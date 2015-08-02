@@ -1,0 +1,41 @@
+﻿body {
+}
+
+a{
+    color:#72c02c;
+}
+
+a:hover{
+    color: #72c02c;
+}
+
+/*dashboard*/
+
+.chart-panel {
+    height: 360px;
+    background-color: #222222;
+    padding: 10px;
+    margin-top: 20px;
+}
+
+.dashboard-label {
+    margin: 5px;
+}
+
+.dashboard-input-text {
+    margin: 5px;
+}
+
+.btn-dashboard {
+    color: #333333;
+    background-color: #ffffff;
+    border-color: #cccccc;
+}
+
+    .btn-dashboard:hover {
+        color: #333333;
+        background-color: #ebebeb;
+        border-color: #adadad;
+    }
+
+

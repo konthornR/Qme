@@ -1,0 +1,46 @@
+﻿<!DOCTYPE html>
+<html ng-app="reservationApp" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <base href="/">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="../styles/style.css" />
+    <title>ตารางคิว</title>
+</head>
+<body ng-controller="tableQueueControl">
+    <div class="container">
+        <div class="row" style="margin-top: 65px; text-align:center;">
+            <h2 class="title" style="margin-bottom: 50px;">Qme(Logo)</h2>
+        </div>
+        <div class="row ng-scope">
+            <table class="table" style="width:50%; margin:auto;">
+                <tbody>
+                    <tr>
+                        <th style="width:15%; text-align:center;">ลำดับคิว</th>
+                        <th>ชื่อ</th>
+                        <th style="width:10%;">จำนวนที่นั่ง</th>
+                    </tr>
+                    <!-- ngRepeat: customer in listCustomersQueue -->
+                    <tr ng-repeat="customer in listCustomersQueue" class="ng-scope">
+                        <td style="text-align:center" class="ng-binding">{{ customer.QueuePosition }}</td>
+                        <td class="ng-binding">{{ customer.Name }}</td>
+                        <td style="text-align:center" class="ng-binding">{{ customer.NumberOfSeats }}</td>
+                    </tr>
+                    <!-- end ngRepeat: customer in listCustomersQueue -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+    <script type="text/javascript" src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="socket.io/socket.io.js"></script>
+    <script src="angular/angular.js"></script>
+    <script type="text/javascript" src="angular-route/angular-route.min.js"></script>
+    <script type="text/javascript" src="qrcode/lib/qrcode.min.js"></script>     
+    <script type="text/javascript" src="angular-qr/angular-qr.min.js"></script>
+    <script src="../scripts/angularmain.js"></script>   
+    
+</body>
+</html>

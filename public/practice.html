@@ -1,0 +1,39 @@
+﻿<!DOCTYPE html>
+<html ng-app="myapp" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular.min.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular-route.min.js"></script>
+    <title></title>
+</head>
+<body>
+    <div ng-view=""></div>
+    <script>
+        var myapp = angular.module('myapp', ['ngRoute']);
+        
+        myapp.config(['$routeProvider', function ($routeProvider) {
+            $routeProvider
+                .when('/', {
+                    templateUrl: 'partials/view1.html',
+                    controller: 'SimpleController'
+                })
+                .when('/view2', {
+                    templateUrl: 'partials/view2.html',
+                    controller: 'SimpleController'
+                })
+                .otherwise({ redirectTo: '/' });
+        }]);
+
+        var controllers = {};
+        controllers.SimpleController = function ($scope) {
+            $scope.customers = [
+                { name: 'John', city: 'Reedville' },
+                { name: 'Murilo', city: 'Curitiba' },
+                { name: 'Jerome', city: 'Amsterdam' },
+                { name: 'Kinsey', city: 'Bangkok' }
+            ]
+        };
+
+        myapp.controller(controllers);
+    </script>
+</body>
+</html>

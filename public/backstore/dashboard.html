@@ -1,0 +1,151 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Q-Me</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="../styles/style.min.css" />
+    <link rel="stylesheet" href="../styles/backstore.css" />
+    <link rel="stylesheet" href="../plugins/flexslider.css" />
+    <link rel="stylesheet" href="../plugins/animate.min.css" />
+    <link rel="stylesheet" href="../plugins/jquery-ui.css" />
+</head>
+<body>
+    <header id="top" class="header navbar-fixed-top">
+        <div class="container">
+            <div style="position: relative">
+                <span style="position: absolute; top: 44px; left: 64px; font-size: 12px;">080-966-7578</span>
+            </div>
+            <h1 class="logo pull-left">
+                <a class="scrollto" href="#promo">
+                    <img id="logo-image" class="logo-image" src="../images/logo.png" alt="Logo" />
+                    <span class="logo-title">Q-Me</span>
+                </a>
+            </h1>
+            <!--//logo-->
+            <nav id="main-nav" class="main-nav navbar-right" role="navigation">
+                <div class="navbar-header">
+                    <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <!--//nav-toggle-->
+                </div>
+                <!--//navbar-header-->
+                <div class="navbar-collapse collapse" id="navbar-collapse">
+                    <ul class="nav navbar-nav">
+                        <li class="nav-item sr-only active"><a href="#promo">Home</a></li>
+                        <li class="nav-item"><a href="#">Account</a></li>
+                        <li class="nav-item"><a href="#">Setting</a></li>
+                    </ul>
+                    <!--//nav-->
+                </div>
+                <!--//navabr-collapse-->
+            </nav>
+            <!--//main-nav-->
+        </div>
+    </header>
+
+    <div class="container" style="margin-top: 100px;">
+        <h1>MyDashboard</h1>
+        <div>
+            <h4 id="currentonline" style="float: right;"></h4>
+        </div>
+        <div style="clear: both; text-align: center; margin-bottom: 20px;">
+            <label class="dashboard-label">ตั้งแต่</label>
+            <input class="dashboard-input-text" type="text" id="time-start" />
+            <label class="dashboard-label">ถึง</label>
+            <input class="dashboard-input-text" type="text" id="time-end" />
+            <button type="button" id="time-button" class="btn btn-dashboard btn-sm">Go</button>
+        </div>
+        <div id="chartdiv01" class="chart-panel" style=""></div>
+        <div id="chartdiv02" class="chart-panel" style=""></div>
+        <div id="chartdiv03" class="chart-panel" style=""></div>
+        <br />
+        <br />
+        <hr />
+        <div style="text-align: center; margin-top: 40px;">
+            <label>ดูกราฟ </label>
+            <select id="filter-by">
+                <option value="day">รายวัน</option>
+                <option value="month">รายเดือน</option>
+            </select>
+        </div>
+        <div id="chartdiv05" class="chart-panel" style=""></div>
+        <div id="chartdiv06" class="chart-panel" style=""></div>
+    </div>
+
+
+    <script type="text/javascript" src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../plugins/jquery-ui.js"></script>
+    <script type="text/javascript" src="http://cdn.amcharts.com/lib/3/amcharts.js"></script>
+    <script type="text/javascript" src="http://cdn.amcharts.com/lib/3/pie.js"></script>
+    <script type="text/javascript" src="http://cdn.amcharts.com/lib/3/serial.js"></script>
+    <script type="text/javascript" src="http://cdn.amcharts.com/lib/3/themes/black.js"></script>
+    <script type="text/javascript" src="../scripts/dashboard-charts.js"></script>
+    <script>
+
+        var currentdate = new Date();
+        var shortcurrentdate = currentdate.getDate() + "/"
+                    + (currentdate.getMonth() + 1) + "/"
+                    + currentdate.getFullYear();
+
+        setDatePickerToElement = function (id) {
+            $(id).datepicker({ dateFormat: "d/m/yy" });
+            $(id).val(shortcurrentdate);
+        }
+
+        $(function () {
+            setDatePickerToElement("#time-start");
+            setDatePickerToElement("#time-end");
+        });
+
+        $("#time-button").click(function () {
+            callout(false);
+        });
+
+        $("#filter-by").change(function () {
+            callout(false);
+        });
+
+        callout = function (isRepeated) {
+            var timeStart = $("#time-start").val() ?
+                $("#time-start").val() : shortcurrentdate;
+            var timeEnd = $("#time-end").val() ?
+                $("#time-end").val() : shortcurrentdate;
+            var filterBy = $("#filter-by").val() ?
+                $("#filter-by").val() : 'day';
+            var amount = filterBy == 'day' ? 30 : 12;
+
+            $.ajax({
+                url: '@Url.Action("DataForDashboard", "Merchant")',
+                data: {
+                    TimeStart: timeStart,
+                    TimeEnd: timeEnd,
+                    FilterBy: filterBy
+                },
+                type: 'POST',
+                async: false,
+            }).done(function (data) {
+                makeChart01(data[0], "chartdiv01", timeStart, timeEnd);
+                makeChart02(data[1], "chartdiv02", timeStart, timeEnd);
+                makeChart03(data[2], "chartdiv03", timeStart, timeEnd);
+                $("#currentonline").text('มีลูกค้า ' + data[3][0] + ' คนกำลังใช้แอพต่อคิวในขณะนี้');
+                makeChart05(data[4], "chartdiv05", filterBy, amount);
+                makeChart06(data[5], "chartdiv06", filterBy, amount);
+            }).always(function () {
+                if (isRepeated) {
+                    //setTimeout(callout(true), 5000);
+                }
+            });
+        }
+
+        callout(false);
+
+    </script>
+</body>
+</html>
