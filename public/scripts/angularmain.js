@@ -6,8 +6,11 @@ app.config(function($routeProvider, $locationProvider) {
 });
 
 app.factory('socket', function(){
-    return io.connect('http://localhost:3000');
-    //return io.connect('https://murmuring-fjord-5701.herokuapp.com/');
+    if(document.location.hostname == "localhost"){
+        return io.connect('http://localhost:3000');     
+    }else{
+        return io.connect('https://murmuring-fjord-5701.herokuapp.com/');
+    }   
 });
 
 app.controller('tableQueueControl', function($scope, socket,$location){
