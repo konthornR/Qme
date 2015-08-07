@@ -2,12 +2,12 @@
   "name": "Reservation",
   "version": "0.0.1",
   "dependencies": {
-    "angular": "latest",
+    "angular": "1.4.3",
     "qrcode": "latest",
     "angular-qr": "latest",
-    "angular-route": "latest"
+    "angular-route": "1.4.3"
   },
   "resolutions": {
-    "angular": "1.4.2"
+    "angular": "1.4.3"
   }
 }
