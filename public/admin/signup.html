@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" ng-app="reservationApp">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../styles/style.css" />
     <link rel="stylesheet" href="../styles/backstore.css" />
     <link rel="stylesheet" href="../plugins/animate.min.css" />
-    <title>ล็อกอิน</title>
+    <title>Sign up</title>
 </head>
 <body>
     <div class="container">
@@ -15,66 +15,60 @@
             <h2 class="title text-center" style="margin-bottom: 50px;">Qme(Logo)</h2>
             <div class="col-md-4 col-md-offset-4 col-sm-6 col-sm-offset-3">
                 <div class="frame-header">
-                    <h2>ล็อกอินเข้าสู่ระบบ</h2>
+                    <h2>Sign up</h2>
                 </div>
-                <div id="login-error" class="alert alert-danger" style="overflow: hidden; display: none;">
-                    ข้อมูลไม่ถูกต้อง
+                <div id="signup-error" class="alert alert-danger" style="overflow: hidden; display: none;">
+                    Username is already exist
                 </div>
                 <div class="input-group" style="margin-bottom: 20px;">
                     <span class="input-group-addon"><i class="fa fa-user"></i></span>
-                    <input type="text" id="login-username" placeholder="Username" name="username" class="form-control">
+                    <input type="text" id="signup-username" placeholder="Username" name="username" class="form-control">
                 </div>
                 <div class="input-group" style="margin-bottom: 20px;">
                     <span class="input-group-addon"><i class="fa fa-lock"></i></span>
-                    <input type="password" id="login-password" placeholder="Password" name="password" class="form-control">
+                    <input type="password" id="signup-password" placeholder="Password" name="password" class="form-control">
                 </div>
 
                 <div class="row">
                     <div class="col-md-6 checkbox">
-                        <label><input type="checkbox"/>จำฉันไว้ในระบบ</label>
+                        
                     </div>
                     <div class="col-md-6">
-                        <button id="login-submit" class="btn-u pull-right">ล็อกอิน</button>
+                        <button id="signup-submit" class="btn-u pull-right">Sign Up</button>
                     </div>
                 </div>
 
                 <hr />
-
-                <a class="color-green" href="forgetpassword.html">ลืมรหัสผ่าน</a>
+               
             </div>
         </div>
     </div>
 
     <script type="text/javascript" src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
     <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-    <script src="socket.io/socket.io.js"></script>
-    <script src="angular/angular.js"></script>
-    <script type="text/javascript" src="angular-route/angular-route.min.js"></script>
-    <script type="text/javascript" src="qrcode/lib/qrcode.min.js"></script>     
-    <script type="text/javascript" src="angular-qr/angular-qr.min.js"></script> <!--https://github.com/janantala/angular-qr-->
-    <script type="text/javascript" src="../scripts/angularmain.js"></script>
+   
 
     <script>
-        $('#login-submit').click(function () {
-            var username = $('#login-username').val();
-            var password = $('#login-password').val();
+        $('#signup-submit').click(function () {
+            var username = $('#signup-username').val();
+            var password = $('#signup-password').val();
             $.ajax({
                 method: "post",
                 data: {username : username, password : password},
                 statusCode: {
                     401: function(){
-                        $('#login-error').css('display', 'block');
-                        $('#login-error').addClass('animated tada delayp3');
+                        $('#signup-error').css('display', 'block');
+                        $('#signup-error').addClass('animated tada delayp3');
                     }
                 }
             }).done(function(msg){
-                window.location.href = "../";
+                window.location.href = "../index";
             });
             
         });
 
-        $('#login-error').on('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
-            $('#login-error').removeClass('animated tada delayp3');
+        $('#signup-error').on('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
+            $('#signup-error').removeClass('animated tada delayp3');
         });
     </script>
 </body>

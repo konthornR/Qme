@@ -4,6 +4,7 @@ var express = require('express'),
     io = require('socket.io').listen(http);
 
 var url  = require('url');
+var _ = require('underscore');
 
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
@@ -24,7 +25,45 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 http.listen(process.env.PORT || 3000)
+/*============================== Function Encrypt Password Start ===========================*/
+// Nodejs encryption with CTR
+var crypto = require('crypto'),
+    algorithm = 'aes-256-ctr',
+    password = 'd6F3Efeq';
 
+function encrypt(text){
+  var cipher = crypto.createCipher(algorithm,password)
+  var crypted = cipher.update(text,'utf8','hex')
+  crypted += cipher.final('hex');
+  return crypted;
+}
+ 
+function decrypt(text){
+  var decipher = crypto.createDecipher(algorithm,password)
+  var dec = decipher.update(text,'hex','utf8')
+  dec += decipher.final('utf8');
+  return dec;
+}
+/*============================== Function Encrypt Password End ===========================*/
+
+/*============================== Function Check Allow Access Start ===========================*/
+var allowAccess = function(req){
+	var url_parts = url.parse(req.url, true);
+    var query = url_parts.query;
+
+    var result = false;
+    if(query && query.companyId){
+    	if(req.isAuthenticated() && req.user && req.user.companyIdList){
+    		_.each(req.user.companyIdList, function(companyId){
+				if(companyId.toString() === query.companyId){
+					result = true;
+				}
+			});	
+    	}
+    }
+    return result;
+}
+/*============================== Function Check Allow Access End ===========================*/
 app.get('/', function (req, res) {
   res.sendfile(__dirname + '/public/index.html');
 });
@@ -35,27 +74,35 @@ app.get('/LogIn', function(req,res){
 });
 
 app.get('/QueueLists', function (req, res) {
-	var url_parts = url.parse(req.url, true);
-    var query = url_parts.query;
-    console.log(query);
-
-    //Need to check query.companyId with req.user.companyId. If it is contain then allow to send queueLists page
-    
- 	res.sendfile(__dirname + '/public/foreground/queueList.html');
+    if(allowAccess(req))
+    	res.sendfile(__dirname + '/public/foreground/queueList.html');
+    else
+    	res.sendfile(__dirname + '/public/index.html');  
 });
 
 app.get('/ReserveQueue', function (req, res) {
-  	res.sendfile(__dirname + '/public/foreground/reservequeue.html');
+	if(allowAccess(req))
+  		res.sendfile(__dirname + '/public/foreground/reservequeue.html');
+  	else
+    	res.sendfile(__dirname + '/public/index.html');
+});
+
+app.get('/CallQueue', function (req, res) {
+  	if(allowAccess(req))
+  		res.sendfile(__dirname + '/public/foreground/callqueue.html');
+  	else
+    	res.sendfile(__dirname + '/public/index.html');
 });
 
 app.get('/admin/CreateOrJoinCompany', function (req, res) {
   	res.sendfile(__dirname + '/public/admin/createOrJoinCompany.html');
 });
-app.get('/CallQueue', function (req, res) {
-  	res.sendfile(__dirname + '/public/foreground/callqueue.html');
+
+app.get('/admin/SignUp', function (req, res) {
+  	res.sendfile(__dirname + '/public/admin/signup.html');
 });
 
-var _ = require('underscore');
+
 
 var mysql = require('mysql');
 var pool = mysql.createPool({
@@ -75,21 +122,26 @@ app.get('/UserAuthentication', function(req,res){
 
 passport.use(new passportLocal.Strategy(function(username,password,done){
 	pool.getConnection(function(err, connection){
+		if(err){
+			connection.release();
+			console.log("!!!!!!!!!!!!!!!!!!!!!! Can not connect with database !!!!!!!!!!!!!!!!!!!!!");
+			done(null,null); 
+			return;
+		}
 		var query = connection.query('SELECT * FROM user WHERE username = ?', username, function(err, result){
 			if (err) { 
 		        throw err;
 	      	}else{
 	      		if(result.length==1){
-	      			if(password === result[0].password){
-	      				done(null,{ id: result[0].id, name: result[0].username })
-						// Need to fix to done(null,{ id: username, name: username, companyId:[query from database] })
+	      			if(password === decrypt(result[0].password)){
+	      				done(null,{ id: result[0].id})	
 	      			}else{
 						done(null,null);
 					}	      			
 	      		}else{
 	      			done(null,null);
 	      		}	      		
-	      	}  
+	      	}   
 		});
 		connection.release();
 	});
@@ -101,7 +153,28 @@ passport.serializeUser(function(user,done){
 
 passport.deserializeUser(function(id,done){
 	//Query database or cache here!
-	done(null,{id:id, name:id});
+	pool.getConnection(function(err, connection){		
+		var companyIdList = [];
+		if(err){
+			connection.release();
+			console.log("!!!!!!!!!!!!!!!!!!!!!! Can not connect with database !!!!!!!!!!!!!!!!!!!!!");
+			done(null,{ id: id, companyIdList: companyIdList})
+			return;
+		}
+		var query2 = connection.query('SELECT * FROM userownshop WHERE userid = ?', id, function(err2, result2){
+			if(err2){
+				throw err2;
+			}else{
+				if(result2.length>0){
+					_.each(result2, function(row){
+						companyIdList.push(row.companyid);
+					});	
+				}
+      		}	
+			done(null,{ id: id, companyIdList: companyIdList})
+		});   
+		connection.release();
+	});
 });
 
 app.get('/logout', function(req,res){
@@ -115,6 +188,40 @@ app.post('/login', passport.authenticate('local'), function(req,res){
 
 /*============================== Log In Session End ===========================*/
 
+/*============================== SignUp Session Start ===========================*/
+app.post('/admin/signup', function(req,res){
+	var newUsername = req.body.username;
+	pool.getConnection(function(err, connection){
+		if(err){
+			connection.release();
+			console.log("!!!!!!!!!!!!!!!!!!!!!! Can not connect with database !!!!!!!!!!!!!!!!!!!!!");
+          	res.json({"code" : 100, "status" : "Error in connection database"});
+			return;
+		}
+		var query = connection.query('SELECT * FROM user WHERE username = ?', newUsername, function(err, result){
+			if (err) { 
+		        throw err;
+	      	}else{
+	      		if(result.length >= 1){
+	      			res.send(401, 'string');	      			
+	      		}else{
+	      			var post  = {
+						username: newUsername, 
+						password: encrypt(req.body.password)
+					};
+	      			var insertQuery = connection.query('INSERT INTO user SET ?', post, function(err2, result2) {
+					  	if (err2) { 
+					        throw err2;
+				      	}
+					});				
+	      		}	      		
+	      	}   
+		});
+		connection.release();
+	});
+	
+});
+/*============================== SignUp Session End ===========================*/
 
 var customer_format = 	{
 					'Name': '',
@@ -142,6 +249,27 @@ GlobalCompany.prototype.addCompany = function(company){
 };
 
 var globalCompany = new GlobalCompany();
+
+/*init company from database*/
+pool.getConnection(function(err, connection){
+	if(err){
+		connection.release();          	
+		console.log("!!!!!!!!!!!!!!!!!!!!!! Can not connect with database !!!!!!!!!!!!!!!!!!!!!");
+		return;
+	}
+	var query = connection.query('SELECT * FROM company', function(err, result){
+		if (err) { 
+	        throw err;
+      	}else{
+      		_.each(result, function(row){
+      			var newCompany = new Company(row.id.toString());
+				globalCompany.addCompany(newCompany);
+			});	
+      	}   
+	});
+	connection.release();
+});
+
 /*============================   Global Entity End  =================================*/	
 
 
@@ -189,9 +317,38 @@ io.sockets.on('connection', function(socket){;
 
 	/*============================   Global Function Start  =================================*/	
 	socket.on('global create company', function(data){		
-		var newCompany = new Company(data.CompanyId);
-		globalCompany.addCompany(newCompany);
-		io.sockets.emit('global update companies', globalCompany.allCompany); 
+		// Have to push in database first
+		pool.getConnection(function(err, connection){
+			if(err){
+				connection.release();
+				console.log("!!!!!!!!!!!!!!!!!!!!!! Can not connect with database !!!!!!!!!!!!!!!!!!!!!");
+				io.sockets.emit('database connection error', globalCompany.allCompany); 
+				return;
+			}
+			var query = connection.query('SELECT * FROM company WHERE name = ?', data.CompanyName, function(err, result){
+			if (err) { 
+		        throw err;
+	      	}else{
+	      		if(result.length >= 1){
+
+	      		}else{
+	      			var post  = {
+						name: data.CompanyName
+					};
+	      			var insertQuery = connection.query('INSERT INTO company SET ?', post, function(err2, result2) {
+					  	if (err2) { 
+					        throw err2;
+				      	}else{
+				      		var newCompany = new Company(result2.insertId.toString());
+							globalCompany.addCompany(newCompany);
+							io.sockets.emit('global update companies', globalCompany.allCompany); 
+				      	}
+					});				
+	      		}	      		
+	      	}   
+		});
+		connection.release();
+		});		
     });  
 
     socket.on('global request initial companies', function(data){				

@@ -98,11 +98,18 @@ app.controller('reserveQueueControl', function($scope, socket,$location){
     }
 });
 
-app.controller('createOrJoinCompanyControl', function($scope, socket,$window){
+app.controller('createOrJoinCompanyControl', function($scope, socket,$window,$http){
+    $http.get("/UserAuthentication").success(function (data) {
+        if(data.isAuthenticated){
+            $scope.isAuthenticated = data.isAuthenticated;
+            $scope.userName = data.user.name;
+        }
+    });
+
     socket.emit('global request initial companies');
     $scope.createCompany = function() {
-        if($scope.newCompany && $scope.newCompany.Id != ""){
-            socket.emit('global create company', {'CompanyId': $scope.newCompany.Id});
+        if($scope.newCompany && $scope.newCompany.Name != ""){
+            socket.emit('global create company', {'CompanyName': $scope.newCompany.Name});
             $scope.newCompany.Id = "";
         }    
     };
