@@ -371,7 +371,6 @@ select {
     .header h1.logo {
         margin-top: 0;
         margin-bottom: 0;
-        text-transform: uppercase;
         font-weight: bold;
         font-size: 28px;
         max-height: 50px;
@@ -417,7 +416,6 @@ select {
 
     .header .main-nav .nav .nav-item {
         font-weight: normal;
-        text-transform: uppercase;
         margin-right: 5px;
     }
 
