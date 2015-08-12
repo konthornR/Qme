@@ -53,7 +53,7 @@ app.get('/', function (req, res) {
 
 
 app.get('/LogIn', function(req,res){
-	res.sendfile(path.join(__dirname, '/views/account/logIn.html'));
+	res.sendfile(path.join(__dirname, '/views/account/login.html'));
 });
 
 app.get('/QueueLists', function (req, res) {
