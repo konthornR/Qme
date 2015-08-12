@@ -1,4 +1,5 @@
 var _ = require('underscore');
+var agent = require(__dirname+"/pushNotification");
 
 module.exports = function(io,pool) {
 	var customer_format = 	{
@@ -6,6 +7,7 @@ module.exports = function(io,pool) {
 					'NumberOfSeats': 0,
 					'Id': '',
 					'SocketId': [],
+					'PushNotificationToken':[],
 					'NextQueueFlag': false,
 					'QueuePosition' : 0,
 					'GroupColor' : ""
@@ -100,7 +102,7 @@ module.exports = function(io,pool) {
 				if(err){
 					connection.release();
 					console.log("!!!!!!!!!!!!!!!!!!!!!! Can not connect with database !!!!!!!!!!!!!!!!!!!!!");
-					io.sockets.emit('database connection error', globalCompany.allCompany); 
+					io.sockets.emit('database connection error', 'database connection error'); 
 					return;
 				}
 				var query = connection.query('SELECT * FROM company WHERE name = ?', data.CompanyName, function(err, result){
@@ -157,24 +159,32 @@ module.exports = function(io,pool) {
 				customer.NumberOfSeats = data.NumberOfSeats;
 				customer.Id = data.Id;
 				customer.SocketId = _.clone(customer_format.SocketId);
+				customer.PushNotificationToken = _.clone(customer_format.PushNotificationToken);
 
 				//Add customer into database
 				var start = new Date();
 				var start_sqlFormat = start.getFullYear() + "-" + (start.getMonth()+1) + "-" + start.getDate() + " " + start.getHours() + ":" + start.getMinutes() + ":" + start.getSeconds();
 				var post  = {
+					companyid: parseInt(socket.companyId),
 					qrcode: data.Id, 
 					timestart: start_sqlFormat,		 
 					name: data.Name,
 					numseat: data.NumberOfSeats
 				};
-				/*pool.getConnection(function(err, connection){
+				pool.getConnection(function(err, connection){
+					if(err){
+						connection.release();
+						console.log("!!!!!!!!!!!!!!!!!!!!!! Can not connect with database !!!!!!!!!!!!!!!!!!!!!");
+						io.sockets.emit('database connection error', 'database connection error'); 
+						return;
+					}
 					var query = connection.query('INSERT INTO reservation SET ?', post, function(err, result) {
 					  	if (err) { 
 					        throw err;
 				      	}
 					});
 					connection.release();
-				});*/
+				});
 
 				
 				//Add customer in tableConfig
@@ -263,20 +273,50 @@ module.exports = function(io,pool) {
 					currentQueueCustomer.NextQueueFlag = false;
 					callingQueue.push(currentQueueCustomer);
 
+					//Send Push Notification to currentQueueCustomer
+					_.each(currentQueueCustomer.PushNotificationToken, function(token){
+						if(token){
+							agent.createMessage()
+							    .device(token)
+							    .alert("Now, It's your queue!!")
+							    .sound("Queue.aiff")
+							    .send(function (err) {
+							      // handle apnagent custom errors
+							      if (err && err.toJSON) {
+							        console.log("Push Notification JSON Error!!");
+							      }
+							      // handle anything else (not likely)
+							      else if (err) {
+							        console.log("Push Notification Error!!");
+							      }
+							      // it was a success
+							      else {
+							        //console.log("Success");
+							      }
+							    });		
+						}
+					});	
+
 					//Update end Timestamp for currentQueueCustomer into database
 					var end = new Date();
 					var end_sqlFormat = end.getFullYear() + "-" + (end.getMonth()+1) + "-" + end.getDate() + " " + end.getHours() + ":" + end.getMinutes() + ":" + end.getSeconds();
 					var post  = {
 						timeend: end_sqlFormat
 					};
-					/*pool.getConnection(function(err, connection){
-						var query = connection.query('UPDATE reservation SET ? WHERE qrcode = ?', [post, currentQueueCustomer.Id], function(err, result){
+					pool.getConnection(function(err, connection){
+						if(err){
+							connection.release();
+							console.log("!!!!!!!!!!!!!!!!!!!!!! Can not connect with database !!!!!!!!!!!!!!!!!!!!!");
+							io.sockets.emit('database connection error', 'database connection error'); 
+							return;
+						}
+						var query = connection.query('UPDATE reservation SET ? WHERE companyid = ? and qrcode = ?', [post, parseInt(socket.companyId),currentQueueCustomer.Id], function(err, result){
 							if (err) { 
 						        throw err;
 					      	}  
 						});
 						connection.release();
-		  			});*/
+		  			});
 
 					//update Table information
 					io.sockets.in(socket.companyId).emit('update table', allCustomers); 
@@ -316,6 +356,9 @@ module.exports = function(io,pool) {
 					_.each(table.customers,function(customer,customerIdx){
 						if(customer.Id == data.Id){
 							customer.SocketId.push(data.SocketId);
+							if(data.PushNotificationToken){
+								customer.PushNotificationToken.push(data.PushNotificationToken);
+							}
 							foundCustomer = true;
 							thisCustomer = _.clone(customer);
 							thisCustomer.QueueNumber = customerIdx+1;				
@@ -327,12 +370,15 @@ module.exports = function(io,pool) {
 				if(!foundCustomer){
 					//insert socket id for customer in callingQueue
 					_.each(callingQueue, function(customer, idx) { 
-					   if (customer.Id == data.Id) {
-					      customer.SocketId.push(data.SocketId);
-					      foundCustomer = true;
-					      thisCustomer = _.clone(customer);
-					      thisCustomer.QueueNumber = 0;
-					      return;
+						if (customer.Id == data.Id) {
+					    	customer.SocketId.push(data.SocketId);
+					    	if(data.PushNotificationToken){
+								customer.PushNotificationToken.push(data.PushNotificationToken);
+							}	
+							foundCustomer = true;
+							thisCustomer = _.clone(customer);
+							thisCustomer.QueueNumber = 0;
+							return;
 					   }
 					});
 				}
@@ -346,14 +392,20 @@ module.exports = function(io,pool) {
 					var post  = {
 									doesusemobile: 'true'
 								};
-					/*pool.getConnection(function(err, connection){
-						var query = connection.query('UPDATE reservation SET ? WHERE qrcode = ?', [post, data.Id], function(err, result){
+					pool.getConnection(function(err, connection){
+						if(err){
+							connection.release();
+							console.log("!!!!!!!!!!!!!!!!!!!!!! Can not connect with database !!!!!!!!!!!!!!!!!!!!!");
+							io.sockets.emit('database connection error', 'database connection error'); 
+							return;
+						}
+						var query = connection.query('UPDATE reservation SET ? WHERE companyid = ? and qrcode = ?', [post, parseInt(socket.companyId),data.Id], function(err, result){
 							if (err) { 
 						        throw err;
 					      	}  
 						});
 						connection.release();
-		  			});*/
+		  			});
 				}		
 				//update Table information
 				io.sockets.in(socket.companyId).emit('update table', allCustomers); 
@@ -405,14 +457,20 @@ module.exports = function(io,pool) {
 				var post  = {
 						doesattend: "true"
 					};
-				/*pool.getConnection(function(err, connection){
-					var query = connection.query('UPDATE reservation SET ? WHERE qrcode = ?', [post, data.Id], function(err, result){
+				pool.getConnection(function(err, connection){
+					if(err){
+						connection.release();
+						console.log("!!!!!!!!!!!!!!!!!!!!!! Can not connect with database !!!!!!!!!!!!!!!!!!!!!");
+						io.sockets.emit('database connection error', 'database connection error'); 
+						return;
+					}
+					var query = connection.query('UPDATE reservation SET ? WHERE companyid = ? and qrcode = ?', [post, parseInt(socket.companyId), data.Id], function(err, result){
 						if (err) { 
 					        throw err;
 				      	}  
 					});
 					connection.release();
-				});*/
+				});
 
 				//Romove this customers in calling queue
 				callingQueue.splice(customerIndex_IncallingQueue,1);
