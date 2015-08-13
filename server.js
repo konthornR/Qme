@@ -58,7 +58,7 @@ app.get('/LogIn', function(req,res){
 
 app.get('/QueueLists', function (req, res) {
     if(allowAccess(req))
-    	res.sendfile(path.join(__dirname, '/views/foreground/queueList.html'));
+    	res.sendfile(path.join(__dirname, '/views/foreground/queuelist.html'));
     else
     	res.sendfile(__dirname + '/public/index.html');  
 });
