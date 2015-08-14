@@ -56,6 +56,13 @@ app.get('/LogIn', function(req,res){
 	res.sendfile(path.join(__dirname, '/views/account/login.html'));
 });
 
+app.get('/account/index', function (req, res) {
+    if (allowAccess(req))
+        res.sendfile(path.join(__dirname, '/views/account/index.html'));
+    else
+        res.sendfile(__dirname + '/public/index.html'); // <--- always come here despite authorization 
+});
+
 app.get('/QueueLists', function (req, res) {
     if(allowAccess(req))
     	res.sendfile(path.join(__dirname, '/views/foreground/queuelist.html'));
