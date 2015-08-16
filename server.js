@@ -30,7 +30,7 @@ http.listen(process.env.PORT || 3000)
 var passwordEncryption = require(__dirname+"/serverUtilities/passwordEncryption");
 
 /*============================== Function Check Allow Access Start ===========================*/
-var allowAccess = function(req){
+var allowAccessToQueueManager = function(req){
 	var url_parts = url.parse(req.url, true);
     var query = url_parts.query;
 
@@ -46,6 +46,10 @@ var allowAccess = function(req){
     }
     return result;
 }
+
+var allowAccess = function(req){	
+	return req.isAuthenticated();
+}
 /*============================== Function Check Allow Access End ===========================*/
 app.get('/', function (req, res) {
   res.sendfile(__dirname + '/public/index.html');
@@ -60,28 +64,32 @@ app.get('/account/index', function (req, res) {
     if (allowAccess(req))
         res.sendfile(path.join(__dirname, '/views/account/index.html'));
     else
-        res.sendfile(__dirname + '/public/index.html'); // <--- always come here despite authorization 
+    	res.redirect('/');
+        //res.sendfile(__dirname + '/public/index.html'); // <--- always come here despite authorization 
 });
 
 app.get('/QueueLists', function (req, res) {
-    if(allowAccess(req))
+    if(allowAccessToQueueManager(req))
     	res.sendfile(path.join(__dirname, '/views/foreground/queuelist.html'));
     else
-    	res.sendfile(__dirname + '/public/index.html');  
+    	res.redirect('/');
+    	//res.sendfile(__dirname + '/public/index.html');  
 });
 
 app.get('/ReserveQueue', function (req, res) {
-	if(allowAccess(req))
+	if(allowAccessToQueueManager(req))
   		res.sendfile(path.join(__dirname, '/views/foreground/reservequeue.html'));
   	else
-    	res.sendfile(__dirname + '/public/index.html');
+  		res.redirect('/');
+    	//res.sendfile(__dirname + '/public/index.html');
 });
 
 app.get('/CallQueue', function (req, res) {
-  	if(allowAccess(req))
+  	if(allowAccessToQueueManager(req))
   		res.sendfile(path.join(__dirname, '/views/foreground/callqueue.html'));
   	else
-    	res.sendfile(__dirname + '/public/index.html');
+  		res.redirect('/');
+    	//res.sendfile(__dirname + '/public/index.html');
 });
 
 app.get('/admin/CreateOrJoinCompany', function (req, res) {
