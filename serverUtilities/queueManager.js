@@ -268,34 +268,33 @@ module.exports = function(io,pool) {
 						//set NextQueueFlag = true for next customer 
 						nextFirstQueueCustomer = tableConfig[tableConfigIndex].customers[0];				
 						nextFirstQueueCustomer.NextQueueFlag = true;
+						//Send Push Notification to nextFirstQueueCustomer
+						_.each(nextFirstQueueCustomer.PushNotificationToken, function(token){
+							if(token){
+								agent.createMessage()
+								    .device(token)
+								    .alert("Next queue is your queue")
+								    .sound("Queue.aiff")
+								    .send(function (err) {
+								      // handle apnagent custom errors
+								      if (err && err.toJSON) {
+								        console.log("Push Notification JSON Error!!");
+								      }
+								      // handle anything else (not likely)
+								      else if (err) {
+								        console.log("Push Notification Error!!");
+								      }
+								      // it was a success
+								      else {
+								        //console.log("Success");
+								      }
+								    });		
+							}
+						});	
 					}
 					
 					currentQueueCustomer.NextQueueFlag = false;
-					callingQueue.push(currentQueueCustomer);
-
-					//Send Push Notification to currentQueueCustomer
-					_.each(currentQueueCustomer.PushNotificationToken, function(token){
-						if(token){
-							agent.createMessage()
-							    .device(token)
-							    .alert("Now, It's your queue!!")
-							    .sound("Queue.aiff")
-							    .send(function (err) {
-							      // handle apnagent custom errors
-							      if (err && err.toJSON) {
-							        console.log("Push Notification JSON Error!!");
-							      }
-							      // handle anything else (not likely)
-							      else if (err) {
-							        console.log("Push Notification Error!!");
-							      }
-							      // it was a success
-							      else {
-							        //console.log("Success");
-							      }
-							    });		
-						}
-					});	
+					callingQueue.push(currentQueueCustomer);					
 
 					//Update end Timestamp for currentQueueCustomer into database
 					var end = new Date();
@@ -322,6 +321,129 @@ module.exports = function(io,pool) {
 					io.sockets.in(socket.companyId).emit('update table', allCustomers); 
 					io.sockets.in(socket.companyId).emit('update calling table', callingQueue); 
 				}
+			}
+	    });   
+
+		socket.on('request cancel queue', function(data){		
+			thisCompany = globalCompany.getCompanyById(socket.companyId);
+			if(thisCompany){
+		    	tableConfig = thisCompany.tableConfig;
+		    	allCustomers = thisCompany.allCustomers;
+		    	callingQueue = thisCompany.callingQueue;
+
+		    	var foundCustomerInTableConfig = false;
+		    	var tableConfigIndex = -1; 
+		    	var customersIndex = -1;
+
+		    	var cancelQueueCustomer;
+		    	var nextFirstQueueCustomer;
+
+				for(var i =0; i<tableConfig.length&& !foundCustomerInTableConfig; i++){
+					//find where is next queue call customer in table config 
+					for(var j = 0; j<tableConfig[i].customers.length; j++){
+						if(data.Id == tableConfig[i].customers[j].Id){
+							tableConfigIndex = i;
+							customersIndex = j ;
+							foundCustomerInTableConfig = true;
+
+							cancelQueueCustomer = tableConfig[i].customers[j];							
+							break;
+						}
+					}
+				}
+
+				if(tableConfigIndex != -1){
+					
+					tableConfig[tableConfigIndex].customers.splice(customersIndex, 1); //remove the first queue
+
+					// Find cancelQueueCustomer index in allCustomers array
+					var customerIndex_InAllCustomers;
+					_.each(allCustomers, function(customer, idx) { 
+					   if (customer.Id == cancelQueueCustomer.Id) {
+					      customerIndex_InAllCustomers = idx;
+					      return;
+					   }
+					 });
+					//Romove this customers
+					allCustomers.splice(customerIndex_InAllCustomers,1);
+
+
+					if(customersIndex == 0 && tableConfig[tableConfigIndex].customers.length > 0){
+						//set NextQueueFlag = true for next customer 
+						nextFirstQueueCustomer = tableConfig[tableConfigIndex].customers[0];				
+						nextFirstQueueCustomer.NextQueueFlag = true;
+
+						//Send Push Notification to nextFirstQueueCustomer
+						_.each(nextFirstQueueCustomer.PushNotificationToken, function(token){
+							if(token){
+								agent.createMessage()
+								    .device(token)
+								    .alert("Next queue is your queue")
+								    .sound("Queue.aiff")
+								    .send(function (err) {
+								      // handle apnagent custom errors
+								      if (err && err.toJSON) {
+								        console.log("Push Notification JSON Error!!");
+								      }
+								      // handle anything else (not likely)
+								      else if (err) {
+								        console.log("Push Notification Error!!");
+								      }
+								      // it was a success
+								      else {
+								        //console.log("Success");
+								      }
+								    });		
+							}
+						});	
+					}
+				}else{
+					// Find cancelQueueCustomer index in allCustomers array
+					var customerIndex_InCallingQueue = -1;
+					_.each(callingQueue, function(customer, idx) { 
+						if (customer.Id == data.Id) {
+							cancelQueueCustomer = customer;
+					    	customerIndex_InCallingQueue = idx;
+							return;
+					   }
+					});
+					if(customerIndex_InCallingQueue != -1){
+						//Romove this customers
+						callingQueue.splice(customerIndex_InCallingQueue,1);
+					}
+				}	
+
+				if(cancelQueueCustomer){					
+					//Update does not attend for cancelQueueCustomer into database
+					var post  = {
+						doesattend: "false"
+					};
+					pool.getConnection(function(err, connection){
+						if(err){
+							connection.release();
+							console.log("!!!!!!!!!!!!!!!!!!!!!! Can not connect with database !!!!!!!!!!!!!!!!!!!!!");
+							io.sockets.emit('database connection error', 'database connection error'); 
+							return;
+						}
+						var query = connection.query('UPDATE reservation SET ? WHERE companyid = ? and qrcode = ?', [post, parseInt(socket.companyId),cancelQueueCustomer.Id], function(err, result){
+							if (err) { 
+						        throw err;
+					      	}  
+						});
+						connection.release();
+		  			});
+
+		  			//Send cancel confirmation 
+		  			_.each(cancelQueueCustomer.SocketId, function(socketId){
+						if(socketId){
+							io.sockets.socket(socketId).emit("cancel queue confirm", {'CancelQueue': true});	
+						}
+					});
+
+				}
+				//update Table information
+				io.sockets.in(socket.companyId).emit('update table', allCustomers); 
+				io.sockets.in(socket.companyId).emit('update calling table', callingQueue); 
 			}
 	    });   
 
@@ -446,34 +568,35 @@ module.exports = function(io,pool) {
 		    	callingQueue = thisCompany.callingQueue;
 
 				// Find data customer index in calling Queue array
-				var customerIndex_IncallingQueue;
+				var customerIndex_IncallingQueue = -1;
 				_.each(callingQueue, function(customer, idx) { 
 				   if (customer.Id == data.Id) {
 				      customerIndex_IncallingQueue = idx;
 				      return;
 				   }
 				 });
-
-				var post  = {
-						doesattend: "true"
-					};
-				pool.getConnection(function(err, connection){
-					if(err){
+				if(customerIndex_IncallingQueue != -1){
+					var post  = {
+							doesattend: "true"
+						};
+					pool.getConnection(function(err, connection){
+						if(err){
+							connection.release();
+							console.log("!!!!!!!!!!!!!!!!!!!!!! Can not connect with database !!!!!!!!!!!!!!!!!!!!!");
+							io.sockets.emit('database connection error', 'database connection error'); 
+							return;
+						}
+						var query = connection.query('UPDATE reservation SET ? WHERE companyid = ? and qrcode = ?', [post, parseInt(socket.companyId), data.Id], function(err, result){
+							if (err) { 
+						        throw err;
+					      	}  
+						});
 						connection.release();
-						console.log("!!!!!!!!!!!!!!!!!!!!!! Can not connect with database !!!!!!!!!!!!!!!!!!!!!");
-						io.sockets.emit('database connection error', 'database connection error'); 
-						return;
-					}
-					var query = connection.query('UPDATE reservation SET ? WHERE companyid = ? and qrcode = ?', [post, parseInt(socket.companyId), data.Id], function(err, result){
-						if (err) { 
-					        throw err;
-				      	}  
 					});
-					connection.release();
-				});
 
-				//Romove this customers in calling queue
-				callingQueue.splice(customerIndex_IncallingQueue,1);
+					//Romove this customers in calling queue
+					callingQueue.splice(customerIndex_IncallingQueue,1);
+				}
 
 				io.sockets.in(socket.companyId).emit('update table', allCustomers); 
 				io.sockets.in(socket.companyId).emit('update calling table', callingQueue); 
@@ -489,7 +612,7 @@ module.exports = function(io,pool) {
 		    	callingQueue = thisCompany.callingQueue;
 
 				// Find data customer index in calling Queue array
-				var customerIndex_IncallingQueue;
+				var customerIndex_IncallingQueue = -1;
 				_.each(callingQueue, function(customer, idx) { 
 				   if (customer.Id == data.Id) {
 				      customerIndex_IncallingQueue = idx;
@@ -497,8 +620,30 @@ module.exports = function(io,pool) {
 				   }
 				 });
 
-				//Romove this customers in calling queue
-				callingQueue.splice(customerIndex_IncallingQueue,1);
+				
+				if(customerIndex_IncallingQueue != -1){
+
+					var post  = {
+						doesattend: "false"
+					};
+					pool.getConnection(function(err, connection){
+						if(err){
+							connection.release();
+							console.log("!!!!!!!!!!!!!!!!!!!!!! Can not connect with database !!!!!!!!!!!!!!!!!!!!!");
+							io.sockets.emit('database connection error', 'database connection error'); 
+							return;
+						}
+						var query = connection.query('UPDATE reservation SET ? WHERE companyid = ? and qrcode = ?', [post, parseInt(socket.companyId), data.Id], function(err, result){
+							if (err) { 
+						        throw err;
+					      	}  
+						});
+						connection.release();
+					});				
+							
+					//Romove this customers in calling queue
+					callingQueue.splice(customerIndex_IncallingQueue,1);
+				}
 
 				io.sockets.in(socket.companyId).emit('update table', allCustomers); 
 				io.sockets.in(socket.companyId).emit('update calling table', callingQueue); 

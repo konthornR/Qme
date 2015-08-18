@@ -6,8 +6,8 @@ var join = require('path').join;
   agent 
     .set('cert file', join(__dirname, '../', 'conf/QmeCert.pem'))
     .set('key file', join(__dirname, '../', 'conf/QmeKey.pem'))
-    .set('passphrase', '5897497Duiz')
-    .enable('sandbox');
+    .set('passphrase', '5897497Duiz');
+    //.enable('sandbox');
 
    // common settings
   agent
