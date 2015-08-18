@@ -355,6 +355,14 @@ module.exports = function(io,pool) {
 				if(tableConfigIndex != -1){
 					
 					tableConfig[tableConfigIndex].customers.splice(customersIndex, 1); //remove the first queue
+					//Send out noticifation to all customers in same catagory
+					_.each(tableConfig[tableConfigIndex].customers, function(customer, idx) { 
+						_.each(customer.SocketId, function(socketId){
+							if(socketId){
+								io.sockets.socket(socketId).emit("call queue", {'QueueNumber': idx+1});	
+							}
+						});		
+					 });
 
 					// Find cancelQueueCustomer index in allCustomers array
 					var customerIndex_InAllCustomers;
