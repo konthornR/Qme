@@ -324,7 +324,15 @@ module.exports = function(io,pool) {
 			}
 	    });   
 
-		socket.on('request cancel queue', function(data){		
+		socket.on('request cancel queue', function(data){	
+		 	//Check if data is string or object. If it is String, convert to object
+	    	if(typeof data === 'string'){  
+	    		try {
+			    	data = JSON.parse(data);
+			    } catch (e) {
+			    	return;
+			    }
+	    	}
 			thisCompany = globalCompany.getCompanyById(socket.companyId);
 			if(thisCompany){
 		    	tableConfig = thisCompany.tableConfig;
@@ -420,7 +428,6 @@ module.exports = function(io,pool) {
 						callingQueue.splice(customerIndex_InCallingQueue,1);
 					}
 				}	
-
 				if(cancelQueueCustomer){					
 					//Update does not attend for cancelQueueCustomer into database
 					var post  = {
