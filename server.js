@@ -228,30 +228,6 @@ app.post('/admin/signup', function(req,res){
 });
 /*============================== SignUp Session End ===========================*/
 
-/*=================== Get data for presenting on Dashboard Start ===================*/
-app.post('/dashboard', function(req,res){
-	var requestCompanyId = req.body.companyId;
-	if(allowAccessForDataShowOnDashboard(req)){
-		pool.getConnection(function(err, connection){
-			if(err){
-				connection.release();
-				console.log("!!!!!!!!!!!!!!!!!!!!!! Can not connect with database !!!!!!!!!!!!!!!!!!!!!");
-	          	res.json({"code" : 100, "status" : "Error in connection database"});
-				return;
-			}
-			var query = connection.query('SELECT * FROM reservation WHERE companyId = ?', requestCompanyId, function(err, result){
-				if (err) { 
-			        throw err;
-		      	}else{
-		      			      		
-		      	}   
-			});
-			connection.release();
-		});
-	}
-});
-
-/*=================== Get data for presenting on Dashboard End ===================*/
 require(__dirname+"/serverUtilities/queueManager")(io,pool);
 
 
