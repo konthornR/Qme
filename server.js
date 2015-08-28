@@ -50,6 +50,19 @@ var allowAccessToQueueManager = function(req){
 var allowAccess = function(req){	
 	return req.isAuthenticated();
 }
+
+var allowAccessForDataShowOnDashboard = function(req){
+	var requestCompanyId = req.body.CompanyId;
+    var result = false;
+	if(req.isAuthenticated() && req.user && req.user.companyIdList){
+		_.each(req.user.companyIdList, function(companyId){
+			if(companyId.toString() === requestCompanyId.toString()){
+				result = true;
+			}
+		});	
+	}    
+    return result;
+}
 /*============================== Function Check Allow Access End ===========================*/
 app.get('/', function (req, res) {
   res.sendfile(__dirname + '/public/index.html');
@@ -214,6 +227,7 @@ app.post('/admin/signup', function(req,res){
 	
 });
 /*============================== SignUp Session End ===========================*/
+
 require(__dirname+"/serverUtilities/queueManager")(io,pool);
 
 

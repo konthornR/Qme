@@ -149,7 +149,7 @@ module.exports = function(io,pool) {
 
 	    socket.on('request reserve seats', function(data){	
 	    	thisCompany = globalCompany.getCompanyById(socket.companyId);
-	    	if(thisCompany){
+	    	if(thisCompany && parseInt(data.NumberOfSeats) > 0){
 		    	tableConfig = thisCompany.tableConfig;
 		    	allCustomers = thisCompany.allCustomers;
 		    	callingQueue = thisCompany.callingQueue;
