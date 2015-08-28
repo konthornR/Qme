@@ -88,6 +88,23 @@ a {
     text-decoration: none;
 }
 
+.btn-option{
+    border: solid 1px #E2DADA;
+    color: #888888;
+}
+
+.btn-option:hover, .btn-option:focus{
+    background-color: #f4fdf8;
+    text-decoration: none;
+    border: solid 1px #62C17B;
+    color: #888888;
+
+    -moz-transition: none;
+    -webkit-transition: none;
+    -o-transition: color 0 ease-in;
+    transition: none;
+}
+
 .form-control {
     -webkit-box-shadow: none;
     -moz-box-shadow: none;

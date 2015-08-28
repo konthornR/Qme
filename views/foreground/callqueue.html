@@ -12,20 +12,20 @@
     <div class="container">
         <div class="row" style="margin-top: 65px; margin-bottom: 40px; text-align: center;">
             <h2 class="title" style="margin-bottom: 40px;">Qme(Logo)</h2>
-            <h3>เรียกลูกค้ารายต่อไปสำหรับ</h3>
+            <h3 style="margin-bottom:30px;">เรียกลูกค้ารายต่อไปสำหรับ</h3>
             <label class="radio-inline">
-                <input ng-model="callValue"  ng-click="getNextQueue(0)" type="radio" name="optradio" />1 - 3 ที่นั่ง
+                <a href ng-click="getNextQueue(0)" class="btn btn-md btn-option">1 - 3 ที่นั่ง</a>
             </label>
             <label class="radio-inline">
-                <input ng-model="callValue" ng-click="getNextQueue(1)" type="radio" name="optradio" />4 - 6 ที่นั่ง
+                <a href ng-click="getNextQueue(1)" class="btn btn-md btn-option">4 - 6 ที่นั่ง</a>
             </label>
             <label class="radio-inline">
-                <input ng-model="callValue" ng-click="getNextQueue(2)" type="radio" name="optradio" />7 - 9 ที่นั่ง
+                <a href ng-click="getNextQueue(2)" class="btn btn-md btn-option">7 - 9 ที่นั่ง</a>
             </label>
             <label class="radio-inline">
-                <input ng-model="callValue" ng-click="getNextQueue(3)" type="radio" name="optradio" />10 ที่นั่งขึ้นไป
+                <a href ng-click="getNextQueue(3)" class="btn btn-md btn-option">10 - 12 ที่นั่ง</a>
             </label>
-            <a class="btn btn-md btn-theme" style="margin-left: 10px;" href ng-click="callThisQueue()">เรียก</a>
+            <a class="btn btn-md btn-theme" style="margin-left: 30px;" href ng-click="callThisQueue()">เรียก</a>
         </div>
         <div class="row ng-scope">
             <table class="table" style="width: 60%; margin: auto;">
