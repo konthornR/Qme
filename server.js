@@ -78,7 +78,13 @@ app.get('/account/index', function (req, res) {
         res.sendfile(path.join(__dirname, '/views/account/index.html'));
     else
     	res.redirect('/');
-        //res.sendfile(__dirname + '/public/index.html'); // <--- always come here despite authorization 
+});
+
+app.get('/backstore/dashboard', function (req, res) {
+    if (allowAccess(req))
+        res.sendfile(path.join(__dirname, '/views/backstore/dashboard.html'));
+    else
+        res.redirect('/');
 });
 
 app.get('/QueueLists', function (req, res) {

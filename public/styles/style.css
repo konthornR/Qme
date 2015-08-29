@@ -10,6 +10,12 @@
     max-height: 380px;
 }
 
+.caret{
+    position: absolute;
+    top: 15px;
+    right: 5px;
+}
+
 /* ======= Base ======= */
 body {
     font-family: 'Lato', arial, sans-serif;
@@ -96,13 +102,8 @@ a {
 .btn-option:hover, .btn-option:focus{
     background-color: #f4fdf8;
     text-decoration: none;
-    border: solid 1px #62C17B;
+    border: solid 1px #99d73f;
     color: #888888;
-
-    -moz-transition: none;
-    -webkit-transition: none;
-    -o-transition: color 0 ease-in;
-    transition: none;
 }
 
 .form-control {
@@ -352,6 +353,14 @@ select {
     -webkit-transition-delay: 2s;
     -moz-transition-delay: 2s;
     -o-transition-delay: 2s;
+}
+
+.notransition{
+    -webkit-transition: none !important;
+    -moz-transition: none !important;
+    -o-transition: none !important;
+    -ms-transition: none !important;
+    transition: none !important;
 }
 /* ======= Log In ======= */
 .frame-page {
@@ -2063,3 +2072,29 @@ select {
             }
 }
 /* Large devices (large desktops, 1200px and up) */
+
+
+.dropdown-btn-expand{
+    width: 100%;
+    position: relative;
+}
+
+.dropdown-ul-expand{
+    width: 100%;
+    position: relative;
+}
+
+.dropdown-btn-ellipsis{
+    overflow: hidden;
+    white-space: nowrap;
+    display: block;
+    text-overflow: ellipsis;
+}
+
+.dropdown-li-ellipsis{
+    overflow: hidden;
+    white-space: nowrap;
+    display: block;
+    text-overflow: ellipsis;
+}
+
