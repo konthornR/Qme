@@ -108,6 +108,12 @@ app.controller('createOrJoinCompanyControl', function($scope, socket,$window,$ht
             $scope.userName = data.user.name;
         }
     });
+    
+    $http.post("/dashboard",{companyId:52}).success(function (data) {
+        if(data){
+            
+        }
+    });
 
     socket.emit('global request initial companies');
     $scope.createCompany = function() {
