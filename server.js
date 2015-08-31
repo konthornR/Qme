@@ -233,6 +233,15 @@ app.post('/admin/signup', function(req,res){
 	
 });
 /*============================== SignUp Session End ===========================*/
+/*=================== Get data for presenting on Dashboard Start ===================*/
+app.post('/dashboard', function(req,res){
+	var requestCompanyId = req.body.companyId;
+	if(allowAccessForDataShowOnDashboard(req)){
+		queryDashboard.queryByDateDashboard(req,res,pool);
+	}else
+		res.send(401, 'string');	
+});
+/*=================== Get data for presenting on Dashboard Start ===================*/
 
 require(__dirname+"/serverUtilities/queueManager")(io,pool);
 
