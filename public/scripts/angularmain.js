@@ -109,11 +109,23 @@ app.controller('createOrJoinCompanyControl', function($scope, socket,$window,$ht
         }
     });
     
-    $http.post("/dashboard",{companyId:52}).success(function (data) {
+    /*$http.post("/dashboard",{companyId:52}).success(function (data) {
         if(data){
             
         }
-    });
+    });*/
+
+    /*$http({
+        method: 'POST',
+        url: '/dashboardSectionTwo',
+        data: "companyId=" + 52,
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+    }).success(function (data){
+        if(data){
+
+        }
+    });*/
+
 
     socket.emit('global request initial companies');
     $scope.createCompany = function() {

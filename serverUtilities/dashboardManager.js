@@ -1,8 +1,10 @@
 var _ = require('underscore');
 
 module.exports = {
-	queryByDateDashboard: function (req,res,pool) {
-		var requestCompanyId = 52;
+	queryByDashboardSectionOne: function (req,res,pool) {
+		var requestCompanyId = req.body.CompanyId;
+		var dateFrom = req.body.TimeStart;
+		var dateTo = req.body.TimeEnd;
 		pool.getConnection(function(err, connection){
 			if(err){
 				connection.release();
@@ -10,7 +12,7 @@ module.exports = {
 		      	res.json({"code" : 100, "status" : "Error in connection database"});
 				return;
 			}
-			var query = connection.query('SELECT * FROM reservation WHERE companyId = ?', requestCompanyId, function(err, result){
+			var query = connection.query('SELECT * FROM reservation WHERE companyId = ? and timestart >= ? and timestart < ?', [requestCompanyId,dateFrom,dateTo], function(err, result){
 				if (err) { 
 			        throw err;
 		      	}else{
@@ -162,7 +164,29 @@ module.exports = {
 							chart03["dataProvider"][parseInt(key)]["column-1"] = groupByDay[key].length;
 						}
 					});
-		      		
+		      		return res.send([chart01,chart02,chart03]);
+		      	}   
+			});
+			connection.release();
+		});
+	},
+	queryByDashboardSectionTwo: function (req,res,pool) {
+		var requestCompanyId = req.body.CompanyId;
+		pool.getConnection(function(err, connection){
+			if(err){
+				connection.release();
+				console.log("!!!!!!!!!!!!!!!!!!!!!! Can not connect with database !!!!!!!!!!!!!!!!!!!!!");
+		      	res.json({"code" : 100, "status" : "Error in connection database"});
+				return;
+			}
+			var queryDateObject = new Date(); 
+			queryDateObject.setHours(0,0,0,0);
+			queryDateObject.setDate(1);
+			queryDateObject.setMonth(queryDateObject.getMonth() - 12);
+			var query = connection.query('SELECT * FROM reservation WHERE companyId = ? and timestart >= ?', [requestCompanyId,queryDateObject], function(err, result){
+				if (err) { 
+			        throw err;
+		      	}else{
 		      		var filterCurrentInQueueUsers = _.filter(result,function(x){
 		      			return x.doesattend == "pending";
 		      		});
@@ -222,19 +246,22 @@ module.exports = {
 		      		}
 		      		for(var num = -12; num<=0; num++){
 		      			var dateObject = new Date(); 
+		      			dateObject.setHours(0,0,0,0);
+						dateObject.setDate(1);
 		      			dateObject.setMonth(dateObject.getMonth() + num);
-		      			var numCountAttendPastDate = 0;
-		      			var numCountNotAttendPastDate = 0;
+		      			console.log(dateObject);
+		      			var numCountAttendPastMonth = 0;
+		      			var numCountNotAttendPastMonth = 0;
 		      			var numCountUseApp = 0;
 		      			var numCountNotUseApp = 0
 
 		      			var queryPastMonth = _.filter(result,function(x){
 		      				return x.timestart.getYear() == dateObject.getYear() && x.timestart.getMonth() == dateObject.getMonth();
 		      			});
-		      			numCountAttendPastDate = _.filter(queryPastMonth,function(x){
+		      			numCountAttendPastMonth = _.filter(queryPastMonth,function(x){
 		      				return x.doesattend == "true"
 		      			}).length;
-		      			numCountNotAttendPastDate = _.filter(queryPastMonth,function(x){
+		      			numCountNotAttendPastMonth = _.filter(queryPastMonth,function(x){
 		      				return x.doesattend == "false"
 		      			}).length;
 		      			numCountUseApp = _.filter(queryPastMonth,function(x){
@@ -247,8 +274,8 @@ module.exports = {
 
 		      			var dataPointObjectForAttended = {
 		      				"date" : dateObject.getFullYear()+"-"+(dateObject.getMonth()+1),
-							"column-1": numCountAttendPastDate,
-							"column-2": numCountNotAttendPastDate
+							"column-1": numCountAttendPastMonth,
+							"column-2": numCountNotAttendPastMonth
 		      			};
 		      			chart07["dataProvider"].push(dataPointObjectForAttended);
 		      			var dataPointObjectForUseMobile = {
@@ -256,10 +283,11 @@ module.exports = {
 							"column-1": numCountUseApp,
 							"column-2": numCountNotUseApp
 		      			};
-		      			sumCount = sumCount + numCountUseApp + numCountNotUseApp;
 		      			chart08["dataProvider"].push(dataPointObjectForUseMobile);
+
 		      		}
-		      		return res.send([chart01,chart02,chart03,filterCurrentInQueueUsers]);
+
+		      		return res.send([numCurrentInQueueUsers,chart05,chart06,chart07,chart08]);
 		      	}   
 			});
 			connection.release();

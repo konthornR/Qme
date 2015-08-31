@@ -28,6 +28,7 @@ app.use(passport.session());
 http.listen(process.env.PORT || 3000)
 
 var passwordEncryption = require(__dirname+"/serverUtilities/passwordEncryption");
+var queryDashboard = require(__dirname+"/serverUtilities/dashboardManager");
 
 /*============================== Function Check Allow Access Start ===========================*/
 var allowAccessToQueueManager = function(req){
@@ -234,10 +235,15 @@ app.post('/admin/signup', function(req,res){
 });
 /*============================== SignUp Session End ===========================*/
 /*=================== Get data for presenting on Dashboard Start ===================*/
-app.post('/dashboard', function(req,res){
-	var requestCompanyId = req.body.companyId;
+app.post('/dashboardSectionOne', function(req,res){
 	if(allowAccessForDataShowOnDashboard(req)){
-		queryDashboard.queryByDateDashboard(req,res,pool);
+		queryDashboard.queryByDashboardSectionOne(req,res,pool);
+	}else
+		res.send(401, 'string');	
+});
+app.post('/dashboardSectionTwo', function(req,res){
+	if(allowAccessForDataShowOnDashboard(req)){
+		queryDashboard.queryByDashboardSectionTwo(req,res,pool);
 	}else
 		res.send(401, 'string');	
 });
