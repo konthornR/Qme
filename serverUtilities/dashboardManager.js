@@ -5,6 +5,7 @@ module.exports = {
 		var requestCompanyId = req.body.CompanyId;
 		var dateFrom = req.body.TimeStart;
 		var dateTo = req.body.TimeEnd;
+
 		pool.getConnection(function(err, connection){
 			if(err){
 				connection.release();
@@ -105,7 +106,7 @@ module.exports = {
 		      		var chart02 = {
 		      			"dataProvider":[{
 		      				"category": "",
-		      				"1 Chairs": 0,
+		      				"1 Chair": 0,
 			                "2 Chairs": 0,
 			                "3 Chairs": 0,
 			                "4 Chairs": 0,

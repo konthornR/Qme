@@ -50,24 +50,7 @@ makeChart01 = function (data, divId, timeStart, timeEnd) {
                 "size": "14"
             }
         ],
-        "dataProvider": [
-            {
-                "category": "7.00-9.59",
-                "column-1": data[0]
-            },
-            {
-                "category": "10.00-11.59",
-                "column-1": data[1]
-            },
-            {
-                "category": "12.00-13.59",
-                "column-1": data[2]
-            },
-            {
-                "category": "14.00-15.59",
-                "column-1": data[3]
-            }
-        ]
+        "dataProvider": data.dataProvider
     });
 }
 
@@ -95,30 +78,62 @@ makeChart02 = function (data, divId, timeStart, timeEnd) {
             {
                 "fillAlphas": 1,
                 "id": "AmGraph-1",
+                "title": "1 เก้าอี้",
+                "type": "column",
+                "valueField": "1 Chair"
+            },
+            {
+                "fillAlphas": 1,
+                "id": "AmGraph-2",
                 "title": "2 เก้าอี้",
                 "type": "column",
                 "valueField": "2 Chairs"
             },
             {
                 "fillAlphas": 1,
-                "id": "AmGraph-2",
+                "fillColors": "#FFAC00",
+                "id": "AmGraph-3",
+                "lineColor": "#FFAC00",
+                "title": "3 เก้าอี้",
+                "type": "column",
+                "valueField": "3 Chairs"
+            },
+            {
+                "fillAlphas": 1,
+                "fillColors": "#9400D3",
+                "id": "AmGraph-4",
+                "lineColor": "#9400D3",
                 "title": "4 เก้าอี้",
                 "type": "column",
                 "valueField": "4 Chairs"
             },
             {
                 "fillAlphas": 1,
-                "fillColors": "#FFAC00",
-                "id": "AmGraph-3",
-                "lineColor": "#FFAC00",
+                "id": "AmGraph-5",
+                "title": "5 เก้าอี้",
+                "type": "column",
+                "valueField": "5 Chairs"
+            },
+            {
+                "fillAlphas": 1,
+                "id": "AmGraph-6",
                 "title": "6 เก้าอี้",
                 "type": "column",
                 "valueField": "6 Chairs"
             },
             {
                 "fillAlphas": 1,
+                "fillColors": "#FFAC00",
+                "id": "AmGraph-7",
+                "lineColor": "#FFAC00",
+                "title": "7 เก้าอี้",
+                "type": "column",
+                "valueField": "7 Chairs"
+            },
+            {
+                "fillAlphas": 1,
                 "fillColors": "#9400D3",
-                "id": "AmGraph-4",
+                "id": "AmGraph-8",
                 "lineColor": "#9400D3",
                 "title": "8 เก้าอี้",
                 "type": "column",
@@ -127,10 +142,10 @@ makeChart02 = function (data, divId, timeStart, timeEnd) {
             {
                 "fillAlphas": 1,
                 "fillColors": "#45E029",
-                "id": "AmGraph-5",
-                "title": "มากกว่า 8",
+                "id": "AmGraph-9",
+                "title": "9 เก้าอี้",
                 "type": "column",
-                "valueField": ">8 Chairs"
+                "valueField": "9 Chairs"
             }
 	    ],
 	    "guides": [],
@@ -162,16 +177,7 @@ makeChart02 = function (data, divId, timeStart, timeEnd) {
                 "text": ""
             }
 	    ],
-	    "dataProvider": [
-            {
-                "category": "",
-                "2 Chairs": data[0],
-                "4 Chairs": data[1],
-                "6 Chairs": data[2],
-                "8 Chairs": data[3],
-                ">8 Chairs": data[4]
-            }
-	    ]
+	    "dataProvider": data.dataProvider
 	});
 }
 
@@ -210,37 +216,7 @@ makeChart03 = function (data, divId, timeStart, timeEnd) {
             }
         ],
         "titles": [],
-        "dataProvider": [
-            {
-                "category": "จันทร์",
-                "column-1": data[0]
-            },
-            {
-                "category": "อังคาร",
-                "column-1": data[1]
-            },
-            {
-                "category": "พุธ",
-                "column-1": data[2]
-
-            },
-            {
-                "category": "พฤหัสบดี",
-                "column-1": data[3]
-            },
-            {
-                "category": "ศุกร์",
-                "column-1": data[4]
-            },
-            {
-                "category": "เสาร์",
-                "column-1": data[5]
-            },
-            {
-                "category": "อาทิตย์",
-                "column-1": data[6]
-            }
-        ]
+        "dataProvider": data.dataProvider
     });
 }
 

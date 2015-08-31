@@ -12,15 +12,11 @@
     <link rel="stylesheet" href="../plugins/jquery-ui.css" />
 </head>
 <body>
-    <header id="top" class="header navbar-fixed-top">
+    <header id="top" class="header navbar-fixed-top" style="background-color: #56bc94">
         <div class="container">
-            <div style="position: relative">
-                <span style="position: absolute; top: 44px; left: 64px; font-size: 12px;">080-966-7578</span>
-            </div>
             <h1 class="logo pull-left">
                 <a class="scrollto" href="#promo">
-                    <img id="logo-image" class="logo-image" src="../images/logo.png" alt="Logo" />
-                    <span class="logo-title">Q-Me</span>
+                    <img id="logo-image" class="logo-image" src="../images/logo-white.jpg" alt="Logo" />
                 </a>
             </h1>
             <!--//logo-->
@@ -38,8 +34,8 @@
                 <div class="navbar-collapse collapse" id="navbar-collapse">
                     <ul class="nav navbar-nav">
                         <li class="nav-item sr-only active"><a href="#promo">Home</a></li>
-                        <li class="nav-item"><a href="#">Account</a></li>
-                        <li class="nav-item"><a href="#">Setting</a></li>
+                        <li class="nav-item"><a href="#" style="color: white;">Account</a></li>
+                        <li class="nav-item"><a href="#" style="color: white">Setting</a></li>
                     </ul>
                     <!--//nav-->
                 </div>
@@ -90,13 +86,40 @@
     <script>
 
         var currentdate = new Date();
-        var shortcurrentdate = currentdate.getDate() + "/"
-                    + (currentdate.getMonth() + 1) + "/"
-                    + currentdate.getFullYear();
+        var thisMonth;
+        var thisDate;
+
+        if ((currentdate.getMonth() + 1) < 10) {
+            thisMonth = '0' + (currentdate.getMonth() + 1);
+        } else {
+            thisMonth = (currentdate.getMonth() + 1);
+        }
+        if ((currentdate.getDate()) < 10) {
+            thisDate = '0' + currentdate.getDate();
+        } else {
+            thisDate = currentdate.getDate();
+        }
+
+        var shortcurrentdate = currentdate.getFullYear() + "-" + thisMonth + "-" + thisDate;
 
         setDatePickerToElement = function (id) {
             $(id).datepicker({ dateFormat: "d/m/yy" });
-            $(id).val(shortcurrentdate);
+            $(id).val(currentdate.getDate() + "/"
+                + (currentdate.getMonth() + 1) + "/"
+                + currentdate.getFullYear());
+        }
+
+        function convertDate(date) {
+            var pattern = /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/;
+            var arrayDate = date.match(pattern);
+            if (arrayDate[2] < 10) {
+                arrayDate[2] = '0' + arrayDate[2];
+            }
+            if (arrayDate[1] < 10) {
+                arrayDate[1] = '0' + arrayDate[1];
+            }
+
+            return arrayDate[3] + '-' + arrayDate[2] + '-' + arrayDate[1];
         }
 
         $(function () {
@@ -114,32 +137,44 @@
 
         callout = function (isRepeated) {
             var timeStart = $("#time-start").val() ?
-                $("#time-start").val() : shortcurrentdate;
+                convertDate($("#time-start").val()) : shortcurrentdate;
             var timeEnd = $("#time-end").val() ?
-                $("#time-end").val() : shortcurrentdate;
+                convertDate($("#time-end").val()) : shortcurrentdate;
             var filterBy = $("#filter-by").val() ?
                 $("#filter-by").val() : 'day';
             var amount = filterBy == 'day' ? 30 : 12;
 
+            alert(timeStart);
+            alert(timeEnd);
+
+            var companyId = 52;
+
             $.ajax({
-                url: '@Url.Action("DataForDashboard", "Merchant")',
+                url: 'http://localhost:3000/dashboardSectionOne',
                 data: {
                     TimeStart: timeStart,
                     TimeEnd: timeEnd,
-                    FilterBy: filterBy
+                    CompanyId: companyId
                 },
                 type: 'POST',
                 async: false,
-            }).done(function (data) {
-                makeChart01(data[0], "chartdiv01", timeStart, timeEnd);
-                makeChart02(data[1], "chartdiv02", timeStart, timeEnd);
-                makeChart03(data[2], "chartdiv03", timeStart, timeEnd);
-                $("#currentonline").text('มีลูกค้า ' + data[3][0] + ' คนกำลังใช้แอพต่อคิวในขณะนี้');
-                makeChart05(data[4], "chartdiv05", filterBy, amount);
-                makeChart06(data[5], "chartdiv06", filterBy, amount);
-            }).always(function () {
-                if (isRepeated) {
-                    //setTimeout(callout(true), 5000);
+                success: function (data) {
+                    //$.each(data[1].dataProvider, function (index, element) {
+                    //    alert(element['category']);
+                    //    alert(element['column-1']);
+                    //});
+
+                    makeChart01(data[0], "chartdiv01", timeStart, timeEnd);
+                    makeChart02(data[1], "chartdiv02", timeStart, timeEnd);
+                    makeChart03(data[2], "chartdiv03", timeStart, timeEnd);
+                    //$("#currentonline").text('มีลูกค้า ' + data[3][0] + ' คนกำลังใช้แอพต่อคิวในขณะนี้');
+                    //makeChart05(data[4], "chartdiv05", filterBy, amount);
+                    //makeChart06(data[5], "chartdiv06", filterBy, amount);
+                },
+                complete: function () {
+                    if (isRepeated) {
+                        //setTimeout(callout(true), 5000);
+                    }
                 }
             });
         }

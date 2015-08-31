@@ -17,7 +17,7 @@
             </div>
         </div>
         <div class="row" style="margin-top: 40px;">
-            <div class="col-sm-6 col-sm-offset-3">
+            <div class="col-md-4 col-md-offset-4 col-sm-6 col-sm-offset-3">
                 <div class="frame-page">
                     <div class="frame-header">
                         <h2>ล็อกอินเข้าสู่ระบบ</h2>
@@ -68,15 +68,16 @@
             $.ajax({
                 method: "post",
                 data: { username: username, password: password },
+                success: function () {
+                    window.location.href = "account/index";
+                },
                 statusCode: {
                     401: function () {
                         $('#login-error').css('display', 'block');
                         $('#login-error').addClass('animated tada delayp3');
                     }
                 }
-            }).done(function (msg) {
-                window.location.href = "account/index";
-            });
+            })
 
         });
 

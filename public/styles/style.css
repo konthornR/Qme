@@ -58,6 +58,21 @@
     }
 }
 
+/* override jqueryUI */
+
+.ui-state-hover,
+.ui-widget-content .ui-state-hover,
+.ui-widget-header .ui-state-hover,
+.ui-state-focus,
+.ui-widget-content .ui-state-focus,
+.ui-widget-header .ui-state-focus {
+	border: 1px solid #999999;
+	background: #dadada 50% 50% repeat-x;
+	font-weight: normal;
+	color: #212121;
+}
+
+
 /* ======= Base ======= */
 body {
     font-family: 'Lato', arial, sans-serif;
