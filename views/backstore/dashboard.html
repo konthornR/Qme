@@ -65,7 +65,7 @@
         <hr />
         <div style="text-align: center; margin-top: 40px;">
             <label>ดูกราฟ </label>
-            <select id="filter-by">
+            <select id="filter-by" style="-webkit-appearance: menulist;">
                 <option value="day">รายวัน</option>
                 <option value="month">รายเดือน</option>
             </select>
@@ -128,25 +128,25 @@
         });
 
         $("#time-button").click(function () {
-            callout(false);
+            calloutChartSet1(false);
         });
 
         $("#filter-by").change(function () {
-            callout(false);
+            if ($(this).val() == 'day') {
+                makeChart05(JSON.parse(localStorage.getItem('chart05day')), "chartdiv05", 'day', '30');
+                makeChart06(JSON.parse(localStorage.getItem('chart06day')), "chartdiv06", 'day', '30');
+            } else {
+                makeChart05(JSON.parse(localStorage.getItem('chart05month')), "chartdiv05", 'month', '30');
+                makeChart06(JSON.parse(localStorage.getItem('chart06month')), "chartdiv06", 'month', '30');
+            }
+            
         });
 
-        callout = function (isRepeated) {
+        calloutChartSet1 = function (isRepeated) {
             var timeStart = $("#time-start").val() ?
                 convertDate($("#time-start").val()) : shortcurrentdate;
             var timeEnd = $("#time-end").val() ?
                 convertDate($("#time-end").val()) : shortcurrentdate;
-            var filterBy = $("#filter-by").val() ?
-                $("#filter-by").val() : 'day';
-            var amount = filterBy == 'day' ? 30 : 12;
-
-            alert(timeStart);
-            alert(timeEnd);
-
             var companyId = 52;
 
             $.ajax({
@@ -167,9 +167,6 @@
                     makeChart01(data[0], "chartdiv01", timeStart, timeEnd);
                     makeChart02(data[1], "chartdiv02", timeStart, timeEnd);
                     makeChart03(data[2], "chartdiv03", timeStart, timeEnd);
-                    //$("#currentonline").text('มีลูกค้า ' + data[3][0] + ' คนกำลังใช้แอพต่อคิวในขณะนี้');
-                    //makeChart05(data[4], "chartdiv05", filterBy, amount);
-                    //makeChart06(data[5], "chartdiv06", filterBy, amount);
                 },
                 complete: function () {
                     if (isRepeated) {
@@ -179,7 +176,40 @@
             });
         }
 
-        callout(false);
+        calloutChartSet2 = function (isRepeated) {
+            var companyId = 52;
+
+            $.ajax({
+                url: 'http://localhost:3000/dashboardSectionTwo',
+                data: {
+                    CompanyId: companyId
+                },
+                type: 'POST',
+                async: false,
+                success: function (data) {
+                    $("#currentonline").text('มีลูกค้า ' + data[0] + ' คนกำลังใช้แอพต่อคิวในขณะนี้');
+                    makeChart05(data[1], "chartdiv05", 'day', '30');
+                    makeChart06(data[2], "chartdiv06", 'day', '30');
+
+                    localStorage.setItem("chart05day", JSON.stringify(data[1]));
+                    localStorage.setItem("chart06day", JSON.stringify(data[2]));
+                    localStorage.setItem("chart05month", JSON.stringify(data[3]));
+                    localStorage.setItem("chart06month", JSON.stringify(data[4]));
+                },
+                complete: function () {
+                    if (isRepeated) {
+                        //setTimeout(callout(true), 5000);
+                    }
+                }
+            });
+        }
+
+        
+
+        $(document).ready(function () {
+            calloutChartSet1(false);
+            calloutChartSet2(false);
+        });
 
     </script>
 </body>

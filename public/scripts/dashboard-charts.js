@@ -196,7 +196,7 @@ makeChart03 = function (data, divId, timeStart, timeEnd) {
         "theme": "black",
         "balloon": {},
         "colors": [
-            "yellow", "pink", "darkgreen", "darkorange", "blue", "violet", "red"
+            "red", "yellow", "pink", "darkgreen", "darkorange", "blue", "violet"
         ],
         "legend": {
             "align": "center",
@@ -223,21 +223,21 @@ makeChart03 = function (data, divId, timeStart, timeEnd) {
 
 makeChart05Day = function (data, divId, amount) {
 
-    var chartData = [];
-    var day = 0;
-    var startDate = new Date();
-    startDate.setDate(startDate.getDate() - (amount - 1));
+    //var chartData = [];
+    //var day = 0;
+    //var startDate = new Date();
+    //startDate.setDate(startDate.getDate() - (amount - 1));
 
-    for (day = 0; day < amount; day++) {
-        var newDate = new Date(startDate);
-        newDate.setDate(newDate.getDate() + day);
+    //for (day = 0; day < amount; day++) {
+    //    var newDate = new Date(startDate);
+    //    newDate.setDate(newDate.getDate() + day);
 
-        chartData.push({
-            "date": newDate,
-            "column-1": data[day],
-            "column-2": data[day + amount]
-        });
-    }
+    //    chartData.push({
+    //        "date": newDate,
+    //        "column-1": data[day],
+    //        "column-2": data[day + amount]
+    //    });
+    //}
 
     chart05 = AmCharts.makeChart(divId,
 	{
@@ -289,7 +289,7 @@ makeChart05Day = function (data, divId, amount) {
 		        "size": "24"
 		    }
 	    ],
-	    "dataProvider": chartData
+	    "dataProvider": data.dataProvider
 	});
 }
 
@@ -364,7 +364,7 @@ makeChart05Month = function (data, divId, amount) {
 		        "size": "24"
 		    }
 	    ],
-	    "dataProvider": chartData
+	    "dataProvider": data.dataProvider
 	});
 }
 
@@ -382,20 +382,20 @@ makeChart05 = function (data, divId, filterBy, amount) {
 
 makeChart06Day = function (data, divId, amount) {
 
-    var chartData = [];
-    var day = 0;
-    var startDate = new Date();
-    startDate.setDate(startDate.getDate() - (amount - 1));
+    //var chartData = [];
+    //var day = 0;
+    //var startDate = new Date();
+    //startDate.setDate(startDate.getDate() - (amount - 1));
 
-    for (day = 0; day < amount; day++) {
-        var newDate = new Date(startDate);
-        newDate.setDate(newDate.getDate() + day);
+    //for (day = 0; day < amount; day++) {
+    //    var newDate = new Date(startDate);
+    //    newDate.setDate(newDate.getDate() + day);
 
-        chartData.push({
-            "date": newDate,
-            "column-1": data[day]
-        });
-    }
+    //    chartData.push({
+    //        "date": newDate,
+    //        "column-1": data[day]
+    //    });
+    //}
 
     chart06 = AmCharts.makeChart(divId,
 	{
@@ -416,8 +416,16 @@ makeChart06Day = function (data, divId, amount) {
                 "fillColors": "#F8E11F",
                 "id": "AmGraph-1",
                 "lineAlpha": 0,
-                "title": "จำนวนผู้ใช้",
+                "title": "จำนวนคนใช้แอพ",
                 "valueField": "column-1"
+            },
+            {
+                "fillAlphas": 0.7,
+                "fillColors": "#F8E11F",
+                "id": "AmGraph-2",
+                "lineAlpha": 0,
+                "title": "จำนวนคนไม่ใช้แอพ",
+                "valueField": "column-2"
             }
 	    ],
 	    "guides": [],
@@ -437,7 +445,7 @@ makeChart06Day = function (data, divId, amount) {
 	    "balloon": {},
 	    "legend": {},
 	    "titles": [],
-	    "dataProvider": chartData
+	    "dataProvider": data.dataProvider
 	});
 }
 
@@ -483,6 +491,14 @@ makeChart06Month = function (data, divId, amount) {
                 "lineAlpha": 0,
                 "title": "จำนวนผู้ใช้",
                 "valueField": "column-1"
+            },
+            {
+                "fillAlphas": 0.7,
+                "fillColors": "#F8E11F",
+                "id": "AmGraph-2",
+                "lineAlpha": 0,
+                "title": "จำนวนคนไม่ใช้แอพ",
+                "valueField": "column-2"
             }
 
         ],
@@ -503,7 +519,7 @@ makeChart06Month = function (data, divId, amount) {
         "balloon": {},
         "legend": {},
         "titles": [],
-        "dataProvider": chartData
+        "dataProvider": data.dataProvider
     });
 }
 
