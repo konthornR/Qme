@@ -50,24 +50,7 @@ makeChart01 = function (data, divId, timeStart, timeEnd) {
                 "size": "14"
             }
         ],
-        "dataProvider": [
-            {
-                "category": "7.00-9.59",
-                "column-1": data[0]
-            },
-            {
-                "category": "10.00-11.59",
-                "column-1": data[1]
-            },
-            {
-                "category": "12.00-13.59",
-                "column-1": data[2]
-            },
-            {
-                "category": "14.00-15.59",
-                "column-1": data[3]
-            }
-        ]
+        "dataProvider": data.dataProvider
     });
 }
 
@@ -95,30 +78,62 @@ makeChart02 = function (data, divId, timeStart, timeEnd) {
             {
                 "fillAlphas": 1,
                 "id": "AmGraph-1",
+                "title": "1 เก้าอี้",
+                "type": "column",
+                "valueField": "1 Chair"
+            },
+            {
+                "fillAlphas": 1,
+                "id": "AmGraph-2",
                 "title": "2 เก้าอี้",
                 "type": "column",
                 "valueField": "2 Chairs"
             },
             {
                 "fillAlphas": 1,
-                "id": "AmGraph-2",
+                "fillColors": "#FFAC00",
+                "id": "AmGraph-3",
+                "lineColor": "#FFAC00",
+                "title": "3 เก้าอี้",
+                "type": "column",
+                "valueField": "3 Chairs"
+            },
+            {
+                "fillAlphas": 1,
+                "fillColors": "#9400D3",
+                "id": "AmGraph-4",
+                "lineColor": "#9400D3",
                 "title": "4 เก้าอี้",
                 "type": "column",
                 "valueField": "4 Chairs"
             },
             {
                 "fillAlphas": 1,
-                "fillColors": "#FFAC00",
-                "id": "AmGraph-3",
-                "lineColor": "#FFAC00",
+                "id": "AmGraph-5",
+                "title": "5 เก้าอี้",
+                "type": "column",
+                "valueField": "5 Chairs"
+            },
+            {
+                "fillAlphas": 1,
+                "id": "AmGraph-6",
                 "title": "6 เก้าอี้",
                 "type": "column",
                 "valueField": "6 Chairs"
             },
             {
                 "fillAlphas": 1,
+                "fillColors": "#FFAC00",
+                "id": "AmGraph-7",
+                "lineColor": "#FFAC00",
+                "title": "7 เก้าอี้",
+                "type": "column",
+                "valueField": "7 Chairs"
+            },
+            {
+                "fillAlphas": 1,
                 "fillColors": "#9400D3",
-                "id": "AmGraph-4",
+                "id": "AmGraph-8",
                 "lineColor": "#9400D3",
                 "title": "8 เก้าอี้",
                 "type": "column",
@@ -127,10 +142,10 @@ makeChart02 = function (data, divId, timeStart, timeEnd) {
             {
                 "fillAlphas": 1,
                 "fillColors": "#45E029",
-                "id": "AmGraph-5",
-                "title": "มากกว่า 8",
+                "id": "AmGraph-9",
+                "title": "9 เก้าอี้",
                 "type": "column",
-                "valueField": ">8 Chairs"
+                "valueField": "9 Chairs"
             }
 	    ],
 	    "guides": [],
@@ -162,16 +177,7 @@ makeChart02 = function (data, divId, timeStart, timeEnd) {
                 "text": ""
             }
 	    ],
-	    "dataProvider": [
-            {
-                "category": "",
-                "2 Chairs": data[0],
-                "4 Chairs": data[1],
-                "6 Chairs": data[2],
-                "8 Chairs": data[3],
-                ">8 Chairs": data[4]
-            }
-	    ]
+	    "dataProvider": data.dataProvider
 	});
 }
 
@@ -190,7 +196,7 @@ makeChart03 = function (data, divId, timeStart, timeEnd) {
         "theme": "black",
         "balloon": {},
         "colors": [
-            "yellow", "pink", "darkgreen", "darkorange", "blue", "violet", "red"
+            "red", "yellow", "pink", "darkgreen", "darkorange", "blue", "violet"
         ],
         "legend": {
             "align": "center",
@@ -210,58 +216,28 @@ makeChart03 = function (data, divId, timeStart, timeEnd) {
             }
         ],
         "titles": [],
-        "dataProvider": [
-            {
-                "category": "จันทร์",
-                "column-1": data[0]
-            },
-            {
-                "category": "อังคาร",
-                "column-1": data[1]
-            },
-            {
-                "category": "พุธ",
-                "column-1": data[2]
-
-            },
-            {
-                "category": "พฤหัสบดี",
-                "column-1": data[3]
-            },
-            {
-                "category": "ศุกร์",
-                "column-1": data[4]
-            },
-            {
-                "category": "เสาร์",
-                "column-1": data[5]
-            },
-            {
-                "category": "อาทิตย์",
-                "column-1": data[6]
-            }
-        ]
+        "dataProvider": data.dataProvider
     });
 }
 
 
 makeChart05Day = function (data, divId, amount) {
 
-    var chartData = [];
-    var day = 0;
-    var startDate = new Date();
-    startDate.setDate(startDate.getDate() - (amount - 1));
+    //var chartData = [];
+    //var day = 0;
+    //var startDate = new Date();
+    //startDate.setDate(startDate.getDate() - (amount - 1));
 
-    for (day = 0; day < amount; day++) {
-        var newDate = new Date(startDate);
-        newDate.setDate(newDate.getDate() + day);
+    //for (day = 0; day < amount; day++) {
+    //    var newDate = new Date(startDate);
+    //    newDate.setDate(newDate.getDate() + day);
 
-        chartData.push({
-            "date": newDate,
-            "column-1": data[day],
-            "column-2": data[day + amount]
-        });
-    }
+    //    chartData.push({
+    //        "date": newDate,
+    //        "column-1": data[day],
+    //        "column-2": data[day + amount]
+    //    });
+    //}
 
     chart05 = AmCharts.makeChart(divId,
 	{
@@ -313,7 +289,7 @@ makeChart05Day = function (data, divId, amount) {
 		        "size": "24"
 		    }
 	    ],
-	    "dataProvider": chartData
+	    "dataProvider": data.dataProvider
 	});
 }
 
@@ -388,7 +364,7 @@ makeChart05Month = function (data, divId, amount) {
 		        "size": "24"
 		    }
 	    ],
-	    "dataProvider": chartData
+	    "dataProvider": data.dataProvider
 	});
 }
 
@@ -406,20 +382,20 @@ makeChart05 = function (data, divId, filterBy, amount) {
 
 makeChart06Day = function (data, divId, amount) {
 
-    var chartData = [];
-    var day = 0;
-    var startDate = new Date();
-    startDate.setDate(startDate.getDate() - (amount - 1));
+    //var chartData = [];
+    //var day = 0;
+    //var startDate = new Date();
+    //startDate.setDate(startDate.getDate() - (amount - 1));
 
-    for (day = 0; day < amount; day++) {
-        var newDate = new Date(startDate);
-        newDate.setDate(newDate.getDate() + day);
+    //for (day = 0; day < amount; day++) {
+    //    var newDate = new Date(startDate);
+    //    newDate.setDate(newDate.getDate() + day);
 
-        chartData.push({
-            "date": newDate,
-            "column-1": data[day]
-        });
-    }
+    //    chartData.push({
+    //        "date": newDate,
+    //        "column-1": data[day]
+    //    });
+    //}
 
     chart06 = AmCharts.makeChart(divId,
 	{
@@ -440,8 +416,16 @@ makeChart06Day = function (data, divId, amount) {
                 "fillColors": "#F8E11F",
                 "id": "AmGraph-1",
                 "lineAlpha": 0,
-                "title": "จำนวนผู้ใช้",
+                "title": "จำนวนคนใช้แอพ",
                 "valueField": "column-1"
+            },
+            {
+                "fillAlphas": 0.7,
+                "fillColors": "#F8E11F",
+                "id": "AmGraph-2",
+                "lineAlpha": 0,
+                "title": "จำนวนคนไม่ใช้แอพ",
+                "valueField": "column-2"
             }
 	    ],
 	    "guides": [],
@@ -461,7 +445,7 @@ makeChart06Day = function (data, divId, amount) {
 	    "balloon": {},
 	    "legend": {},
 	    "titles": [],
-	    "dataProvider": chartData
+	    "dataProvider": data.dataProvider
 	});
 }
 
@@ -507,6 +491,14 @@ makeChart06Month = function (data, divId, amount) {
                 "lineAlpha": 0,
                 "title": "จำนวนผู้ใช้",
                 "valueField": "column-1"
+            },
+            {
+                "fillAlphas": 0.7,
+                "fillColors": "#F8E11F",
+                "id": "AmGraph-2",
+                "lineAlpha": 0,
+                "title": "จำนวนคนไม่ใช้แอพ",
+                "valueField": "column-2"
             }
 
         ],
@@ -527,7 +519,7 @@ makeChart06Month = function (data, divId, amount) {
         "balloon": {},
         "legend": {},
         "titles": [],
-        "dataProvider": chartData
+        "dataProvider": data.dataProvider
     });
 }
 
