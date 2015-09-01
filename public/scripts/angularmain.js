@@ -168,3 +168,49 @@ app.controller('homePageControl', function($scope,$http){
     });
     
 });
+
+app.controller('userAndCompanyManagerControl', function($scope,$http){
+    $http.post("/admin/listUser").success(function (data) {
+        $scope.users = data;
+    });
+    $http.post("/admin/listCompany").success(function (data) {
+        $scope.companies = data;
+    });
+    $http.post("/admin/listLink").success(function (data) {
+        $scope.linksBetween = data;
+    });
+
+    /*$scope.seachUsernameById = function(userId){
+        if($scope.users && $scope.users.length>0){
+            for(var i = 0; i<$scope.users.length; i++){
+                if($scope.users[i].id == userId){
+                    return $scope.users[i].username;
+                }
+            }
+        }
+    };
+    $scope.searchCompanyNameById = function(companyId){
+        if($scope.companies && $scope.companies.length>0){
+            for(var i = 0; i<$scope.companies.length; i++){
+                if($scope.companies[i].id == companyId){
+                    return $scope.companies[i].name;
+                }
+            }
+        }
+    };*/
+
+    $scope.linkUserCompany = function(){
+        if($scope.newLink && $scope.newLink.userId && $scope.newLink.companyId){
+            $http({
+                method: 'POST',
+                url: '/admin/linkUserCompany',
+                data: { AlbumName: "Dirty Deeds", Entered: "5/1/2012" },
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+                }).success(function (data){
+                    if(data){
+
+                    }
+            });
+        }
+    }
+});

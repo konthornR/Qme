@@ -117,7 +117,7 @@ module.exports = {
 		      			}]
 		      		};
 		      		_.each(_.keys(groupByNumSeat), function(key){
-						if(parseInt(key) <= 1){
+						if(parseInt(key) <= 8){
 							chart02["dataProvider"][0][key+" Chairs"] = groupByNumSeat[key].length;
 						}else
 							chart02["dataProvider"][0]["9 Chairs"] = chart02["dataProvider"][0]["9 Chairs"] + groupByNumSeat[key].length;

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html ng-app="reservationApp">
+<head>
+    <base href="/">
+    <title>User And Company Manager</title>
+    <script src="angular/angular.js"></script>
+    <!--<script src="angular-ui-router/release/angular-ui-router.min.js"></script>-->
+    <script type="text/javascript" src="angular-route/angular-route.min.js"></script>
+    <script type="text/javascript" src="qrcode/lib/qrcode.min.js"></script>     
+    <script type="text/javascript" src="angular-qr/angular-qr.min.js"></script> <!--https://github.com/janantala/angular-qr-->
+    <script src="scripts/angularmain.js"></script>
+</head>
+<body>
+    
+    <h1>User And Company Manager</h1>
+
+    <div ng-controller="userAndCompanyManagerControl"> 
+        
+        
+        <div class= "queue-list">
+            <table>
+                <col width="300">
+                <tbody>
+                    <tr>
+                        <th>Id</th> 
+                        <th>Username</th>  
+                        <th>IsOwner</th>                               
+                    </tr>
+                    <tr ng-repeat="user in users"> 
+                        <td>{{user.id}}</td> 
+                        <td>{{user.username}}</td> 
+                        <td>{{user.isowner}}</td>   
+                    </tr>
+                </tbody>
+            </table>
+            <table>
+                <col width="300">
+                <tbody>
+                    <tr>
+                        <th>Id</th> 
+                        <th>Company Name</th>                  
+                    </tr>
+                    <tr ng-repeat="company in companies"> 
+                        <td>{{company.id}}</td> 
+                        <td>{{company.name}}</td> 
+                    </tr>
+                </tbody>
+            </table>
+            <table>
+                <col width="300">
+                <tbody>
+                    <tr>
+                        <th>User Id</th> 
+                        <!-- <th>Username</th>  -->
+                        <th>Company Id</th>
+                        <!-- <th>CompanyName</th> -->                  
+                    </tr>
+                    <tr ng-repeat="link in linksBetween"> 
+                        <td>{{link.userid}}</td> 
+                        <!-- <td>{{seachUsernameById(link.userid)}}</td> -->
+                        <td>{{link.companyid}}</td>
+                        <!-- <td>{{searchCompanyNameById(link.companyid}})</td> --> 
+                    </tr>
+                </tbody>
+            </table>
+
+            <fieldset>
+                <legend>Link User Id and Company Id</legend>
+                <form novalidate class="pure-form pure-form-stacked">
+                    <label for="name">User Id</label>
+                    <input placeholder="Name" type="text" ng-model="newLink.userId"><br>            
+                    <br><br>
+                    <label for="name">Company Id</label>
+                    <input placeholder="Name" type="text" ng-model="newLink.companyId"><br>            
+                    <br><br>
+                    <button class="pure-button pure-button-primary" ng-click="linkUserCompany()">Link</button>
+                </form>
+            </fieldset>
+        </div>
+    </div>   
+</body>
+</html>

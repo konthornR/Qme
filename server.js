@@ -55,7 +55,7 @@ var allowAccess = function(req){
 var allowAccessForDataShowOnDashboard = function(req){
 	var requestCompanyId = req.body.CompanyId;
     var result = false;
-	if(req.isAuthenticated() && req.user && req.user.companyIdList){
+	if(req.isAuthenticated() && req.user && req.user.companyIdList && req.user.isOwner == 'true'){
 		_.each(req.user.companyIdList, function(companyId){
 			if(companyId.toString() === requestCompanyId.toString()){
 				result = true;
@@ -119,6 +119,9 @@ app.get('/admin/CreateOrJoinCompany', function (req, res) {
 app.get('/admin/SignUp', function (req, res) {
   	res.sendfile(path.join(__dirname, '/views/admin/signup.html'));
 });
+app.get('/admin/UserAndCompanyManager', function (req, res) {
+  	res.sendfile(path.join(__dirname, '/views/admin/userAndCompanyManager.html'));
+});
 
 
 
@@ -167,10 +170,11 @@ passport.deserializeUser(function(id,done){
 	//Query database or cache here!
 	pool.getConnection(function(err, connection){		
 		var companyIdList = [];
+		var isOwner = 'false';
 		if(err){
 			connection.release();
 			console.log("!!!!!!!!!!!!!!!!!!!!!! Can not connect with database !!!!!!!!!!!!!!!!!!!!!");
-			done(null,{ id: id, companyIdList: companyIdList})
+			done(null,{ id: id, companyIdList: companyIdList, isOwner: isOwner})
 			return;
 		}
 		var query2 = connection.query('SELECT * FROM userownshop WHERE userid = ?', id, function(err2, result2){
@@ -182,9 +186,19 @@ passport.deserializeUser(function(id,done){
 						companyIdList.push(row.companyid);
 					});	
 				}
-      		}	
-			done(null,{ id: id, companyIdList: companyIdList})
-		});   
+      		}
+      		var query = connection.query('SELECT * FROM user WHERE id = ?', id, function(err, result){
+				if(err){
+					throw err;
+				}else{
+
+					if(result.length == 1){
+						isOwner = result[0].isowner;
+					}
+				}
+				done(null,{ id: id, companyIdList: companyIdList, isOwner: isOwner})
+			}); 		
+		}); 		
 		connection.release();
 	});
 });
@@ -200,7 +214,7 @@ app.post('/login', passport.authenticate('local'), function(req,res){
 
 /*============================== Log In Session End ===========================*/
 
-/*============================== SignUp Session Start ===========================*/
+/*============================== Admin Session Start ===========================*/
 app.post('/admin/signup', function(req,res){
 	var newUsername = req.body.username;
 	pool.getConnection(function(err, connection){
@@ -219,7 +233,8 @@ app.post('/admin/signup', function(req,res){
 	      		}else{
 	      			var post  = {
 						username: newUsername, 
-						password: passwordEncryption.encrypt(req.body.password)
+						password: passwordEncryption.encrypt(req.body.password),
+						isowner: 'true'
 					};
 	      			var insertQuery = connection.query('INSERT INTO user SET ?', post, function(err2, result2) {
 					  	if (err2) { 
@@ -233,7 +248,91 @@ app.post('/admin/signup', function(req,res){
 	});
 	
 });
-/*============================== SignUp Session End ===========================*/
+app.post('/admin/listUser',function(req,res){
+	pool.getConnection(function(err, connection){
+		if(err){
+			connection.release();
+			console.log("!!!!!!!!!!!!!!!!!!!!!! Can not connect with database !!!!!!!!!!!!!!!!!!!!!");
+			res.json({"code" : 100, "status" : "Error in connection database"});
+			return;
+		}
+		var query = connection.query('SELECT * FROM user', function(err, result){
+			if (err) { 
+		        throw err;
+	      	}else{
+	      		res.send(result);				      		
+	      	}   
+		});
+		connection.release();
+	});
+});
+app.post('/admin/listCompany',function(req,res){
+	pool.getConnection(function(err, connection){
+		if(err){
+			connection.release();
+			console.log("!!!!!!!!!!!!!!!!!!!!!! Can not connect with database !!!!!!!!!!!!!!!!!!!!!");
+			res.json({"code" : 100, "status" : "Error in connection database"});
+			return;
+		}
+		var query = connection.query('SELECT * FROM company', function(err, result){
+			if (err) { 
+		        throw err;
+	      	}else{
+	      		res.send(result);	      		
+	      	}   
+		});
+		connection.release();
+	});
+});
+app.post('/admin/listLink',function(req,res){
+	pool.getConnection(function(err, connection){
+		if(err){
+			connection.release();
+			console.log("!!!!!!!!!!!!!!!!!!!!!! Can not connect with database !!!!!!!!!!!!!!!!!!!!!");
+			res.json({"code" : 100, "status" : "Error in connection database"});
+			return;
+		}
+		var query = connection.query('SELECT * FROM userownshop', function(err, result){
+			if (err) { 
+		        throw err;
+	      	}else{
+	      		res.send(result);		      		
+	      	}   
+		});
+		connection.release();
+	});
+});
+app.post('/admin/linkUserCompany',function(req,res){
+	var userId = req.body.userId;
+	var companyId = req.body.companyId;
+	console.log('access in link user company')
+	console.log(req.body)
+	if(userId && parseInt(userId) && companyId && parseInt(companyId)){
+		pool.getConnection(function(err, connection){
+			if(err){
+				connection.release();
+				console.log("!!!!!!!!!!!!!!!!!!!!!! Can not connect with database !!!!!!!!!!!!!!!!!!!!!");
+				res.json({"code" : 100, "status" : "Error in connection database"});
+				return;
+			}
+			var post  = {
+							userid: userId, 
+							companyid: companyId
+						};
+			var insertQuery = connection.query('INSERT INTO userownshop SET ?', post, function(err2, result2) {
+			  	if (err2) { 
+			        throw err2;
+		      	}else{
+		      		console.log(result2)
+		      	}
+			});	
+			connection.release();
+		});
+	}else{
+		res.json({"code" : 100, "status" : "Fail for this request"});
+	}
+});
+/*============================== Admin Session End ===========================*/
 /*=================== Get data for presenting on Dashboard Start ===================*/
 app.post('/dashboardSectionOne', function(req,res){
 	if(allowAccessForDataShowOnDashboard(req)){
