@@ -214,3 +214,20 @@ app.controller('userAndCompanyManagerControl', function($scope,$http){
         }
     }
 });
+
+
+app.controller('merchantIndexControl', function ($scope, $http) {
+
+    $http.post('http://localhost:3000/api/getCompaniesByUserId', '').
+      then(function (response) {
+          $scope.companies = response["data"];
+          $scope.selectedCompany = response["data"][0];
+      }, function (response) {
+          $scope.companies = null;
+      });
+
+    $scope.changeSelectedCompany = function (selected) {
+        $scope.selectedCompany = selected;
+    };
+
+});

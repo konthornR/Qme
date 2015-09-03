@@ -353,3 +353,16 @@ require(__dirname+"/serverUtilities/queueManager")(io,pool);
 
 app.use(express.static(__dirname+'/public'));
 app.use(express.static(__dirname+'/bower_components'));
+
+
+
+/*=================== API ===================*/
+
+app.post('/api/getCompaniesByUserId', function (req, res) {
+    if (allowAccess(req)) {
+        return queryQueue.getCompaniesByUserId(req, res);
+    } else {
+        res.send(401, 'Not authorized');
+    }
+});
+

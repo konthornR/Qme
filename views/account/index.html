@@ -12,7 +12,7 @@
     <!--Can't find the animate.min.css -->
     <title>ล็อกอิน</title>
 </head>
-<body>
+<body ng-controller="merchantIndexControl">
     <div class="container">
         <div class="row">
             <div class="col-md-6 col-md-offset-3" style="text-align: center; margin-top: 20px;">
@@ -31,14 +31,13 @@
                     <div class="dropdown">
                         <button class="btn btn-default dropdown-toggle dropdown-btn-expand" type="button" id="dropdownMenu1"
                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                            <span class="dropdown-btn-ellipsis">DuiDuidduidudiduidudid duidui dudiu sdfsdfsdfsdfsdfsdf</span>
+                            <span class="dropdown-btn-ellipsis">{{ selectedCompany }}</span>
                             <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu dropdown-ul-expand" aria-labelledby="dropdownMenu1">
-                            <li><a href="#" class="dropdown-li-ellipsis notransition">Action duiii duii aass bbb cddcdd sdf frosdfsdfsdf</a></li>
-                            <li><a href="#" class="dropdown-li-ellipsis notransition">Another action</a></li>
-                            <li><a href="#" class="dropdown-li-ellipsis notransition">Something else here</a></li>
-                            <li><a href="#" class="dropdown-li-ellipsis notransition">Separated link</a></li>
+                            <li><a href="#" class="dropdown-li-ellipsis notransition" ng-repeat="company in companies" 
+                                ng-click="changeSelectedCompany(company)">
+                                {{company}}</a></li>
                         </ul>
                     </div>
                     <a class="btn btn-lg btn-theme" style="display: inherit; margin-top: 30px; margin-bottom: 15px;" href>Reserve Queue</a>
@@ -51,5 +50,10 @@
 
     <script type="text/javascript" src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
     <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="../angular/angular.js"></script>
+    <script type="text/javascript" src="../angular-route/angular-route.min.js"></script>
+    <script type="text/javascript" src="../qrcode/lib/qrcode.min.js"></script>     
+    <script type="text/javascript" src="../angular-qr/angular-qr.min.js"></script>
+    <script src="../scripts/angularmain.js"></script>   
 </body>
 </html>
