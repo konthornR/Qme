@@ -757,6 +757,7 @@ module.exports = function(io,pool) {
 module.exports.getCompaniesByUserId = function (req, res, pool) {
 
     var companies = [];
+
     pool.getConnection(function (err, connection) {
         if (err) {
             connection.release();
@@ -768,7 +769,10 @@ module.exports.getCompaniesByUserId = function (req, res, pool) {
                 throw err;
             } else {
                 _.each(result, function (row) {
-                    companies.push(row.name);
+                    companies.push({
+                        id: row.id,
+                        name: row.name
+                    });
                 });
             }
             return res.send(companies);

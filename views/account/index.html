@@ -10,7 +10,7 @@
     <!--Can't find the backstore.css -->
     <link rel="stylesheet" href="../plugins/animate.min.css" />
     <!--Can't find the animate.min.css -->
-    <title>ล็อกอิน</title>
+    <title>Qme</title>
 </head>
 <body ng-controller="merchantIndexControl">
     <div class="container">
@@ -31,18 +31,21 @@
                     <div class="dropdown">
                         <button class="btn btn-default dropdown-toggle dropdown-btn-expand" type="button" id="dropdownMenu1"
                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                            <span class="dropdown-btn-ellipsis">{{ selectedCompany }}</span>
+                            <span class="dropdown-btn-ellipsis">{{ selectedCompany.name }}</span>
                             <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu dropdown-ul-expand" aria-labelledby="dropdownMenu1">
                             <li><a href="#" class="dropdown-li-ellipsis notransition" ng-repeat="company in companies" 
                                 ng-click="changeSelectedCompany(company)">
-                                {{company}}</a></li>
+                                {{company.name}}</a></li>
                         </ul>
                     </div>
-                    <a class="btn btn-lg btn-theme" style="display: inherit; margin-top: 30px; margin-bottom: 15px;" href>Reserve Queue</a>
-                    <a class="btn btn-lg btn-theme" style="display: inherit; margin-bottom: 15px;" href>Queue List</a>
-                    <a class="btn btn-lg btn-theme" style="display: inherit; margin-bottom: 15px;" href>Next Queue</a>
+                    <a class="btn btn-lg btn-theme" style="display: inherit; margin-top: 30px; margin-bottom: 15px;" 
+                        ng-href="../reserveQueue?companyId={{selectedCompany.id}}">Reserve Queue</a>
+                    <a class="btn btn-lg btn-theme" style="display: inherit; margin-bottom: 15px;"
+                        ng-href="../queueLists?companyId={{selectedCompany.id}}">Queue List</a>
+                    <a class="btn btn-lg btn-theme" style="display: inherit; margin-bottom: 15px;"
+                        ng-href="../callQueue?companyId={{selectedCompany.id}}">Next Queue</a>
                 </div>
             </div>
         </div>
