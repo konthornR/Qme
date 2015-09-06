@@ -10,7 +10,8 @@ module.exports = function(io,pool) {
 					'PushNotificationToken':[],
 					'NextQueueFlag': false,
 					'QueuePosition' : 0,
-					'GroupColor' : ""
+					'GroupColor' : "",
+					'TimeStart' : ""
 				};
 
 	/*============================   Global Entity Start  =================================*/	
@@ -59,6 +60,8 @@ module.exports = function(io,pool) {
 								customer.Id = row2.qrcode;
 								customer.SocketId = _.clone(customer_format.SocketId);
 								customer.PushNotificationToken = _.clone(customer_format.PushNotificationToken);
+
+								// Must add customer.timestart From sql timestart
 
 	      						if(row2.timeend){
 	      							newCompany.callingQueue.push(customer);
@@ -200,6 +203,7 @@ module.exports = function(io,pool) {
 
 				//Add customer into database
 				var start = new Date();
+				customer.TimeStart = start;
 				var start_sqlFormat = start.getFullYear() + "-" + (start.getMonth()+1) + "-" + start.getDate() + " " + start.getHours() + ":" + start.getMinutes() + ":" + start.getSeconds();
 				var post  = {
 					companyid: parseInt(socket.companyId),
@@ -716,6 +720,28 @@ module.exports = function(io,pool) {
 				io.sockets.in(socket.companyId).emit('update table', allCustomers); 
 				io.sockets.in(socket.companyId).emit('update calling table', callingQueue); 
 			}
+		});
+
+		socket.on('request customer search by name and id', function(data){
+			thisCompany = globalCompany.getCompanyById(socket.companyId);
+			if(thisCompany && data.Name && data.NumberOfSeats){
+		    	tableConfig = thisCompany.tableConfig;
+		    	allCustomers = thisCompany.allCustomers;
+		    	callingQueue = thisCompany.callingQueue;
+
+		    	var searchResult = [];
+				_.each(allCustomers,function(customer){
+					if(customer.Name == data.Name && customer.NumberOfSeats == data.NumberOfSeats){
+						searchResult.push(customer);
+					}
+				});
+				_.each(callingQueue,function(customer){
+					if(customer.Name == data.Name && customer.NumberOfSeats == data.NumberOfSeats){
+						searchResult.push(customer);
+					}
+				});
+				io.sockets.in(socket.companyId).emit('respond customer search by name and id', searchResult); 
+		    }
 		});
 
 		//Test Connection
