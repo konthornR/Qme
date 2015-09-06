@@ -47,10 +47,11 @@
                         <td class="ng-binding">{{ customer.Name }}</td>
                         <td style="text-align: center" class="ng-binding">{{ customer.NumberOfSeats }}</td>
                         <td style="text-align: center;">
-                            <i class="fa fa-check clickable-icon customer-attend" id="callqueue-attend"></i>
+                            <i class="fa fa-check clickable-icon customer-attend" id="callqueue-attend" ng-click="attend(customer)"></i>
                         </td>
                         <td style="text-align: center;">
-                            <i class="fa fa-close clickable-icon customer-not-attend" id="callqueue-not-attend"></i>
+                            <i class="fa fa-close clickable-icon customer-not-attend" id="callqueue-not-attend" 
+                                ng-click="notAttend(customer)"></i>
                         </td>
                     </tr>
                     <!-- end ngRepeat: customer in listCustomersQueue -->
