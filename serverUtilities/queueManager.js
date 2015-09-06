@@ -43,6 +43,43 @@ module.exports = function(io,pool) {
 	      	}else{
 	      		_.each(result, function(row){
 	      			var newCompany = new Company(row.id.toString());
+	      			var getParameter  = {
+							companyid: row.id,
+							doesattend: "pending",
+
+					};
+	      			var query2 = connection.query('SELECT * FROM reservation WHERE companyid = ? and doesattend = ? ORDER BY timestart ASC',[getParameter.companyid,getParameter.doesattend], function(err2,result2){
+	      				if(err2){
+	      					throw err2;
+	      				}else{
+	      					_.each(result2,function(row2){
+	      						var customer = _.clone(customer_format);
+								customer.Name = row2.name;
+								customer.NumberOfSeats = row2.numseat;
+								customer.Id = row2.qrcode;
+								customer.SocketId = _.clone(customer_format.SocketId);
+								customer.PushNotificationToken = _.clone(customer_format.PushNotificationToken);
+
+	      						if(row2.timeend){
+	      							newCompany.callingQueue.push(customer);
+	      						}else{
+	      							_.each(newCompany.tableConfig,function(table){
+	      								if(row2.numseat >= table.greater && row2.numseat <= table.less){
+											if(table.customers.length == 0){
+												customer.NextQueueFlag = true;
+											}
+											table.latestQueuePosition = table.latestQueuePosition + 1;
+											//customer.QueuePosition = table.latestQueuePosition;
+											customer.QueuePosition = table.customers.length + 1; 
+											customer.GroupColor = table.groupColor;
+											table.customers.push(customer);
+											newCompany.allCustomers.push(customer);
+	      								}
+	      							});
+	      						}
+	      					});
+	      				}
+	      			});
 					globalCompany.addCompany(newCompany);
 				});	
 	      	}   
@@ -195,7 +232,8 @@ module.exports = function(io,pool) {
 							customer.NextQueueFlag = true;
 						}
 						tableConfig[i].latestQueuePosition = tableConfig[i].latestQueuePosition + 1;
-						customer.QueuePosition = tableConfig[i].latestQueuePosition;
+						//customer.QueuePosition = tableConfig[i].latestQueuePosition;
+						customer.QueuePosition = tableConfig[i].customers.length + 1; 
 						customer.GroupColor = tableConfig[i].groupColor;
 						tableConfig[i].customers.push(customer);
 						break;
@@ -248,6 +286,7 @@ module.exports = function(io,pool) {
 								io.sockets.socket(socketId).emit("call queue", {'QueueNumber': idx});	
 							}
 						});		
+						customer.QueuePosition = idx; 
 					 });
 
 					tableConfig[tableConfigIndex].customers.splice(customersIndex, 1); //remove the first queue
@@ -294,6 +333,7 @@ module.exports = function(io,pool) {
 					}
 					
 					currentQueueCustomer.NextQueueFlag = false;
+					currentQueueCustomer.QueuePosition = 0;
 					callingQueue.push(currentQueueCustomer);					
 
 					//Update end Timestamp for currentQueueCustomer into database
@@ -312,7 +352,8 @@ module.exports = function(io,pool) {
 						var query = connection.query('UPDATE reservation SET ? WHERE companyid = ? and qrcode = ?', [post, parseInt(socket.companyId),currentQueueCustomer.Id], function(err, result){
 							if (err) { 
 						        throw err;
-					      	}  
+					      	}else
+					      		console.log(result);  
 						});
 						connection.release();
 		  			});
