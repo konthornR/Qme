@@ -70,10 +70,11 @@ app.controller('tableQueueControl', function($scope, socket,$location){
 
     $scope.searchCustomerByNameAndNumSeats = function(){
         if($scope.searchCustomer && $scope.searchCustomer.Name && $scope.searchCustomer.NumberOfSeats){
-            socket.emit('request customer search by name and id', $scope.searchCustomer.Name);
+            socket.emit('request customer search by name and id', $scope.searchCustomer);
         }
     }
     socket.on('respond customer search by name and id', function(data) {
+        $scope.searchResultCustomers = data;
         $scope.$digest();
     });
 

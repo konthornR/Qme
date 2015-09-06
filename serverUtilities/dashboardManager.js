@@ -5,6 +5,7 @@ module.exports = {
 		var requestCompanyId = req.body.CompanyId;
 		var dateFrom = req.body.TimeStart;
 		var dateTo = req.body.TimeEnd;
+		dateTo = dateTo+" :23:59:59"
 
 		pool.getConnection(function(err, connection){
 			if(err){
@@ -13,7 +14,7 @@ module.exports = {
 		      	res.json({"code" : 100, "status" : "Error in connection database"});
 				return;
 			}
-			var query = connection.query('SELECT * FROM reservation WHERE companyId = ? and timestart >= ? and timestart < ?', [requestCompanyId,dateFrom,dateTo], function(err, result){
+			var query = connection.query('SELECT * FROM reservation WHERE companyId = ? and timestart >= ? and timestart <= ?', [requestCompanyId,dateFrom,dateTo], function(err, result){
 				if (err) { 
 			        throw err;
 		      	}else{
