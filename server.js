@@ -28,7 +28,8 @@ app.use(passport.session());
 http.listen(process.env.PORT || 3000)
 
 var passwordEncryption = require(__dirname+"/serverUtilities/passwordEncryption");
-var queryDashboard = require(__dirname+"/serverUtilities/dashboardManager");
+var queryDashboard = require(__dirname + "/serverUtilities/dashboardManager");
+var queryQueue = require(__dirname + "/serverUtilities/queueManager");
 
 /*============================== Function Check Allow Access Start ===========================*/
 var allowAccessToQueueManager = function(req){
@@ -360,7 +361,7 @@ app.use(express.static(__dirname+'/bower_components'));
 
 app.post('/api/getCompaniesByUserId', function (req, res) {
     if (allowAccess(req)) {
-        return queryQueue.getCompaniesByUserId(req, res);
+        return queryQueue.getCompaniesByUserId(req, res, pool);
     } else {
         res.send(401, 'Not authorized');
     }

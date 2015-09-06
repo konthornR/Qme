@@ -754,3 +754,26 @@ module.exports = function(io,pool) {
 	});
 };
 
+module.exports.getCompaniesByUserId = function (req, res, pool) {
+
+    var companies = [];
+    pool.getConnection(function (err, connection) {
+        if (err) {
+            connection.release();
+            console.log("!!!!!!!!!!!!!!!!!!!!!! Can not connect with database !!!!!!!!!!!!!!!!!!!!!");
+            return;
+        }
+        var query = connection.query('SELECT * FROM company WHERE id in (SELECT companyid FROM userownshop WHERE userid = ?)', [req.user.id], function (err, result) {
+            if (err) {
+                throw err;
+            } else {
+                _.each(result, function (row) {
+                    companies.push(row.name);
+                });
+            }
+            return res.send(companies);
+        });
+        connection.release();
+        
+    });
+};
