@@ -367,3 +367,12 @@ app.post('/api/getCompaniesByUserId', function (req, res) {
     }
 });
 
+/*=================== For Partial ===================*/
+app.get('/partials/company-dropdown', function (req, res) {
+    if (allowAccess(req)) {
+        res.sendfile(path.join(__dirname, '/views/partials/company-dropdown.html'));
+    } else {
+        res.send(401, 'Not authorized');
+    }
+});
+

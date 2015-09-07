@@ -1,0 +1,11 @@
+﻿<div class="dropdown" id="company-dropdown" data-selectedcompanyid="{{selectedCompany.id}}">
+    <button class="btn btn-default dropdown-toggle dropdown-btn-expand" type="button" id="dropdownMenu1"
+        data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+        <span class="dropdown-btn-ellipsis">{{ selectedCompany.name }}</span>
+        <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu dropdown-ul-expand" aria-labelledby="dropdownMenu1">
+        <li><a href="#" class="dropdown-li-ellipsis notransition" ng-repeat="company in companies"
+            ng-click="changeSelectedCompany(company)">{{company.name}}</a></li>
+    </ul>
+</div>
