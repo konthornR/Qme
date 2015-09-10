@@ -306,8 +306,6 @@ app.post('/admin/listLink',function(req,res){
 app.post('/admin/linkUserCompany',function(req,res){
 	var userId = req.body.userId;
 	var companyId = req.body.companyId;
-	console.log('access in link user company')
-	console.log(req.body)
 	if(userId && parseInt(userId) && companyId && parseInt(companyId)){
 		pool.getConnection(function(err, connection){
 			if(err){
@@ -322,9 +320,8 @@ app.post('/admin/linkUserCompany',function(req,res){
 						};
 			var insertQuery = connection.query('INSERT INTO userownshop SET ?', post, function(err2, result2) {
 			  	if (err2) { 
-			        throw err2;
-		      	}else{
-		      		console.log(result2)
+			  		//throw err2
+			        console.log(err2);
 		      	}
 			});	
 			connection.release();

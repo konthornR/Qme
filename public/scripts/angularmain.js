@@ -214,13 +214,17 @@ app.controller('userAndCompanyManagerControl', function($scope,$http){
             $http({
                 method: 'POST',
                 url: '/admin/linkUserCompany',
-                data: { AlbumName: "Dirty Deeds", Entered: "5/1/2012" },
+                data: $scope.newLink,
+                transformRequest: function(obj) {
+                    var str = [];
+                    for(var p in obj)
+                    str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+                    return str.join("&");
+                },
                 headers: {'Content-Type': 'application/x-www-form-urlencoded'}
                 }).success(function (data){
-                    if(data){
-
-                    }
-            });
+                    
+                });
         }
     }
 });
@@ -228,7 +232,7 @@ app.controller('userAndCompanyManagerControl', function($scope,$http){
 
 app.controller('merchantIndexControl', function ($scope, $http) {
 
-    $http.post('http://localhost:3000/api/getCompaniesByUserId', '').
+    $http.post('/api/getCompaniesByUserId', '').
       then(function (response) {
           $scope.companies = response["data"];
           $scope.selectedCompany = response["data"][0];
