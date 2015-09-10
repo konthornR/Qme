@@ -230,12 +230,14 @@ app.controller('userAndCompanyManagerControl', function($scope,$http){
 });
 
 
-app.controller('merchantIndexControl', function ($scope, $http) {
+app.controller('backstoreControl', function ($scope, $http) {
 
     $http.post('/api/getCompaniesByUserId', '').
       then(function (response) {
           $scope.companies = response["data"];
           $scope.selectedCompany = response["data"][0];
+          calloutChartSet1($scope.selectedCompany.id, false);
+          calloutChartSet2($scope.selectedCompany.id, false);
       }, function (response) {
           $scope.companies = null;
       });
@@ -243,5 +245,11 @@ app.controller('merchantIndexControl', function ($scope, $http) {
     $scope.changeSelectedCompany = function (selected) {
         $scope.selectedCompany = selected;
     };
+});
 
+app.directive('companyDropdown', function () {
+    return {
+        restrict: 'E',
+        templateUrl: '/partials/company-dropdown'
+    }
 });

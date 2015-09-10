@@ -2144,7 +2144,7 @@ select {
 
 .dropdown-ul-expand{
     width: 100%;
-    position: relative;
+    position: absolute;
 }
 
 .dropdown-btn-ellipsis{

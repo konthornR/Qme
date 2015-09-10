@@ -1,17 +1,17 @@
 ﻿<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" ng-app="reservationApp">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Q-Me</title>
+    <title>QMe</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" />
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" />
-    <link rel="stylesheet" href="../styles/style.min.css" />
-    <link rel="stylesheet" href="../styles/backstore.css" />
-    <link rel="stylesheet" href="../plugins/flexslider.css" />
-    <link rel="stylesheet" href="../plugins/animate.min.css" />
-    <link rel="stylesheet" href="../plugins/jquery-ui.css" />
+    <link rel="stylesheet" href="/styles/style.min.css" />
+    <link rel="stylesheet" href="/styles/backstore.css" />
+    <link rel="stylesheet" href="/plugins/flexslider.css" />
+    <link rel="stylesheet" href="/plugins/animate.min.css" />
+    <link rel="stylesheet" href="/plugins/jquery-ui.css" />
 </head>
-<body>
+<body ng-controller="backstoreControl">
     <header id="top" class="header navbar-fixed-top" style="background-color: #56bc94">
         <div class="container">
             <h1 class="logo pull-left">
@@ -50,7 +50,14 @@
         <div>
             <h4 id="currentonline" style="float: right;"></h4>
         </div>
-        <div style="clear: both; text-align: center; margin-bottom: 20px;">
+
+        <div class="row" style="clear:both; margin-top: 65px;">
+            <div class="col-md-4 col-md-offset-4 col-sm-6 col-sm-offset-3 col-xs-6 col-xs-offset-3" style="text-align:center;">
+                <company-dropdown></company-dropdown>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin: 20px 0px;">
             <label class="dashboard-label">ตั้งแต่</label>
             <input class="dashboard-input-text" type="text" id="time-start" />
             <label class="dashboard-label">ถึง</label>
@@ -75,14 +82,15 @@
     </div>
 
 
-    <script type="text/javascript" src="//code.jquery.com/jquery-2.1.4.min.js"></script>
-    <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="../plugins/jquery-ui.js"></script>
-    <script type="text/javascript" src="//cdn.amcharts.com/lib/3/amcharts.js"></script>
-    <script type="text/javascript" src="//cdn.amcharts.com/lib/3/pie.js"></script>
-    <script type="text/javascript" src="//cdn.amcharts.com/lib/3/serial.js"></script>
-    <script type="text/javascript" src="//cdn.amcharts.com/lib/3/themes/black.js"></script>
-    <script type="text/javascript" src="../scripts/dashboard-charts.js"></script>
+    <script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    
+    <script src="/plugins/jquery-ui.js"></script>
+    <script src="//cdn.amcharts.com/lib/3/amcharts.js"></script>
+    <script src="//cdn.amcharts.com/lib/3/pie.js"></script>
+    <script src="//cdn.amcharts.com/lib/3/serial.js"></script>
+    <script src="//cdn.amcharts.com/lib/3/themes/black.js"></script>
+    <script src="/scripts/dashboard-charts.js"></script>
     <script>
 
         var currentdate = new Date();
@@ -128,7 +136,7 @@
         });
 
         $("#time-button").click(function () {
-            calloutChartSet1(false);
+            calloutChartSet1($('#company-dropdown').attr('data-selectedcompanyid'), false);
         });
 
         $("#filter-by").change(function () {
@@ -139,18 +147,18 @@
                 makeChart05(JSON.parse(localStorage.getItem('chart05month')), "chartdiv05", 'month', '30');
                 makeChart06(JSON.parse(localStorage.getItem('chart06month')), "chartdiv06", 'month', '30');
             }
-            
+
         });
 
-        calloutChartSet1 = function (isRepeated) {
+        calloutChartSet1 = function (companyId, isRepeated) {
             var timeStart = $("#time-start").val() ?
                 convertDate($("#time-start").val()) : shortcurrentdate;
             var timeEnd = $("#time-end").val() ?
                 convertDate($("#time-end").val()) : shortcurrentdate;
-            var companyId = 52;
+            alert(companyId);
 
             $.ajax({
-                url: 'http://localhost:3000/dashboardSectionOne',
+                url: '/dashboardSectionOne',
                 data: {
                     TimeStart: timeStart,
                     TimeEnd: timeEnd,
@@ -176,11 +184,9 @@
             });
         }
 
-        calloutChartSet2 = function (isRepeated) {
-            var companyId = 52;
-
+        calloutChartSet2 = function (companyId, isRepeated) {
             $.ajax({
-                url: 'http://localhost:3000/dashboardSectionTwo',
+                url: '/dashboardSectionTwo',
                 data: {
                     CompanyId: companyId
                 },
@@ -204,13 +210,11 @@
             });
         }
 
-        
-
-        $(document).ready(function () {
-            calloutChartSet1(false);
-            calloutChartSet2(false);
-        });
-
     </script>
+    <script src="/angular/angular.js"></script>
+    <script src="/angular-route/angular-route.min.js"></script>
+    <script src="/qrcode/lib/qrcode.min.js"></script>
+    <script src="/angular-qr/angular-qr.min.js"></script>
+    <script src="/scripts/angularmain.js"></script>
 </body>
 </html>
