@@ -80,7 +80,7 @@ makeChart02 = function (data, divId, timeStart, timeEnd) {
                 "id": "AmGraph-1",
                 "title": "1 เก้าอี้",
                 "type": "column",
-                "valueField": "1 Chair"
+                "valueField": "1 Chairs"
             },
             {
                 "fillAlphas": 1,
