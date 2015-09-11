@@ -1,0 +1,57 @@
+﻿extend ../layout.jade
+block append content
+  .container
+      .row
+        .col-md-6.col-md-offset-3(style='text-align: center; margin-top: 20px;')
+          img#logo-image.logo-header(src='../images/logo.jpg', alt='Logo')
+      .row(style='margin-top: 40px;')
+        .col-md-4.col-md-offset-4.col-sm-6.col-sm-offset-3
+          .frame-page
+            .frame-header
+              h2 ล็อกอินเข้าสู่ระบบ
+            #login-error.alert.alert-danger(style='overflow: hidden; display: none;')
+              | ข้อมูลไม่ถูกต้อง
+            .input-group(style='margin-bottom: 20px;')
+              span.input-group-addon
+                i.fa.fa-user
+              input#login-username.form-control(type='text', placeholder='Username', name='username')
+            .input-group(style='margin-bottom: 20px;')
+              span.input-group-addon
+                i.fa.fa-lock
+              input#login-password.form-control(type='password', placeholder='Password', name='password')
+            .row
+              .col-md-6.checkbox
+                label
+                  input(type='checkbox')
+                  | จำฉันไว้ในระบบ
+              .col-md-6
+                button#login-submit.btn-u.pull-right ล็อกอิน
+            hr
+            a.color-green(href='forgetpassword.html') ลืมรหัสผ่าน
+block append script
+    script.
+      $('#login-submit').click(function () {
+      var username = $('#login-username').val();
+      var password = $('#login-password').val();
+      $.ajax({
+      method: "post",
+      data: { username: username, password: password },
+      success: function () {
+      window.location.href = "account/index";
+      },
+      statusCode: {
+      401: function () {
+      $('#login-error').css('display', 'block');
+      $('#login-error').addClass('animated tada delayp3');
+      }
+      }
+      })
+      });
+      $('#login-error').on('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
+      $('#login-error').removeClass('animated tada delayp3');
+      });
+      $('#login-password').keydown(function (e) {
+      if (e.keyCode == 13) {
+      $('#login-submit').trigger('click');
+      }
+      });
