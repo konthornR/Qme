@@ -1,0 +1,370 @@
+﻿extend home-layout.jade
+block append content
+    header#top.header.navbar-fixed-top
+      .container
+        div(style='position: relative;')
+        h1.logo.pull-left
+          a.scrollto(href='#promo')
+            img#logo-image.logo-image(src='images/logo.jpg', alt='Logo')
+        nav#main-nav.main-nav.navbar-right(role='navigation')
+          .navbar-header
+            button.navbar-toggle(type='button', data-toggle='collapse', data-target='#navbar-collapse')
+              span.sr-only Toggle navigation
+              span.icon-bar
+              span.icon-bar
+              span.icon-bar
+          #navbar-collapse.navbar-collapse.collapse
+            ul.nav.navbar-nav
+              li.nav-item.sr-only.active
+                a.scrollto(href='#promo') Home
+              li.nav-item
+                a.scrollto(href='#features') ฟีเจอร์
+              li.nav-item
+                a.scrollto(href='#how') Q Me ใช้ยังไง
+              li.nav-item
+                a.scrollto(href='#faq') คำถามที่พบบ่อย
+              li.nav-item
+                a.scrollto(href='#story') ความเป็นมา Q Me
+              li.nav-item
+                a.scrollto(href='#customers') ลูกค้าของเรา
+              li.nav-item
+                a.scrollto(href='#pricing') ราคา
+              li.nav-item.last
+                a.scrollto(href='#contact') ติดต่อเรา
+              li.nav-item.last
+                a(href='/login') ล็อกอิน
+    section#promo.promo.section.offset-header.has-pattern
+      .container
+        .row
+          .overview.col-md-8.col-sm-12.col-xs-12
+            h2.title Q Me เรื่องคิว ให้เราจัดการ
+            ul.summary
+              li สแกน QR Code เพื่อจองคิว
+              li ระบบแจ้งเตือนเมื่อใกล้จะถึงคิว
+              li เก็บข้อมูลการต่อคิว
+              li เพิ่มช่องทางการโฆษณา
+            .download-area
+              ul.btn-group.list-inline
+                li.ios-btn
+                  a(href='#') Download from the App Store
+                li.android-btn
+                  a(href='https://play.google.com/store/apps/details?id=com.Qme.testapp') Get it from Google Play
+          .phone.iphone.iphone-black.col-md-4.col-sm-12.col-xs-12
+            .iphone-holder.phone-holder
+              .iphone-holder-inner
+                .slider.flexslider
+                  ul.slides
+                    li.flex-active-slide(style='width: 100%; float: left; margin-right: -100%; position: relative; opacity: 1; display: block; -webkit-transition: opacity 0.6s ease; transition: opacity 0.6s ease; z-index: 2;')
+                      img(src='images/iphone/iphone-slide-1.jpg', alt='', draggable='false')
+                    li(style='width: 100%; float: left; margin-right: -100%; position: relative; opacity: 0; display: block; -webkit-transition: opacity 0.6s ease; transition: opacity 0.6s ease; z-index: 1;')
+                      img(src='images/iphone/iphone-slide-2.jpg', alt='', draggable='false')
+                    li(style='width: 100%; float: left; margin-right: -100%; position: relative; opacity: 0; display: block; -webkit-transition: opacity 0.6s ease; transition: opacity 0.6s ease; z-index: 1;')
+                      img(src='images/iphone/iphone-slide-3.jpg', alt='', draggable='false')
+    section#features.features.section
+      .container
+        .row.feature-row-last
+          .item.col-md-4.col-sm-6.col-xs-12.text-center
+            .icon
+              i.fa.fa-calendar
+            .content
+              h3.title จัดสรรระบบคิว ให้มีประสิทธิภาพมากขึ้น
+              p
+                | Qme เป็น Application ที่จะช่วยจัดสรรคิวผ่านมือถือ ซึ่งเชื่อมต่อโดยตรงจากร้านค้าสู่ลูกค้า โดยลูกค้าใช้เพียงแค่ปลายนิ้วสัมผัสก็สามารถจองคิวได้เลย และจะแจ้งกลับไปเมื่อใกล้ถึงคิว
+              button.modal-trigger.btn.btn-link(data-toggle='modal', data-target='#feature-modal-1') อ่านเพิ่ม
+          .item.col-md-4.col-sm-6.col-xs-12.text-center
+            .icon
+              i.fa.fa-comments
+            .content
+              h3.title บริหารจัดการข้อมูล และวางกลยุทธ์สำหรับร้านค้า
+              p
+                | การสร้างความยั่งยืนทางธุรกิจของร้านอาหาร ที่สำคัญที่สุด อย่างหนึ่งนั่น ก็ คือ ฐานลูกค้า Qme จะช่วยคุณ เก็บข้อมูล และ พยากรณ์ ความเป็นมาในอดีต และทิศทางความเป็นไปได้ในอนาคต
+              button.modal-trigger.btn.btn-link(data-toggle='modal', data-target='#feature-modal-2') อ่านเพิ่ม
+          .item.col-md-4.col-sm-6.col-xs-12.text-center
+            .icon
+              i.fa.fa-globe
+            .content
+              h3.title โฆษณา กับ Qme
+              p
+                | ลูกค้าสามารถ อ่านเมนู ที่อยากทาน และทำการ จัดเก็บไว้ในมือถือเพื่อให้ง่ายต่อการสั่ง รวมทั้งยังมีโฆษณา และ Promotion ที่น่าสนใจของทางร้านอาหาร ให้ลูกค้ารู้ก่อนใครอีกด้วย
+              button.modal-trigger.btn.btn-link(data-toggle='modal', data-target='#feature-modal-3') อ่านเพิ่ม
+    section#how.how.section.has-pattern
+      .container
+        .row
+          h2.title.text-center(style='margin-bottom: 40px;') Q Me ใช้ยังไง
+          div(style='padding-left: 20px;')
+            h3 1) Cloud services system
+            p
+              | Qme เป็นระบบ ที่อยู่ บน Cloud services system ซึ่งผู้ใช้งานไม่จำเป็นที่จะต้องไปลง Software หรือ Hardware เพียงแค่มี อินเตอร์เน็ตก็สามารถ เชื่อมต่อและใช้งานได้
+            h3 2) ลูกค้า Download แอพพลิเคชั่น Qme
+            p
+              | เมื่อลูกค้าจะจองคิว จะต้องจองคิวผ่าน แอปพลิเคชั่น Qme เพื่อที่จะไป สแกน กับ Ipad หรือ Tablet
+            h3 3) ติดตั้ง Ipad หรือ Tablet ในการจองคิว
+            p
+              | ร้านค้ามี Ipad หรือ Tablet ไว้เพื่อติดตั้งให้กับลูกค้าได้ไว้ใช้สำหรับการจองคิว โดยมีการติดตั้งไว้ที่บริเวณหน้าร้านค้า
+            h3 4) ติดตั้ง TV เพื่อแสดงผล “คิว”
+            p
+              | หลังจากร้านค้าติดตั้ง Ipad หรือ Table แล้ว ทางร้านค้าจะต้องมีการติดตั้ง TV ไว้ที่บริเวณหน้าร้านเพื่อเป็นการแจ้งเตือนและแสดงผลให้กับลูกค้าสามารถเห็นได้ว่าเมื่อไหร่จะถึงคิว
+            h3 5) ระบบ Database
+            p
+              | ร้านค้าไม่จำเป็นต้องมี Software & Hardware เพียงแค่มี Internet ก็สามารถ เข้าไปดูข้อมูลของลูกค้าที่เข้ามาใช้บริการที่ร้านค้าและข้อมูลอื่นๆ เพียงแค่ Login: Username Password เท่านั้น
+    section#faq.faq.section
+      .container
+        .row
+          h2.title.text-center คำถามที่พบบ่อย
+          .faq-col.col-md-6.col-sm-6.col-xs-12
+            .item
+              h3.question
+                i.fa.fa-question-circle
+                | Qme เหมาะสำหรับใคร
+              p.answer
+                | Qme เหมาะสำหรับ ธุรกิจหรือหน่วยงานต่างๆ ที่มีความจำเป็นที่จะต้องใช้ระบบคิว และมีการเก็บฐานข้อมูลของผู้ที่มาใช้บริการ รวมถึงการเก็บข้อมูลเพื่อนำไปวิเคราะห์ต่อ เช่น ธุรกิจร้านอาหาร, ธุรกิจรถเช่า, โรงพยาบาล, หน่วยงานราชการต่างๆ ฯลฯ เป็นต้น โดยร้านค้าจะต้องติดตั้งระบบ Qme และให้ผู้ที่มาใช้บริการดาวน์โหลดแอพ Qme เพื่อใช้ระบบ
+            .item
+              h3.question
+                i.fa.fa-question-circle
+                | ถ้าธุรกิจมีหลายสาขา จะสามารถใช้ Qme ทุกสาขาเลยได้ไหม และขั้นตอนใการติดตั้งยุ่งยากไหม
+              p.answer
+                | สามารถใช้ได้ทุกสาขา โดย Qme จะไปติดตั้งโปรแกรมให้อย่างสมบูรณ์แบบทุกสาขา ส่วนขึ้นตอนที่ใช้ในการติดตั้งนั้นง่ายแสนง่าย เพียงแค่มีคอมพิวเตอร์ อินเตอร์เน็ต และ Ipad/Tablet ก็สามารถใช้งานได้เลย
+            .item
+              h3.question
+                i.fa.fa-question-circle
+                | ราคาค่าใช้จ่ายในการใช้ระบบ Qme ทั้งระบบ มีค่าใช้จ่ายแพงไหม จำนวนกี่บาท
+              p.answer ราคาคุ้มค่าที่สุด เริ่มต้นเพียง 290 บาท
+          .faq-col.col-md-6.col-sm-6.col-xs-12
+            .item
+              h3.question
+                i.fa.fa-question-circle
+                | ช่องทางในการติดต่อกับ Qme มีกี่ช่องทาง และทางไหนบ้าง
+              p.answer มีทั้งหมด 3 ช่องทาง
+              p.answer
+                | 1) ติดต่อผ่านเว็บไซต์ สามารถ
+                a.scrollto(href='#contact') ติดต่อเรา
+                | ได้ตลอด 24 ชม. หรืออีเมล์มาที่ sales@qmeapp.com
+              p.answer 2) ติดต่อทางโทรศัพท์ ติดต่อเข้าไปที่ Qme Contact center เบอร์โทร 080-966-7578
+              p.answer
+                | 3) ติดต่อผ่าน 
+                a(href='https://www.facebook.com/qmeapp', target='_blank') Facebook
+            .item
+              h3.question
+                i.fa.fa-question-circle
+                | ถ้าลูกค้าที่เข้ามาใช้บริการในร้านค้าไม่มีสมาร์ทโฟน จะสามารถใช้บริการระบบ Qme ได้ไหม
+              p.answer
+                | ใช้บริการได้ เพียงแต่ลูกค้าจะไม่สามารถสแกน QR Code กับ โทรศัพท์มือถือได้เนื่องจากไม่ใช่สมาร์ทโฟน ซึ่งจะไม่มีการแจ้งเตือนไปยังมือถือลูกค้า แต่ว่ายังสามารถเก็บข้อมูลในระบบเพื่อทำการต่อคิวได้เหมือนเดิม
+            // //item
+            .item
+              h3.question
+                i.fa.fa-question-circle
+                | แอพ Qme สามารถดาวน์โหลดที่ไหนได้บ้าง?
+              p.answer
+                | ตอบ แอพพลิเคชัน Qme สามารถหาโหลดได้ที่ App store และ Play Store ใช้ได้ทั้งระบบ IOS และ Android ผู้ใช้งานสามารถดาวน์โหลดโดยค้นหาด้วยคำว่า Qme
+        .more.text-center
+          h4.title มีคำถามเพิ่มเติม?
+          a.btn.btn-lg.btn-theme.scrollto(href='#contact')
+            | คุยกับเรา
+            i.fa.fa-arrow-circle-o-down
+    section#story.story.section.has-pattern
+      .container
+        .row
+          .content.col-md-6.col-sm-6.col-xs-12.text-center
+            h2.title ความเป็นมา Q Me
+            p
+              | มีหลายคนบอกว่า การที่จะต้องไปยืนรอคิว เพื่อต่อคิวอะไรนานๆ ในช่วงที่คนเยอะสุดๆ เป็นสิ่งที่น่าเบื่อและไม่อยากเจอเป็นที่สุด เพื่อแก้ปัญหาสิ่งเหล่านี้ Qme จึงเกิดขึ้น จากสุดยอดทีมงาน 4 คน ที่มีความมุ่งมั่นอย่างสูงยิ่งเพื่อที่จะให้ปัญหาเหล่านี้หมดไป
+            p
+              | ทีมงานคุณภาพทั้งหมด จึงรวมตัวกัน เพื่อแก้ปัญหาว่า ทำอย่างไรให้ทุกคนไม่จำเป็นที่จะต้องไปยืนต่อคิวอีก รวมทั้ง ทำอย่างไรธุรกิจต่างๆ สามารถเข้าใจพฤติกรรมของลูกค้าได้อย่างดีด้วย พวกเค้าจึงตกผลึกออกมาเป็นไอเดียที่จะช่วยให้ร้านค้าต่างๆสามารถบริหารจัดการคิว จัดสรรข้อมูล และเข้าถึงลูกค้าได้มีประสิทธิภาพยิ่งขึ้น นั้นก็คือ “Qme”
+            p
+              | Qme เป็น กลุ่ม Startup company ที่มีความเข้าใจทั้งพฤติกรรมของร้านค้าและลูกค้าอย่างดีเยี่ยม พวกเราเชื่อใน สโลแกน ที่ว่า 
+              strong “Our Customers are Our Own Family”
+          .team.col-md-5.col-sm-5.col-md-offset-1.col-sm-offset-1.col-xs-12
+            .row
+              .member.col-md-6.text-center
+                img.img-rounded.member-image(src='images/team/member1.png', alt='')
+                p.name Boonnart Sintoowong
+                p.title Marketing/Sales
+              .member.col-md-6.text-center
+                img.img-rounded.member-image(src='images/team/member2.png', alt='')
+                p.name Nipoon Sintoowong
+                p.title Mobile App Developer
+            .row
+              .member.col-md-6.text-center
+                img.img-rounded.member-image(src='images/team/member3.png', alt='')
+                p.name Konthorn Rojvattanakarn
+                p.title System Developer
+              .member.col-md-6.text-center
+                img.img-rounded.member-image(src='images/team/member4.png', alt='')
+                p.name Gavin Sitthiampornphan
+                p.title Web Developer
+    section#customers.customers.section
+      .container
+        .row.feature-row-last
+          h2.title.text-center ลูกค้าของเรา
+          .customer-div.item.col-md-6.col-sm-6.col-xs-12.text-center
+            img.customer-image(src='images/customers/shabu-nangnai.jpg', alt='')
+          .customer-div.item.col-md-6.col-sm-6.col-xs-12.text-center
+            img.customer-image(src='images/customers/to-be-one.jpg', alt='')
+    section#pricing.pricing.section.has-pattern
+      .container
+        .price-cols.row
+          h2.title.text-center เลือก Q Me ที่เหมาะกับคุณ
+          .items-wrapper.col-md-10.col-sm-12.col-xs-12.col-md-offset-1.col-sm-offset-0.col-xs-offset-0
+            .item.price-1.col-md-6.col-sm-6.col-xs-12.text-center
+              .item-inner
+                .heading
+                  h3.title รายวัน
+                  p.price-figure
+                    span.price-figure-inner
+                      span.currency ฿
+                      span.number 290
+                      br
+                      span.unit ต่อวัน
+                .content
+                  ul.list-unstyled.feature-list
+                    li เหมาะสำหรับผู้ที่จะซื้อในระยะสั้น เช่น จัดนิทรรศการ และ อีเวนท์ต่างๆ
+                    li
+                      strong HOT Promotion
+                      |  พิเศษ สำหรับ 3 เดือนนี้เท่านั้น : สามารถ ซื้อ Package ซื้อ 5 วันขึ้นไป สามารถใช้งานวันแรก ฟรี !!!
+                  a.btn.btn-theme.btn-block(href='#') คุยกับเรา
+            .item.price-2.col-md-6.col-sm-6.col-xs-12.text-center.best-buy
+              .item-inner
+                .heading
+                  h3.title รายปี
+                  p.price-figure
+                    span.price-figure-inner
+                      span.currency ฿
+                      span.number 2,900
+                      br
+                      span.unit ต่อเดือน
+                .content
+                  ul.list-unstyled.feature-list
+                    li
+                      | เหมาะสำหรับผู้ที่มีธุรกิจและความจำเป็นที่จะต้องใช้การจัดสรร ระบบคิว เช่น ธุรกิจร้านอาหาร ธนาคาร, ธุรกิจโรงพยาบาล, ธุรกิจที่เกี่ยวกับการให้บริการต่างๆ, และ อื่นๆ อีกมากมาย
+                    li
+                      strong HOT Promotion
+                      |  พิเศษ สำหรับ เดือนนี้ – ธันวาคม นี้ เท่านั้น : ถ้าซื้อสัญญาเป็นรายปี สามารถใช้ได้ฟรี 3 เดือนแรก !!!
+                  a.btn.btn-theme.btn-block(href='#') คุยกับเรา
+                .ribbon
+                  .text Popular
+    section#contact.contact.section.has-pattern
+      .container
+        .row.text-center
+          h2.title ติดต่อเรา
+          .intro.col-md-6.col-sm-12.col-xs-12.col-md-offset-3(style='padding-left:5px;padding-right:5px;')
+            p
+              | สัมผัสถึงความประทับใจ ในระบบ Qme ที่จะช่วยเพิ่มศักยภาพ ของธรกิจท่านได้แล้ว ตอนนี้
+            p ติดต่อเราได้ที่
+            ul.list-unstyled.contact-details
+              li
+                i.fa.fa-envelope
+                a(href='mailto:hello@website.com') sales@qmeapp.com
+              li
+                i.fa.fa-phone-square
+                | 080-966-7578
+        .row.text-center
+          .contact-form.col-md-6.col-sm-12.col-xs-12.col-md-offset-3
+            form.form
+              .form-group.name
+                label.sr-only(for='name') Name
+                input#name.form-control(type='text', placeholder='ชื่อ:')
+              .form-group.email
+                label.sr-only(for='email') Email
+                input#email.form-control(type='email', placeholder='อีเมล์:')
+              .form-group.message
+                label.sr-only(for='message') Message
+                textarea#message.form-control(rows='6', placeholder='ข้อความ:')
+              button.btn.btn-lg.btn-theme(type='submit') ส่งข้อความ
+        .text-center
+          ul.social-icons.list-inline
+            li
+              a(href='#')
+                i.fa.fa-twitter
+            li
+              a(href='#')
+                i.fa.fa-facebook
+            li
+              a(href='#')
+                i.fa.fa-linkedin
+            li
+              a(href='#')
+                i.fa.fa-google-plus
+    #feature-modal-1.modal.modal-feature(tabindex='-1', role='dialog', aria-labelledby='featureModalLabel-1', aria-hidden='true', style='display: none;')
+      .modal-dialog.modal-lg
+        .modal-content
+          .modal-header
+            button.close(type='button', data-dismiss='modal', aria-hidden='true') ×
+            h4#featureModalLabel-1.modal-title.text-center จัดสรรระบบคิว ให้มีประสิทธิภาพมากขึ้น
+          .modal-body
+            .row
+              figure.figure.col-md-6.col-sm-12.col-xs-12
+                img.img-responsive.img-rounded(src='images/features/feature-figure-1.png', alt='')
+                figcaption.caption Qme Qme Qme
+              .content.col-md-6.col-sm-12.col-xs-12
+                p
+                  | เมื่อลูกค้าเข้าใช้บริการกับร้านค้าที่มี ระบบ Qme ทาง Qme จะมี โปรแกรม ที่ช่วยในการบริหารจัดการและจัดเก็บข้อมูลของลูกค้าให้กับร้านค้า ซึ่งข้อมูลของลูกค้าที่จัดเก็บ ทางร้านค้าสามารถ ดูได้ในช่วงเวลาขณะนั้นเลย (Real Time) และ ยังสามารถเลือกได้อีกด้วยว่า ช่วงเวลาไหนเป็นช่วงเวลาที่ดีที่สุด(Peak hour) ที่ลูกค้าเข้ามาใช้บริการ โดยยังสามารถ เปรียบเทียบได้อีกว่า วันไหน เดือนไหน หรือ ปีไหน มีความแตกต่างกันแค่ไหน ฯลฯ ซึ่งระบบต่างๆที่ Qme จะติดตั้งให้นั้นใช้งานง่ายและไม่ยุ่งยาก โดยเมื่อร้านค้านำข้อมูลทั้งหมดมาประมวลผลร่วมกันแล้ว จะทำให้การบริหารจัดการต้นทุน และ การบริหารจัดการ รายรับ มีประสิทธิภาพสูงขึ้น
+                p โดยสรุป
+                ul.list-unstyled
+                  li
+                    i.fa.fa-star
+                    | Monitor ข้อมูลในช่วงเวลาขณะนั้นได้เลย (Real Time)
+                  li
+                    i.fa.fa-star
+                    | จัดสรรข้อมูลการเข้ามาใช้บริการของลูกค้าให้มีประสิทธิภาพ
+                  li
+                    i.fa.fa-star
+                    | พยากรณ์ (Forecasting) ทิศทางของร้านค้า ทั้ง อดีต ปัจจุบัน และ อนาคต
+                  li
+                    i.fa.fa-star
+                    | บริหารจัดการทางข้อมูล เพื่อ รายรับ ต้นทุน และ การตลาด ให้มีประสิทธิภาพสูงขึ้น
+    #feature-modal-2.modal.modal-feature(tabindex='-1', role='dialog', aria-labelledby='featureModalLabel-1', aria-hidden='true', style='display: none;')
+      .modal-dialog.modal-lg
+        .modal-content
+          .modal-header
+            button.close(type='button', data-dismiss='modal', aria-hidden='true') ×
+            h4#H2.modal-title.text-center บริหารจัดการข้อมูล และวางกลยุทธ์สำหรับร้านค้า
+          .modal-body
+            .row
+              figure.figure.col-md-6.col-sm-12.col-xs-12
+                img.img-responsive.img-rounded(src='images/features/feature-figure-1.png', alt='')
+                figcaption.caption Qme Qme Qme
+              .content.col-md-6.col-sm-12.col-xs-12
+                p(style='font-weight: bold') ลูกค้าไม่จำเป็นต้องยืนรอคิว หน้าร้านค้าอีกต่อไป
+                p
+                  | เมื่อร้านค้ามีระบบ และ แอปพลิเคชัน Qme ลูกค้าสามารถใช้โทรศัพท์มือถือสมาร์ทโฟน โดยเปิด แอปพลิเคชัน Qme แล้วไป สแกน กับจุด สแกน ที่อยู่หน้าร้านค้า โดยสามารถเลือกจำนวนของผู้เข้าใช้ได้ว่ามีจำนวนกี่ท่าน เมื่อ สแกน แล้ว ข้อมูลของลูกค้า จะถูกบันทึกเข้าไปในระบบ การบริหารจัดสรรคิว ของร้านค้า โดยระหว่างที่ลูกค้ารอคิว ทาง Qme จะมีการแจ้งเตือนเป็นระยะ และเมื่อใกล้จะถึงคิวของลูกค้า ทาง Qme จะมีการแจ้งเตือนเพื่อให้ลูกค้ายืนยัน ทำให้ลูกค้ามั่นใจได้ว่า จะไม่พลาดคิวอย่างแน่นอน
+                p โดยสรุป
+                ul.list-unstyled
+                  li
+                    i.fa.fa-star
+                    | ลูกค้าไม่ต้องยืนต่อคิว
+                  li
+                    i.fa.fa-star
+                    | จัดสรรจำนวนที่นั่งให้ตรงกับความต้องการของลูกค้า
+                  li
+                    i.fa.fa-star
+                    | ร้านค้าประหยัดค่าใช้จ่ายในการจ้างพนักงาน
+                  li
+                    i.fa.fa-star
+                    | เพิ่มความทันสมัยให้กับร้านค้า
+    #feature-modal-3.modal.modal-feature(tabindex='-1', role='dialog', aria-labelledby='featureModalLabel-1', aria-hidden='true', style='display: none;')
+      .modal-dialog.modal-lg
+        .modal-content
+          .modal-header
+            button.close(type='button', data-dismiss='modal', aria-hidden='true') ×
+            h4#H1.modal-title.text-center โฆษณากับ Q Me
+          .modal-body
+            .row
+              figure.figure.col-md-6.col-sm-12.col-xs-12
+                img.img-responsive.img-rounded(src='images/features/feature-figure-1.png', alt='')
+                figcaption.caption Qme Qme Qme
+              .content.col-md-6.col-sm-12.col-xs-12
+                p
+                  | เมื่อร้านค้าให้บริการกับระบบ Qme ทาง Qme มีส่วนของการจัดสรรโฆษณาให้กับทางร้านค้าไว้เพื่อเป็นช่องทางในการ โปรโมท สินค้า บริการ รวมทั้ง Promotion ของร้านค้าเพื่อให้เป็นที่สนใจของลูกค้า โดยช่องทางการโฆษณามีหลายช่องทาง ดังนี้
+                ul.list-unstyled
+                  li
+                    i.fa.fa-star
+                    | แอปพลิเคชั่น Qme
+                  li
+                    i.fa.fa-star
+                    | Website ของ Qme
+                  li
+                    i.fa.fa-star
+                    | Facebook ของ Qme
+                  li
+                    i.fa.fa-star
+                    | Partner ที่อยู่ในเครือบริษัท Qme

@@ -14,6 +14,9 @@ var expressSession = require('express-session');
 var passport = require('passport');
 var passportLocal = require('passport-local');
 
+app.set('view engine', 'jade');
+app.locals.basedir = path.join(__dirname, 'views');
+
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(expressSession({ 
@@ -67,7 +70,7 @@ var allowAccessForDataShowOnDashboard = function(req){
 }
 /*============================== Function Check Allow Access End ===========================*/
 app.get('/', function (req, res) {
-  res.sendfile(__dirname + '/public/index.html');
+  res.render(path.join(__dirname, '/views/home.jade'));
 });
 
 
