@@ -26,8 +26,8 @@
                     </tr>
                     <!-- ngRepeat: customer in listCustomersQueue -->
                     <tr ng-repeat="customer in listCustomersQueue" class="ng-scope">
-                        <td style="text-align:center" class="ng-binding">{{ customer.QueuePosition }}</td>
-                        <td class="ng-binding" ng-style="{color: '{{customer.GroupColor}}'">{{ customer.Name }}</td>
+                        <td style="text-align:center" ng-style="{color: '{{customer.GroupColor}}'" class="ng-binding">{{ customer.QueuePosition }}</td>
+                        <td class="ng-binding">{{ customer.Name }}</td>
                         <td style="text-align:center" class="ng-binding">{{ customer.NumberOfSeats }}</td>
                     </tr>
                     <!-- end ngRepeat: customer in listCustomersQueue -->
