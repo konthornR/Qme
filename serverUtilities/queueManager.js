@@ -304,7 +304,7 @@ module.exports = function(io,pool) {
 					   }
 					 });
 					//Romove this customers
-					allCustomers.splice(customerIndex_InAllCustomers,1);
+					//allCustomers.splice(customerIndex_InAllCustomers,1);
 
 
 					if(tableConfig[tableConfigIndex].customers.length > 0){
@@ -653,6 +653,16 @@ module.exports = function(io,pool) {
 						});
 						connection.release();
 					});
+					// Find currentQueueCustomer index in allCustomers array
+					var customerIndex_InAllCustomers;
+					_.each(allCustomers, function(customer, idx) { 
+					   if (customer.Id == data.Id) {
+					      customerIndex_InAllCustomers = idx;
+					      return;
+					   }
+					 });
+					//Romove this customers
+					allCustomers.splice(customerIndex_InAllCustomers,1);
 
 					//Romove this customers in calling queue
 					callingQueue.splice(customerIndex_IncallingQueue,1);
@@ -700,6 +710,16 @@ module.exports = function(io,pool) {
 						});
 						connection.release();
 					});				
+					// Find currentQueueCustomer index in allCustomers array
+					var customerIndex_InAllCustomers;
+					_.each(allCustomers, function(customer, idx) { 
+					   if (customer.Id == data.Id) {
+					      customerIndex_InAllCustomers = idx;
+					      return;
+					   }
+					 });
+					//Romove this customers
+					allCustomers.splice(customerIndex_InAllCustomers,1);
 							
 					//Romove this customers in calling queue
 					callingQueue.splice(customerIndex_IncallingQueue,1);
