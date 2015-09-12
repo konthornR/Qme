@@ -56,7 +56,7 @@ var allowAccess = function(req){
 var allowAccessForDataShowOnDashboard = function(req){
 	var requestCompanyId = req.body.CompanyId;
     var result = false;
-	if(req.isAuthenticated() && req.user && req.user.companyIdList && req.user.isOwner == 'true'){
+	if(req.isAuthenticated() && req.user && req.user.companyIdList && req.user.role == 'owner'){
 		_.each(req.user.companyIdList, function(companyId){
 			if(companyId.toString() === requestCompanyId.toString()){
 				result = true;
@@ -171,11 +171,11 @@ passport.deserializeUser(function(id,done){
 	//Query database or cache here!
 	pool.getConnection(function(err, connection){		
 		var companyIdList = [];
-		var isOwner = 'false';
+		var role = '';
 		if(err){
 			connection.release();
 			console.log("!!!!!!!!!!!!!!!!!!!!!! Can not connect with database !!!!!!!!!!!!!!!!!!!!!");
-			done(null,{ id: id, companyIdList: companyIdList, isOwner: isOwner})
+			done(null,{ id: id, companyIdList: companyIdList, role: role})
 			return;
 		}
 		var query2 = connection.query('SELECT * FROM userownshop WHERE userid = ?', id, function(err2, result2){
@@ -194,10 +194,10 @@ passport.deserializeUser(function(id,done){
 				}else{
 
 					if(result.length == 1){
-						isOwner = result[0].isowner;
+						role = result[0].role;
 					}
 				}
-				done(null,{ id: id, companyIdList: companyIdList, isOwner: isOwner})
+				done(null,{ id: id, companyIdList: companyIdList, role: role})
 			}); 		
 		}); 		
 		connection.release();
@@ -235,7 +235,7 @@ app.post('/admin/signup', function(req,res){
 	      			var post  = {
 						username: newUsername, 
 						password: passwordEncryption.encrypt(req.body.password),
-						isowner: 'true'
+						role: 'owner'
 					};
 	      			var insertQuery = connection.query('INSERT INTO user SET ?', post, function(err2, result2) {
 					  	if (err2) { 
