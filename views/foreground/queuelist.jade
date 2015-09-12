@@ -12,6 +12,7 @@ block append content
               th(style='width: 15%; text-align: center;') ลำดับคิว
               th ชื่อ
               th(style='width: 10%;') จำนวนที่นั่ง
-            tr.ng-scope(ng-repeat='customer in listCustomersQueue')
+            tr.ng-scope(ng-repeat='customer in listCustomersQueue', ng-style='{color: \'{{customer.GroupColor}}\' }')
               td.ng-binding(style='text-align: center') {{ customer.QueuePosition }}
+              td.ng-binding {{ customer.Name }}
               td.ng-binding(style='text-align: center') {{ customer.NumberOfSeats }}
