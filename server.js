@@ -80,7 +80,7 @@ app.get('/LogIn', function(req,res){
 
 app.get('/account/index', function (req, res) {
     if (allowAccess(req))
-        res.render(path.join(__dirname, '/views/account/index.jade'), { mainCtrl: 'backstoreControl' });
+        res.render(path.join(__dirname, '/views/account/index.jade'), { mainCtrl: 'backstoreControl', isOwner: req.user.role == 'owner' });
     else
     	res.redirect('/');
 });
