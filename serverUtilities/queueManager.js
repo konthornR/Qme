@@ -63,7 +63,8 @@ module.exports = function(io,pool) {
 
 								// Must add customer.timestart From sql timestart
 
-	      						if(row2.timeend){
+	      						if(row2.timeend){	      							
+	      							newCompany.allCustomers.push(customer);
 	      							newCompany.callingQueue.push(customer);
 	      						}else{
 	      							_.each(newCompany.tableConfig,function(table){
@@ -418,15 +419,17 @@ module.exports = function(io,pool) {
 					 });
 
 					// Find cancelQueueCustomer index in allCustomers array
-					var customerIndex_InAllCustomers;
+					var customerIndex_InAllCustomers = -1;
 					_.each(allCustomers, function(customer, idx) { 
 					   if (customer.Id == cancelQueueCustomer.Id) {
 					      customerIndex_InAllCustomers = idx;
 					      return;
 					   }
 					 });
-					//Romove this customers
-					allCustomers.splice(customerIndex_InAllCustomers,1);
+					if(customerIndex_InAllCustomers != -1){							
+						//Romove this customers
+						allCustomers.splice(customerIndex_InAllCustomers,1);
+					}
 
 
 					if(customersIndex == 0 && tableConfig[tableConfigIndex].customers.length > 0){
@@ -654,15 +657,17 @@ module.exports = function(io,pool) {
 						connection.release();
 					});
 					// Find currentQueueCustomer index in allCustomers array
-					var customerIndex_InAllCustomers;
+					var customerIndex_InAllCustomers = -1;
 					_.each(allCustomers, function(customer, idx) { 
 					   if (customer.Id == data.Id) {
 					      customerIndex_InAllCustomers = idx;
 					      return;
 					   }
 					 });
-					//Romove this customers
-					allCustomers.splice(customerIndex_InAllCustomers,1);
+					if(customerIndex_InAllCustomers != -1){							
+						//Romove this customers
+						allCustomers.splice(customerIndex_InAllCustomers,1);	
+					}
 
 					//Romove this customers in calling queue
 					callingQueue.splice(customerIndex_IncallingQueue,1);
@@ -711,16 +716,17 @@ module.exports = function(io,pool) {
 						connection.release();
 					});				
 					// Find currentQueueCustomer index in allCustomers array
-					var customerIndex_InAllCustomers;
+					var customerIndex_InAllCustomers = -1;
 					_.each(allCustomers, function(customer, idx) { 
 					   if (customer.Id == data.Id) {
 					      customerIndex_InAllCustomers = idx;
 					      return;
 					   }
 					 });
-					//Romove this customers
-					allCustomers.splice(customerIndex_InAllCustomers,1);
-							
+					if(customerIndex_InAllCustomers != -1){							
+						//Romove this customers
+						allCustomers.splice(customerIndex_InAllCustomers,1);
+					}							
 					//Romove this customers in calling queue
 					callingQueue.splice(customerIndex_IncallingQueue,1);
 				}
