@@ -14,6 +14,9 @@ var expressSession = require('express-session');
 var passport = require('passport');
 var passportLocal = require('passport-local');
 
+app.set('view engine', 'jade');
+app.locals.basedir = path.join(__dirname, 'views');
+
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(expressSession({ 
@@ -67,50 +70,47 @@ var allowAccessForDataShowOnDashboard = function(req){
 }
 /*============================== Function Check Allow Access End ===========================*/
 app.get('/', function (req, res) {
-  res.sendfile(__dirname + '/public/index.html');
+  res.render(path.join(__dirname, '/views/home.jade'));
 });
 
 
 app.get('/LogIn', function(req,res){
-	res.sendfile(path.join(__dirname, '/views/account/login.html'));
+	res.render(path.join(__dirname, '/views/account/login.jade'));
 });
 
 app.get('/account/index', function (req, res) {
     if (allowAccess(req))
-        res.sendfile(path.join(__dirname, '/views/account/index.html'));
+        res.render(path.join(__dirname, '/views/account/index.jade'), { mainCtrl: 'backstoreControl' });
     else
     	res.redirect('/');
 });
 
 app.get('/backstore/dashboard', function (req, res) {
     if (allowAccess(req))
-        res.sendfile(path.join(__dirname, '/views/backstore/dashboard.html'));
+        res.render(path.join(__dirname, '/views/backstore/dashboard.jade'), { mainCtrl: 'backstoreControl' });
     else
         res.redirect('/');
 });
 
 app.get('/QueueLists', function (req, res) {
     if(allowAccessToQueueManager(req))
-    	res.sendfile(path.join(__dirname, '/views/foreground/queuelist.html'));
+    	res.render(path.join(__dirname, '/views/foreground/queuelist.jade'), { mainCtrl: 'tableQueueControl' });
     else
-    	res.redirect('/');
-    	//res.sendfile(__dirname + '/public/index.html');  
+    	res.redirect('/'); 
 });
 
 app.get('/ReserveQueue', function (req, res) {
 	if(allowAccessToQueueManager(req))
-  		res.sendfile(path.join(__dirname, '/views/foreground/reservequeue.html'));
+  		res.render(path.join(__dirname, '/views/foreground/reservequeue.jade'), { mainCtrl: 'reserveQueueControl' });
   	else
   		res.redirect('/');
-    	//res.sendfile(__dirname + '/public/index.html');
 });
 
 app.get('/CallQueue', function (req, res) {
   	if(allowAccessToQueueManager(req))
-  		res.sendfile(path.join(__dirname, '/views/foreground/callqueue.html'));
+  		res.render(path.join(__dirname, '/views/foreground/callqueue.jade'), { mainCtrl: 'tableQueueControl' });
   	else
   		res.redirect('/');
-    	//res.sendfile(__dirname + '/public/index.html');
 });
 
 app.get('/admin/CreateOrJoinCompany', function (req, res) {

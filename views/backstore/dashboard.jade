@@ -1,0 +1,54 @@
+﻿extend ../layout.jade
+block append content
+    header#top.header.navbar-fixed-top(style='background-color: #56bc94')
+      .container
+        h1.logo.pull-left
+          a.scrollto(href='#promo')
+            img#logo-image.logo-image(src='../images/logo-white.jpg', alt='Logo')
+        nav#main-nav.main-nav.navbar-right(role='navigation')
+          .navbar-header
+            button.navbar-toggle(type='button', data-toggle='collapse', data-target='#navbar-collapse')
+              span.sr-only Toggle navigation
+              span.icon-bar
+              span.icon-bar
+              span.icon-bar
+          #navbar-collapse.navbar-collapse.collapse
+            ul.nav.navbar-nav
+              li.nav-item.sr-only.active
+                a(href='#promo') Home
+              li.nav-item
+                a(href='#', style='color: white;') Account
+              li.nav-item
+                a(href='#', style='color: white') Setting
+    .container(style='margin-top: 100px;')
+      h1 MyDashboard
+      div
+        h4#currentonline(style='float: right;')
+      .row(style='clear: both; margin-top: 65px;')
+        .col-md-4.col-md-offset-4.col-sm-6.col-sm-offset-3.col-xs-6.col-xs-offset-3(style='text-align: center;')
+          company-dropdown
+      div(style='text-align: center; margin: 20px 0px;')
+        label.dashboard-label ตั้งแต่
+        input#time-start.dashboard-input-text(type='text')
+        label.dashboard-label ถึง
+        input#time-end.dashboard-input-text(type='text')
+        button#time-button.btn.btn-dashboard.btn-sm(type='button') Go
+      #chartdiv01.chart-panel(style='')
+      #chartdiv02.chart-panel(style='')
+      #chartdiv03.chart-panel(style='')
+      br
+      br
+      hr
+      div(style='text-align: center; margin-top: 40px;')
+        label ดูกราฟ 
+        select#filter-by(style='-webkit-appearance: menulist;')
+          option(value='day') รายวัน
+          option(value='month') รายเดือน
+      #chartdiv05.chart-panel(style='')
+      #chartdiv06.chart-panel(style='')
+block append script
+    script(src='//cdn.amcharts.com/lib/3/amcharts.js')
+    script(src='//cdn.amcharts.com/lib/3/pie.js')
+    script(src='//cdn.amcharts.com/lib/3/serial.js')
+    script(src='//cdn.amcharts.com/lib/3/themes/black.js')
+    script(src='/scripts/dashboard-charts.js')

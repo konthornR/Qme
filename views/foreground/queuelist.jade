@@ -1,0 +1,18 @@
+﻿extend ../layout.jade
+block append content
+    .container
+      .row
+        .col-md-6.col-md-offset-3(style='text-align: center; margin-top: 20px;')
+          img#logo-image.logo-header(src='../images/logo.jpg', alt='Logo')
+      .row(style='margin-top: 40px; text-align: center;')
+      .row.ng-scope
+        table.table(style='width: 50%; margin: auto;')
+          tbody
+            tr
+              th(style='width: 15%; text-align: center;') ลำดับคิว
+              th ชื่อ
+              th(style='width: 10%;') จำนวนที่นั่ง
+            tr.ng-scope(ng-repeat='customer in listCustomersQueue')
+              td.ng-binding(style='text-align: center') {{ customer.QueuePosition }}
+              td.ng-binding {{ customer.Name }}
+              td.ng-binding(style='text-align: center') {{ customer.NumberOfSeats }}

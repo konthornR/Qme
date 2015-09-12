@@ -107,7 +107,7 @@ module.exports = {
 		      		var chart02 = {
 		      			"dataProvider":[{
 		      				"category": "",
-		      				"1 Chair": 0,
+		      				"1 Chairs": 0,
 			                "2 Chairs": 0,
 			                "3 Chairs": 0,
 			                "4 Chairs": 0,
@@ -251,7 +251,6 @@ module.exports = {
 		      			dateObject.setHours(0,0,0,0);
 						dateObject.setDate(1);
 		      			dateObject.setMonth(dateObject.getMonth() + num);
-		      			console.log(dateObject);
 		      			var numCountAttendPastMonth = 0;
 		      			var numCountNotAttendPastMonth = 0;
 		      			var numCountUseApp = 0;

@@ -1,4 +1,5 @@
 ﻿
+/* make chart */
 
 makeChart01 = function (data, divId, timeStart, timeEnd) {
     chart01 = AmCharts.makeChart(divId,
@@ -80,7 +81,7 @@ makeChart02 = function (data, divId, timeStart, timeEnd) {
                 "id": "AmGraph-1",
                 "title": "1 เก้าอี้",
                 "type": "column",
-                "valueField": "1 Chair"
+                "valueField": "1 Chairs"
             },
             {
                 "fillAlphas": 1,
@@ -533,5 +534,130 @@ makeChart06 = function (data, divId, filterBy, amount) {
     } else {
         alert('error: unknown filter by');
     }
+}
+
+
+
+
+/* operation */
+
+setDatePickerToElement = function (id, currentdate) {
+    $(id).datepicker({ dateFormat: "d/m/yy" });
+    $(id).val(currentdate.getDate() + "/" 
+                + (currentdate.getMonth() + 1) + "/" 
+                + currentdate.getFullYear());
+}
+
+$(document).ready(function () {
+    var currentdate = new Date();
+    var thisMonth;
+    var thisDate;
+    
+    if ((currentdate.getMonth() + 1) < 10) {
+        thisMonth = '0' + (currentdate.getMonth() + 1);
+    } else {
+        thisMonth = (currentdate.getMonth() + 1);
+    }
+    if ((currentdate.getDate()) < 10) {
+        thisDate = '0' + currentdate.getDate();
+    } else {
+        thisDate = currentdate.getDate();
+    }
+    
+    var shortcurrentdate = currentdate.getFullYear() + "-" + thisMonth + "-" + thisDate;
+    
+    setDatePickerToElement("#time-start", currentdate);
+    setDatePickerToElement("#time-end", currentdate);
+});
+
+
+
+function convertDate(date) {
+    var pattern = /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/;
+    var arrayDate = date.match(pattern);
+    if (arrayDate[2] < 10) {
+        arrayDate[2] = '0' + arrayDate[2];
+    }
+    if (arrayDate[1] < 10) {
+        arrayDate[1] = '0' + arrayDate[1];
+    }
+    
+    return arrayDate[3] + '-' + arrayDate[2] + '-' + arrayDate[1];
+}
+
+
+
+$("#time-button").click(function () {
+    calloutChartSet1($('#company-dropdown').attr('data-selectedcompanyid'), false);
+});
+
+$("#filter-by").change(function () {
+    if ($(this).val() == 'day') {
+        makeChart05(JSON.parse(localStorage.getItem('chart05day')), "chartdiv05", 'day', '30');
+        makeChart06(JSON.parse(localStorage.getItem('chart06day')), "chartdiv06", 'day', '30');
+    } else {
+        makeChart05(JSON.parse(localStorage.getItem('chart05month')), "chartdiv05", 'month', '30');
+        makeChart06(JSON.parse(localStorage.getItem('chart06month')), "chartdiv06", 'month', '30');
+    }
+
+});
+
+calloutChartSet1 = function (companyId, isRepeated) {
+    var timeStart = $("#time-start").val() ?
+                convertDate($("#time-start").val()) : shortcurrentdate;
+    var timeEnd = $("#time-end").val() ?
+                convertDate($("#time-end").val()) : shortcurrentdate;
+    
+    $.ajax({
+        url: '/dashboardSectionOne',
+        data: {
+            TimeStart: timeStart,
+            TimeEnd: timeEnd,
+            CompanyId: companyId
+        },
+        type: 'POST',
+        async: false,
+        success: function (data) {
+            //$.each(data[1].dataProvider, function (index, element) {
+            //    alert(element['category']);
+            //    alert(element['column-1']);
+            //});
+            
+            makeChart01(data[0], "chartdiv01", timeStart, timeEnd);
+            makeChart02(data[1], "chartdiv02", timeStart, timeEnd);
+            makeChart03(data[2], "chartdiv03", timeStart, timeEnd);
+        },
+        complete: function () {
+            if (isRepeated) {
+                        //setTimeout(callout(true), 5000);
+            }
+        }
+    });
+}
+
+calloutChartSet2 = function (companyId, isRepeated) {
+    $.ajax({
+        url: '/dashboardSectionTwo',
+        data: {
+            CompanyId: companyId
+        },
+        type: 'POST',
+        async: false,
+        success: function (data) {
+            $("#currentonline").text('มีลูกค้า ' + data[0] + ' คนกำลังใช้แอพต่อคิวในขณะนี้');
+            makeChart05(data[1], "chartdiv05", 'day', '30');
+            makeChart06(data[2], "chartdiv06", 'day', '30');
+            
+            localStorage.setItem("chart05day", JSON.stringify(data[1]));
+            localStorage.setItem("chart06day", JSON.stringify(data[2]));
+            localStorage.setItem("chart05month", JSON.stringify(data[3]));
+            localStorage.setItem("chart06month", JSON.stringify(data[4]));
+        },
+        complete: function () {
+            if (isRepeated) {
+                        //setTimeout(callout(true), 5000);
+            }
+        }
+    });
 }
 
