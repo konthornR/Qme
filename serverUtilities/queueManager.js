@@ -63,7 +63,12 @@ module.exports = function(io,pool) {
 
 								// Must add customer.timestart From sql timestart
 
-	      						if(row2.timeend){	      							
+	      						if(row2.timeend){	
+	      							_.each(newCompany.tableConfig,function(table){
+	      								if(row2.numseat >= table.greater && row2.numseat <= table.less){											
+											customer.GroupColor = table.groupColor;
+	      								}
+	      							});      							
 	      							newCompany.allCustomers.push(customer);
 	      							newCompany.callingQueue.push(customer);
 	      						}else{
