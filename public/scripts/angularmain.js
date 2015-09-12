@@ -238,8 +238,10 @@ app.controller('backstoreControl', function ($scope, $http) {
       then(function (response) {
           $scope.companies = response["data"];
           $scope.selectedCompany = response["data"][0];
-          calloutChartSet1($scope.selectedCompany.id, false);
-          calloutChartSet2($scope.selectedCompany.id, false);
+        if (window.location.href.indexOf('dashboard')){
+            calloutChartSet1($scope.selectedCompany.id, false);
+            calloutChartSet2($scope.selectedCompany.id, false);
+        }
       }, function (response) {
           $scope.companies = null;
       });
