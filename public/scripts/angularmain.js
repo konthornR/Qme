@@ -49,7 +49,9 @@ app.controller('tableQueueControl', function($scope, socket,$location){
 
     $scope.selectCustomer = function(customer) {
         $scope.selectedCustomer = customer;
-        $scope.qrCodeString = '{"CompanyId" : "' + $location.search().companyId+ '", "Id": "'+customer.Id+'"}';
+        $scope.qrCodeString = '{"CompanyId" : "' + $location.search().companyId + '", "Id": "' + customer.Id + '"}';
+        $('#callqueue-searchResultModal').modal('hide');
+        $('#callqueue-qrModal').modal('show');
     }
 
     $scope.getNextQueue = function(index){

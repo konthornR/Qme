@@ -108,7 +108,7 @@ app.get('/ReserveQueue', function (req, res) {
 
 app.get('/CallQueue', function (req, res) {
   	if(allowAccessToQueueManager(req))
-  		res.sendfile(path.join(__dirname, '/views/foreground/callqueue.html'));
+  		res.render(path.join(__dirname, '/views/foreground/callqueue.jade'), { mainCtrl: 'tableQueueControl' });
   	else
   		res.redirect('/');
 });
