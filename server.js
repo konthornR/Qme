@@ -139,7 +139,6 @@ app.get('/UserAuthentication', function(req,res){
 passport.use(new passportLocal.Strategy(function(username,password,done){
 	pool.getConnection(function(err, connection){
 		if(err){
-			connection.release();
 			console.log("!!!!!!!!!!!!!!!!!!!!!! Can not connect with database !!!!!!!!!!!!!!!!!!!!!");
 			done(null,null); 
 			return;
@@ -173,7 +172,6 @@ passport.deserializeUser(function(id,done){
 		var companyIdList = [];
 		var role = '';
 		if(err){
-			connection.release();
 			console.log("!!!!!!!!!!!!!!!!!!!!!! Can not connect with database !!!!!!!!!!!!!!!!!!!!!");
 			done(null,{ id: id, companyIdList: companyIdList, role: role})
 			return;
@@ -220,7 +218,6 @@ app.post('/admin/signup', function(req,res){
 	var newUsername = req.body.username;
 	pool.getConnection(function(err, connection){
 		if(err){
-			connection.release();
 			console.log("!!!!!!!!!!!!!!!!!!!!!! Can not connect with database !!!!!!!!!!!!!!!!!!!!!");
           	res.json({"code" : 100, "status" : "Error in connection database"});
 			return;
@@ -252,7 +249,6 @@ app.post('/admin/signup', function(req,res){
 app.post('/admin/listUser',function(req,res){
 	pool.getConnection(function(err, connection){
 		if(err){
-			connection.release();
 			console.log("!!!!!!!!!!!!!!!!!!!!!! Can not connect with database !!!!!!!!!!!!!!!!!!!!!");
 			res.json({"code" : 100, "status" : "Error in connection database"});
 			return;
@@ -270,7 +266,6 @@ app.post('/admin/listUser',function(req,res){
 app.post('/admin/listCompany',function(req,res){
 	pool.getConnection(function(err, connection){
 		if(err){
-			connection.release();
 			console.log("!!!!!!!!!!!!!!!!!!!!!! Can not connect with database !!!!!!!!!!!!!!!!!!!!!");
 			res.json({"code" : 100, "status" : "Error in connection database"});
 			return;
@@ -288,7 +283,6 @@ app.post('/admin/listCompany',function(req,res){
 app.post('/admin/listLink',function(req,res){
 	pool.getConnection(function(err, connection){
 		if(err){
-			connection.release();
 			console.log("!!!!!!!!!!!!!!!!!!!!!! Can not connect with database !!!!!!!!!!!!!!!!!!!!!");
 			res.json({"code" : 100, "status" : "Error in connection database"});
 			return;
@@ -309,7 +303,6 @@ app.post('/admin/linkUserCompany',function(req,res){
 	if(userId && parseInt(userId) && companyId && parseInt(companyId)){
 		pool.getConnection(function(err, connection){
 			if(err){
-				connection.release();
 				console.log("!!!!!!!!!!!!!!!!!!!!!! Can not connect with database !!!!!!!!!!!!!!!!!!!!!");
 				res.json({"code" : 100, "status" : "Error in connection database"});
 				return;
