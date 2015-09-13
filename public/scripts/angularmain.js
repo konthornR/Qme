@@ -248,6 +248,10 @@ app.controller('backstoreControl', function ($scope, $http) {
 
     $scope.changeSelectedCompany = function (selected) {
         $scope.selectedCompany = selected;
+        if (window.location.href.indexOf('dashboard') > -1) {
+            calloutChartSet1($scope.selectedCompany.id, false);
+            calloutChartSet2($scope.selectedCompany.id, false);
+        }
     };
 });
 
