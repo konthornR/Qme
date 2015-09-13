@@ -21,13 +21,13 @@ block append content
               input#login-password.form-control(type='password', placeholder='Password', name='password')
             .row
               .col-md-6.checkbox
-                label
+                label(style='display:none;')
                   input(type='checkbox')
                   | จำฉันไว้ในระบบ
               .col-md-6
                 button#login-submit.btn-u.pull-right ล็อกอิน
             hr
-            a.color-green(href='forgetpassword.html') ลืมรหัสผ่าน
+            a.color-green(href='forgetpassword.html', style='display:none;') ลืมรหัสผ่าน
 block append script
     script.
       $('#login-submit').click(function () {
