@@ -1,0 +1,7 @@
+﻿#company-dropdown.dropdown(data-selectedcompanyid='{{selectedCompany.id}}')
+  button#dropdownMenu1.btn.btn-default.dropdown-toggle.dropdown-btn-expand(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='true')
+    span.dropdown-btn-ellipsis {{ selectedCompany.name }}
+    span.caret
+  ul.dropdown-menu.dropdown-ul-expand(aria-labelledby='dropdownMenu1')
+    li
+      a.dropdown-li-ellipsis.notransition(href='', ng-repeat='company in companies', ng-click='changeSelectedCompany(company)') {{company.name}}

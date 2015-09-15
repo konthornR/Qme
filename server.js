@@ -124,7 +124,11 @@ app.get('/admin/UserAndCompanyManager', function (req, res) {
   	res.sendfile(path.join(__dirname, '/views/admin/userAndCompanyManager.html'));
 });
 
-
+//for angular to see jade file
+app.get('/partials/:name', function (req, res) {
+    var name = req.params.name;
+    res.render('partials/' + name);
+});
 
 var pool = require("./serverUtilities/databaseManager");
 
