@@ -9,14 +9,13 @@ module.exports = {
 
 		pool.getConnection(function(err, connection){
 			if(err){
-				connection.release();
 				console.log("!!!!!!!!!!!!!!!!!!!!!! Can not connect with database !!!!!!!!!!!!!!!!!!!!!");
 		      	res.json({"code" : 100, "status" : "Error in connection database"});
 				return;
 			}
 			var query = connection.query('SELECT * FROM reservation WHERE companyId = ? and timestart >= ? and timestart <= ?', [requestCompanyId,dateFrom,dateTo], function(err, result){
 				if (err) { 
-			        throw err;
+			        //throw err;
 		      	}else{
 					var groupByHour = _.chain(result)
 								      	.groupBy(function (entity) {
@@ -176,7 +175,6 @@ module.exports = {
 		var requestCompanyId = req.body.CompanyId;
 		pool.getConnection(function(err, connection){
 			if(err){
-				connection.release();
 				console.log("!!!!!!!!!!!!!!!!!!!!!! Can not connect with database !!!!!!!!!!!!!!!!!!!!!");
 		      	res.json({"code" : 100, "status" : "Error in connection database"});
 				return;
@@ -187,7 +185,7 @@ module.exports = {
 			queryDateObject.setMonth(queryDateObject.getMonth() - 12);
 			var query = connection.query('SELECT * FROM reservation WHERE companyId = ? and timestart >= ?', [requestCompanyId,queryDateObject], function(err, result){
 				if (err) { 
-			        throw err;
+			        //throw err;
 		      	}else{
 		      		var filterCurrentInQueueUsers = _.filter(result,function(x){
 		      			return x.doesattend == "pending";

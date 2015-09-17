@@ -145,7 +145,7 @@ passport.use(new passportLocal.Strategy(function(username,password,done){
 		}
 		var query = connection.query('SELECT * FROM user WHERE username = ?', username, function(err, result){
 			if (err) { 
-		        throw err;
+		        //throw err;
 	      	}else{
 	      		if(result.length==1){
 	      			if(password === passwordEncryption.decrypt(result[0].password)){
@@ -178,7 +178,7 @@ passport.deserializeUser(function(id,done){
 		}
 		var query2 = connection.query('SELECT * FROM userownshop WHERE userid = ?', id, function(err2, result2){
 			if(err2){
-				throw err2;
+				//throw err2;
 			}else{
 				if(result2.length>0){
 					_.each(result2, function(row){
@@ -188,7 +188,7 @@ passport.deserializeUser(function(id,done){
       		}
       		var query = connection.query('SELECT * FROM user WHERE id = ?', id, function(err, result){
 				if(err){
-					throw err;
+					//throw err;
 				}else{
 
 					if(result.length == 1){
@@ -224,7 +224,7 @@ app.post('/admin/signup', function(req,res){
 		}
 		var query = connection.query('SELECT * FROM user WHERE username = ?', newUsername, function(err, result){
 			if (err) { 
-		        throw err;
+		        //throw err;
 	      	}else{
 	      		if(result.length >= 1){
 	      			res.send(401, 'string');	      			
@@ -236,7 +236,7 @@ app.post('/admin/signup', function(req,res){
 					};
 	      			var insertQuery = connection.query('INSERT INTO user SET ?', post, function(err2, result2) {
 					  	if (err2) { 
-					        throw err2;
+					        //throw err2;
 				      	}
 					});				
 	      		}	      		
@@ -255,7 +255,7 @@ app.post('/admin/listUser',function(req,res){
 		}
 		var query = connection.query('SELECT * FROM user', function(err, result){
 			if (err) { 
-		        throw err;
+		        //throw err;
 	      	}else{
 	      		res.send(result);				      		
 	      	}   
@@ -272,7 +272,7 @@ app.post('/admin/listCompany',function(req,res){
 		}
 		var query = connection.query('SELECT * FROM company', function(err, result){
 			if (err) { 
-		        throw err;
+		        //throw err;
 	      	}else{
 	      		res.send(result);	      		
 	      	}   
@@ -289,7 +289,7 @@ app.post('/admin/listLink',function(req,res){
 		}
 		var query = connection.query('SELECT * FROM userownshop', function(err, result){
 			if (err) { 
-		        throw err;
+		        //throw err;
 	      	}else{
 	      		res.send(result);		      		
 	      	}   

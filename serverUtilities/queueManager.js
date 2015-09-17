@@ -33,14 +33,13 @@ module.exports = function(io,pool) {
 
 	/*init company from database*/
 	pool.getConnection(function(err, connection){
-		if(err){
-			connection.release();          	
+		if(err){        	
 			console.log("!!!!!!!!!!!!!!!!!!!!!! Can not connect with database !!!!!!!!!!!!!!!!!!!!!");
 			return;
 		}
 		var query = connection.query('SELECT * FROM company', function(err, result){
 			if (err) { 
-		        throw err;
+		        //throw err;
 	      	}else{
 	      		_.each(result, function(row){
 	      			var newCompany = new Company(row.id.toString());
@@ -51,7 +50,7 @@ module.exports = function(io,pool) {
 					};
 	      			var query2 = connection.query('SELECT * FROM reservation WHERE companyid = ? and doesattend = ? ORDER BY timestart ASC',[getParameter.companyid,getParameter.doesattend], function(err2,result2){
 	      				if(err2){
-	      					throw err2;
+	      					//throw err2;
 	      				}else{
 	      					_.each(result2,function(row2){
 	      						var customer = _.clone(customer_format);
@@ -146,14 +145,13 @@ module.exports = function(io,pool) {
 			// Have to push in database first
 			pool.getConnection(function(err, connection){
 				if(err){
-					connection.release();
 					console.log("!!!!!!!!!!!!!!!!!!!!!! Can not connect with database !!!!!!!!!!!!!!!!!!!!!");
 					io.sockets.emit('database connection error', 'database connection error'); 
 					return;
 				}
 				var query = connection.query('SELECT * FROM company WHERE name = ?', data.CompanyName, function(err, result){
 				if (err) { 
-			        throw err;
+			        //throw err;
 		      	}else{
 		      		if(result.length >= 1){
 
@@ -163,7 +161,7 @@ module.exports = function(io,pool) {
 						};
 		      			var insertQuery = connection.query('INSERT INTO company SET ?', post, function(err2, result2) {
 						  	if (err2) { 
-						        throw err2;
+						        //throw err2;
 					      	}else{
 					      		var newCompany = new Company(result2.insertId.toString());
 								globalCompany.addCompany(newCompany);
@@ -220,14 +218,13 @@ module.exports = function(io,pool) {
 				};
 				pool.getConnection(function(err, connection){
 					if(err){
-						connection.release();
 						console.log("!!!!!!!!!!!!!!!!!!!!!! Can not connect with database !!!!!!!!!!!!!!!!!!!!!");
 						io.sockets.emit('database connection error', 'database connection error'); 
 						return;
 					}
 					var query = connection.query('INSERT INTO reservation SET ?', post, function(err, result) {
 					  	if (err) { 
-					        throw err;
+					        //throw err;
 				      	}
 					});
 					connection.release();
@@ -354,14 +351,13 @@ module.exports = function(io,pool) {
 					};
 					pool.getConnection(function(err, connection){
 						if(err){
-							connection.release();
 							console.log("!!!!!!!!!!!!!!!!!!!!!! Can not connect with database !!!!!!!!!!!!!!!!!!!!!");
 							io.sockets.emit('database connection error', 'database connection error'); 
 							return;
 						}
 						var query = connection.query('UPDATE reservation SET ? WHERE companyid = ? and qrcode = ?', [post, parseInt(socket.companyId),currentQueueCustomer.Id], function(err, result){
 							if (err) { 
-						        throw err;
+						        //throw err;
 					      	}else
 					      		console.log(result);  
 						});
@@ -488,14 +484,13 @@ module.exports = function(io,pool) {
 					};
 					pool.getConnection(function(err, connection){
 						if(err){
-							connection.release();
 							console.log("!!!!!!!!!!!!!!!!!!!!!! Can not connect with database !!!!!!!!!!!!!!!!!!!!!");
 							io.sockets.emit('database connection error', 'database connection error'); 
 							return;
 						}
 						var query = connection.query('UPDATE reservation SET ? WHERE companyid = ? and qrcode = ?', [post, parseInt(socket.companyId),cancelQueueCustomer.Id], function(err, result){
 							if (err) { 
-						        throw err;
+						        //throw err;
 					      	}  
 						});
 						connection.release();
@@ -584,14 +579,13 @@ module.exports = function(io,pool) {
 								};
 					pool.getConnection(function(err, connection){
 						if(err){
-							connection.release();
 							console.log("!!!!!!!!!!!!!!!!!!!!!! Can not connect with database !!!!!!!!!!!!!!!!!!!!!");
 							io.sockets.emit('database connection error', 'database connection error'); 
 							return;
 						}
 						var query = connection.query('UPDATE reservation SET ? WHERE companyid = ? and qrcode = ?', [post, parseInt(socket.companyId),data.Id], function(err, result){
 							if (err) { 
-						        throw err;
+						        //throw err;
 					      	}  
 						});
 						connection.release();
@@ -649,14 +643,13 @@ module.exports = function(io,pool) {
 						};
 					pool.getConnection(function(err, connection){
 						if(err){
-							connection.release();
 							console.log("!!!!!!!!!!!!!!!!!!!!!! Can not connect with database !!!!!!!!!!!!!!!!!!!!!");
 							io.sockets.emit('database connection error', 'database connection error'); 
 							return;
 						}
 						var query = connection.query('UPDATE reservation SET ? WHERE companyid = ? and qrcode = ?', [post, parseInt(socket.companyId), data.Id], function(err, result){
 							if (err) { 
-						        throw err;
+						        //throw err;
 					      	}  
 						});
 						connection.release();
@@ -708,14 +701,13 @@ module.exports = function(io,pool) {
 					};
 					pool.getConnection(function(err, connection){
 						if(err){
-							connection.release();
 							console.log("!!!!!!!!!!!!!!!!!!!!!! Can not connect with database !!!!!!!!!!!!!!!!!!!!!");
 							io.sockets.emit('database connection error', 'database connection error'); 
 							return;
 						}
 						var query = connection.query('UPDATE reservation SET ? WHERE companyid = ? and qrcode = ?', [post, parseInt(socket.companyId), data.Id], function(err, result){
 							if (err) { 
-						        throw err;
+						        //throw err;
 					      	}  
 						});
 						connection.release();
@@ -791,13 +783,12 @@ module.exports.getCompaniesByUserId = function (req, res, pool) {
 
     pool.getConnection(function (err, connection) {
         if (err) {
-            connection.release();
             console.log("!!!!!!!!!!!!!!!!!!!!!! Can not connect with database !!!!!!!!!!!!!!!!!!!!!");
             return;
         }
         var query = connection.query('SELECT * FROM company WHERE id in (SELECT companyid FROM userownshop WHERE userid = ?)', [req.user.id], function (err, result) {
             if (err) {
-                throw err;
+                //throw err;
             } else {
                 _.each(result, function (row) {
                     companies.push({
