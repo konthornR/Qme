@@ -9,7 +9,8 @@ app.factory('socket', function(){
     if(document.location.hostname == "localhost"){
         return io.connect('http://localhost:3000');     
     }else{
-        return io.connect('https://murmuring-fjord-5701.herokuapp.com/');
+        //return io.connect('https://murmuring-fjord-5701.herokuapp.com/');
+        return io.connect('http://qmeapp.com/');
     }   
 });
 
