@@ -6,7 +6,8 @@ var mysql = require('mysql');
   database : 'heroku_ec961a3d2debbe8'
 });*/
 var pool = mysql.createPool({
-  host     : '103.22.180.250',
+  //host     : '103.22.180.250',
+  host     : 'localhost',
   user     : 'qmeappco_qmeapp',
   password : 'lL36n5Xlc3',
   database : 'qmeappco_qmeapp'
