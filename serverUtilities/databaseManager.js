@@ -8,8 +8,8 @@ var mysql = require('mysql');
 var pool = mysql.createPool({
   //host     : '103.22.180.250',
   host     : 'localhost',
-  user     : 'qmeappco_qmeapp',
-  password : 'lL36n5Xlc3',
-  database : 'qmeappco_qmeapp'
+  user     : 'root',
+  password : 'qmeapp100millions',
+  database : 'qmeapp_database'
 });
 module.exports = pool;
