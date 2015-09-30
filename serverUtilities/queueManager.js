@@ -103,7 +103,7 @@ module.exports = function(io,pool) {
 		this.companyId = id;
 		this.allCustomers = [];
 		//default table config
-		this.tableConfig = 	[{
+		/*this.tableConfig = 	[{
 							'greater' : 1,
 							'less' : 3,
 							'customers' : [],
@@ -131,7 +131,31 @@ module.exports = function(io,pool) {
 							'latestQueuePosition' : 0,
 							'groupColor' : "black"		
 						}]; 
+		*/
+		this.tableConfig = 	[{
+							'greater' : 1,
+							'less' : 2,
+							'customers' : [],
+							'latestQueuePosition' : 0,
+							'groupColor' : "red"
+						},
+						{
+							'greater' : 3,
+							'less' : 6,
+							'customers' : [],
+							'latestQueuePosition' : 0,
+							'groupColor' : "green"						
+						},
+						{
+							'greater' : 7,
+							'less' : 10000,
+							'customers' : [],
+							'latestQueuePosition' : 0,
+							'groupColor' : "blue"		
+						}];
+
 		this.callingQueue = [];
+
 	};
 
 	/*============================   Each Comapany Entity End  =================================*/	
@@ -409,7 +433,7 @@ module.exports = function(io,pool) {
 
 				if(tableConfigIndex != -1){
 					
-					tableConfig[tableConfigIndex].customers.splice(customersIndex, 1); //remove the first queue
+					tableConfig[tableConfigIndex].customers.splice(customersIndex, 1); //remove this cancel customer
 					//Send out noticifation to all customers in same catagory
 					_.each(tableConfig[tableConfigIndex].customers, function(customer, idx) { 
 						_.each(customer.SocketId, function(socketId){
@@ -605,9 +629,9 @@ module.exports = function(io,pool) {
 		    	allCustomers = thisCompany.allCustomers;
 		    	callingQueue = thisCompany.callingQueue;
 				if(data.customerType != undefined && typeof data.customerType === "number"){
-					//Current this server have only 0,1,2,3 customer type
-					if(data.customerType > 3){
-						data.customerType = 3; 
+					//Current this server have only 0,1,2 customer type
+					if(data.customerType >= tableConfig.length){
+						data.customerType = tableConfig.length - 1; 
 					}
 					if(tableConfig[data.customerType].customers.length > 0){
 						requestNextCustomer = tableConfig[data.customerType].customers[0];
@@ -632,8 +656,13 @@ module.exports = function(io,pool) {
 				// Find data customer index in calling Queue array
 				var customerIndex_IncallingQueue = -1;
 				_.each(callingQueue, function(customer, idx) { 
-				   if (customer.Id == data.Id) {
-				      customerIndex_IncallingQueue = idx;
+					if (customer.Id == data.Id) {
+						customerIndex_IncallingQueue = idx;
+						_.each(customer.SocketId, function(socketId){
+							if(socketId){
+								io.sockets.socket(socketId).emit("process end", "process end");	
+							}
+						});	
 				      return;
 				   }
 				 });
@@ -687,11 +716,16 @@ module.exports = function(io,pool) {
 				// Find data customer index in calling Queue array
 				var customerIndex_IncallingQueue = -1;
 				_.each(callingQueue, function(customer, idx) { 
-				   if (customer.Id == data.Id) {
-				      customerIndex_IncallingQueue = idx;
-				      return;
-				   }
-				 });
+					if (customer.Id == data.Id) {
+				    	customerIndex_IncallingQueue = idx;
+				    	_.each(customer.SocketId, function(socketId){
+							if(socketId){
+								io.sockets.socket(socketId).emit("process end", "process end");	
+							}
+						});	
+				    	return;
+					}
+				});
 
 				
 				if(customerIndex_IncallingQueue != -1){
