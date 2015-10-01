@@ -1,4 +1,6 @@
-var app = angular.module('reservationApp', ['ja.qr','ngRoute']);
+//test push
+
+var app = angular.module('reservationApp', ['ja.qr', 'ngRoute']);
 
 app.config(function($routeProvider, $locationProvider) {    
     // enable html5Mode for pushstate ('#'-less URLs)
