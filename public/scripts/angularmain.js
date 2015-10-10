@@ -263,3 +263,22 @@ app.directive('companyDropdown', function () {
         templateUrl: '/partials/company-dropdown'
     }
 });
+
+app.directive('winkableDirective', ['$interval', function ($interval) {
+    function link(scope, element, attrs) {
+        var timeoutId;
+        scope.$watch(scope.customer.QueuePosition, function (value) {
+            if (scope.customer.QueuePosition == 0) {
+                timeoutId = $interval(function () {
+                    element.toggleClass('winkable-background');
+                }, 1000);
+            }
+        });
+        element.on('$destroy', function () {
+            $interval.cancel(timeoutId);
+        });
+    }
+    return {
+        link: link
+    };
+}])

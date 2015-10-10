@@ -99,16 +99,16 @@ app.get('/QueueLists', function (req, res) {
     	res.redirect('/'); 
 });
 
+app.get('/CallQueue', function (req, res) {
+    if (allowAccessToQueueManager(req))
+        res.render(path.join(__dirname, '/views/foreground/callqueue.jade'), { mainCtrl: 'tableQueueControl' });
+    else
+        res.redirect('/');
+});
+
 app.get('/ReserveQueue', function (req, res) {
 	if(allowAccessToQueueManager(req))
   		res.render(path.join(__dirname, '/views/foreground/reservequeue.jade'), { mainCtrl: 'reserveQueueControl' });
-  	else
-  		res.redirect('/');
-});
-
-app.get('/CallQueue', function (req, res) {
-  	if(allowAccessToQueueManager(req))
-  		res.render(path.join(__dirname, '/views/foreground/callqueue.jade'), { mainCtrl: 'tableQueueControl' });
   	else
   		res.redirect('/');
 });
