@@ -2,180 +2,157 @@
 
 var app = angular.module('reservationApp', ['ja.qr', 'ngRoute']);
 
-app.config(function($routeProvider, $locationProvider) {    
+app.config(function ($routeProvider, $locationProvider) {
     // enable html5Mode for pushstate ('#'-less URLs)
     $locationProvider.html5Mode(true);
 });
 
-app.factory('socket', function(){
-    if(document.location.hostname == "localhost"){
-        return io.connect('http://localhost:3000');     
-    }else{
+app.factory('socket', function () {
+    if (document.location.hostname == "localhost") {
+        return io.connect('http://localhost:3000');
+    } else {
         //return io.connect('https://murmuring-fjord-5701.herokuapp.com/');
         //return io.connect('http://qmeapp.com/');
         return io.connect();
-    }   
+    }
 });
 
-app.controller('tableQueueControl', function($scope, socket,$location){
+app.controller('tableQueueControl', function ($scope, socket, $location) {
     $scope.qrCodeString = "TEST";
-    if($location.search().companyId){
-         socket.emit('join company', {'CompanyId': $location.search().companyId});
+    if ($location.search().companyId) {
+        socket.emit('join company', { 'CompanyId': $location.search().companyId });
     }
-
+    
     $scope.selectedCustomer = {
-                                Id : "",
-                                Name : "",
-                                QueuePosition : 0,
-                                NumberOfSeats : 0
-                            };
-
-    socket.on('update table', function(data) {
+        Id : "",
+        Name : "",
+        QueuePosition : 0,
+        NumberOfSeats : 0
+    };
+    
+    socket.on('update table', function (data) {
         $scope.listCustomersQueue = data;
         $scope.$digest();
     });
-     socket.on('update calling table', function(data) {
+    socket.on('update calling table', function (data) {
         $scope.listCustomersCalling = data;
         $scope.$digest();
     });
-
-    $scope.nextQueue = function(customer){
+    
+    $scope.nextQueue = function (customer) {
         socket.emit('next queue', customer);
     };
-
-    $scope.attend = function(customer){
+    
+    $scope.attend = function (customer) {
         socket.emit('customer attend', customer);
     };
-
-    $scope.notAttend = function(customer){
+    
+    $scope.notAttend = function (customer) {
         socket.emit('customer does not attend', customer);
     };
-
-    $scope.selectCustomer = function(customer) {
+    
+    $scope.selectCustomer = function (customer) {
         $scope.selectedCustomer = customer;
         $scope.qrCodeString = '{"CompanyId" : "' + $location.search().companyId + '", "Id": "' + customer.Id + '"}';
     }
-
-    $scope.getNextQueue = function(index){
-        socket.emit('request customer in next queue', {'customerType': index});
+    
+    $scope.getNextQueue = function (index) {
+        socket.emit('request customer in next queue', { 'customerType': index });
     }
-
-    socket.on('respond customer in next queue', function(data) {
+    
+    socket.on('respond customer in next queue', function (data) {
         $scope.nextCustomer = data;
         $scope.$digest();
     });
-
-    $scope.callThisQueue = function(){
-        if($scope.nextCustomer && $scope.nextCustomer.Id){
+    
+    $scope.callThisQueue = function () {
+        if ($scope.nextCustomer && $scope.nextCustomer.Id) {
             socket.emit('next queue', $scope.nextCustomer);
             $scope.nextCustomer = undefined;
         }
     }
-
-    $scope.searchCustomerByNameAndNumSeats = function(){
-        if($scope.searchCustomer && $scope.searchCustomer.Name && $scope.searchCustomer.NumberOfSeats){
+    
+    $scope.searchCustomerByNameAndNumSeats = function () {
+        if ($scope.searchCustomer && $scope.searchCustomer.Name && $scope.searchCustomer.NumberOfSeats) {
             socket.emit('request customer search by name and id', $scope.searchCustomer);
         }
     }
-    socket.on('respond customer search by name and id', function(data) {
+    socket.on('respond customer search by name and id', function (data) {
         $scope.searchResultCustomers = data;
         $scope.$digest();
     });
-
+    
     //Initial Table
     socket.emit('request initial table');
 });
 
-app.controller('reserveQueueControl', function($scope, socket,$location){
+app.controller('reserveQueueControl', function ($scope, socket, $location) {
     $scope.qrCodeString = "TEST";
-    if($location.search().companyId){
-         socket.emit('join company', {'CompanyId': $location.search().companyId});
+    if ($location.search().companyId) {
+        socket.emit('join company', { 'CompanyId': $location.search().companyId });
     }
-    $scope.reserveSeats = function() {
+    $scope.reserveSeats = function () {
         var Id = generateUniqueId();
-        if($scope.customer && $scope.customer.Name != "" && IsNumeric($scope.customer.NumberOfSeats)){
-            socket.emit('request reserve seats', {'Name': $scope.customer.Name, 'NumberOfSeats': $scope.customer.NumberOfSeats, 'Id': Id});
+        if ($scope.customer && $scope.customer.Name != "" && IsNumeric($scope.customer.NumberOfSeats)) {
+            socket.emit('request reserve seats', { 'Name': $scope.customer.Name, 'NumberOfSeats': $scope.customer.NumberOfSeats, 'Id': Id });
             $scope.customer.Name = "";
             $scope.customer.NumberOfSeats = "";
-            $scope.qrCodeString = '{"CompanyId" : "' + $location.search().companyId+ '" , "Id": "'+Id+'" , "Version": "1.0.0" }';
-        }else{
+            $scope.qrCodeString = '{"CompanyId" : "' + $location.search().companyId + '" , "Id": "' + Id + '" , "Version": "1.0.0" }';
+        } else {
             alert("Wrong Input Format: Name can not be empty and Number of Seats must be numeric");
-        }        
+        }
     };
-
-    var generateUniqueId = function() {
-        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-                var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
-                return v.toString(16);
-            });
+    
+    var generateUniqueId = function () {
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+            var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+            return v.toString(16);
+        });
     };
-
-    var IsNumeric = function(num) {
-        return (num >=0 || num < 0);
+    
+    var IsNumeric = function (num) {
+        return (num >= 0 || num < 0);
     }
 });
 
-app.controller('createOrJoinCompanyControl', function($scope, socket,$window,$http){
+app.controller('createOrJoinCompanyControl', function ($scope, socket, $window, $http) {
     $http.get("/UserAuthentication").success(function (data) {
-        if(data.isAuthenticated){
+        if (data.isAuthenticated) {
             $scope.isAuthenticated = data.isAuthenticated;
             $scope.userName = data.user.name;
         }
     });
-    
-    /*$http.post("/dashboard",{companyId:52}).success(function (data) {
-        if(data){
-            
-        }
-    });*/
-
-    /*$http({
-        method: 'POST',
-        url: '/dashboardSectionTwo',
-        data: "companyId=" + 52,
-        headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-    }).success(function (data){
-        if(data){
-
-        }
-    });*/
-
 
     socket.emit('global request initial companies');
-    $scope.createCompany = function() {
-        if($scope.newCompany && $scope.newCompany.Name != ""){
-            socket.emit('global create company', {'CompanyName': $scope.newCompany.Name});
+    $scope.createCompany = function () {
+        if ($scope.newCompany && $scope.newCompany.Name != "") {
+            socket.emit('global create company', { 'CompanyName': $scope.newCompany.Name });
             $scope.newCompany.Id = "";
-        }    
+        }
     };
-
-    socket.on('global update companies', function(data) {
+    
+    socket.on('global update companies', function (data) {
         $scope.companies = data;
         $scope.$digest();
     });
-
-    $scope.selectReserveQueueCompany = function(company){
-        //$state.go("reserveQueue", { comapnyId: company.companyId });
-        //var url = $state.href('reserveQueue', {comapnyId: company.companyId});
-        //window.open(url,'_blank');
-
-        $window.open('/reserveQueue?companyId='+company.companyId);
-        //$window.location.href = '/reserveQueue.html?companyId='+company.companyId;
+    
+    $scope.selectReserveQueueCompany = function (company) {
+        $window.open('/reserveQueue?companyId=' + company.companyId);
     };
-    $scope.selectQueueListsCompany = function(company){
-        $window.open('/queueLists?companyId='+company.companyId);
+    $scope.selectQueueListsCompany = function (company) {
+        $window.open('/queueLists?companyId=' + company.companyId);
     };
-    $scope.selectNextQueueCompany = function(company){
-        $window.open('/callQueue?companyId='+company.companyId);
+    $scope.selectNextQueueCompany = function (company) {
+        $window.open('/callQueue?companyId=' + company.companyId);
     };
 });
 
-app.controller('homePageControl', function($scope,$http){
+app.controller('homePageControl', function ($scope, $http) {
     $scope.isAuthenticated = false;
     $scope.userName = null;
-
+    
     $http.get("/UserAuthentication").success(function (data) {
-        if(data.isAuthenticated){
+        if (data.isAuthenticated) {
             $scope.isAuthenticated = data.isAuthenticated;
             $scope.userName = data.user.name;
         }
@@ -183,7 +160,7 @@ app.controller('homePageControl', function($scope,$http){
     
 });
 
-app.controller('userAndCompanyManagerControl', function($scope,$http){
+app.controller('userAndCompanyManagerControl', function ($scope, $http) {
     $http.post("/admin/listUser").success(function (data) {
         $scope.users = data;
     });
@@ -193,7 +170,7 @@ app.controller('userAndCompanyManagerControl', function($scope,$http){
     $http.post("/admin/listLink").success(function (data) {
         $scope.linksBetween = data;
     });
-
+    
     /*$scope.seachUsernameById = function(userId){
         if($scope.users && $scope.users.length>0){
             for(var i = 0; i<$scope.users.length; i++){
@@ -213,41 +190,41 @@ app.controller('userAndCompanyManagerControl', function($scope,$http){
         }
     };*/
 
-    $scope.linkUserCompany = function(){
-        if($scope.newLink && $scope.newLink.userId && $scope.newLink.companyId){
+    $scope.linkUserCompany = function () {
+        if ($scope.newLink && $scope.newLink.userId && $scope.newLink.companyId) {
             $http({
                 method: 'POST',
                 url: '/admin/linkUserCompany',
                 data: $scope.newLink,
-                transformRequest: function(obj) {
+                transformRequest: function (obj) {
                     var str = [];
-                    for(var p in obj)
-                    str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+                    for (var p in obj)
+                        str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
                     return str.join("&");
                 },
-                headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-                }).success(function (data){
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+            }).success(function (data) {
                     
-                });
+            });
         }
     }
 });
 
 
 app.controller('backstoreControl', function ($scope, $http) {
-
+    
     $http.post('/api/getCompaniesByUserId', '').
       then(function (response) {
-          $scope.companies = response["data"];
-          $scope.selectedCompany = response["data"][0];
-        if (window.location.href.indexOf('dashboard') > -1){
+        $scope.companies = response["data"];
+        $scope.selectedCompany = response["data"][0];
+        if (window.location.href.indexOf('dashboard') > -1) {
             calloutChartSet1($scope.selectedCompany.id, false);
             calloutChartSet2($scope.selectedCompany.id, false);
         }
-      }, function (response) {
-          $scope.companies = null;
-      });
-
+    }, function (response) {
+        $scope.companies = null;
+    });
+    
     $scope.changeSelectedCompany = function (selected) {
         $scope.selectedCompany = selected;
         if (window.location.href.indexOf('dashboard') > -1) {
@@ -264,21 +241,53 @@ app.directive('companyDropdown', function () {
     }
 });
 
+app.directive('queueAnnouncementRow', ['$interval', function ($interval) {
+        function link(scope, element, attrs) {
+            var timeoutId;
+            timeoutId = $interval(function () {
+                element.toggleClass('winkable-background');
+            }, 1000);
+            element.on('$destroy', function () {
+                $interval.cancel(timeoutId);
+            });
+        }
+        return {
+            restrict: 'C',
+            link: link
+        };
+    }])
+
 app.directive('winkableDirective', ['$interval', function ($interval) {
-    function link(scope, element, attrs) {
-        var timeoutId;
-        scope.$watch(scope.customer.QueuePosition, function (value) {
-            if (scope.customer.QueuePosition == 0) {
-                timeoutId = $interval(function () {
-                    element.toggleClass('winkable-background');
-                }, 1000);
-            }
-        });
-        element.on('$destroy', function () {
-            $interval.cancel(timeoutId);
-        });
-    }
-    return {
-        link: link
-    };
-}])
+        function link(scope, element, attrs) {
+            var timeoutId;
+            scope.$watch(scope.customer.QueuePosition, function (value) {
+                if (scope.customer.QueuePosition == 0) {
+                    if (scope.customer.NumberOfSeats <= 2) {
+                        $('#queue1').css({ 'background-color' : 'inherit', 'color' : 'inherit' });
+                        $('#queue1 .detail').text(scope.customer.Name);
+                    } else if (scope.customer.NumberOfSeats <= 6) {
+                        $('#queue2').css({ 'background-color' : 'inherit', 'color' : 'inherit' });
+                        $('#queue2 .detail').text(scope.customer.Name);
+                    } else {
+                        $('#queue3').css({ 'background-color' : 'inherit', 'color' : 'inherit' });
+                        $('#queue3 .detail').text(scope.customer.Name);
+                    }
+                }
+            });
+            element.on('$destroy', function () {
+                if (scope.customer.NumberOfSeats <= 2) {
+                    $('#queue1').css({ 'background-color' : 'white', 'color' : '#555' });
+                    $('#queue1 .detail').text('');
+                } else if (scope.customer.NumberOfSeats <= 6) {
+                    $('#queue2').css({ 'background-color' : 'white', 'color' : '#555' });
+                    $('#queue2 .detail').text('');
+                } else {
+                    $('#queue3').css({ 'background-color' : 'white', 'color' : '#555' });
+                    $('#queue3 .detail').text('');
+                }
+            });
+        }
+        return {
+            link: link
+        };
+    }])
