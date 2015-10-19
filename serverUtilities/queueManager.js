@@ -68,7 +68,7 @@ module.exports = function(io,pool) {
 											customer.GroupColor = table.groupColor;
 	      								}
 	      							});      							
-	      							newCompany.allCustomers.push(customer);
+	      							//newCompany.allCustomers.push(customer);
 	      							newCompany.callingQueue.push(customer);
 	      						}else{
 	      							_.each(newCompany.tableConfig,function(table){
