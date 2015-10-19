@@ -330,8 +330,8 @@ module.exports = function(io,pool) {
 					      return;
 					   }
 					 });
-					//Romove this customers
-					//allCustomers.splice(customerIndex_InAllCustomers,1);
+					//Remove this customers
+					allCustomers.splice(customerIndex_InAllCustomers,1);
 
 
 					if(tableConfig[tableConfigIndex].customers.length > 0){
@@ -365,6 +365,29 @@ module.exports = function(io,pool) {
 					
 					currentQueueCustomer.NextQueueFlag = false;
 					currentQueueCustomer.QueuePosition = 0;
+					//Push Notification to CurrentQueue
+					_.each(currentQueueCustomer.PushNotificationToken, function(token){
+							if(token){
+								agent.createMessage()
+								    .device(token)
+								    .alert("Now is your queue")
+								    .sound("arriveQueue.aiff")
+								    .send(function (err) {
+								      // handle apnagent custom errors
+								      if (err && err.toJSON) {
+								        console.log("Push Notification JSON Error!!");
+								      }
+								      // handle anything else (not likely)
+								      else if (err) {
+								        console.log("Push Notification Error!!");
+								      }
+								      // it was a success
+								      else {
+								        //console.log("Success");
+								      }
+								    });		
+							}
+						});	
 					callingQueue.push(currentQueueCustomer);					
 
 					//Update end Timestamp for currentQueueCustomer into database
@@ -684,7 +707,7 @@ module.exports = function(io,pool) {
 						connection.release();
 					});
 					// Find currentQueueCustomer index in allCustomers array
-					var customerIndex_InAllCustomers = -1;
+					/*var customerIndex_InAllCustomers = -1;
 					_.each(allCustomers, function(customer, idx) { 
 					   if (customer.Id == data.Id) {
 					      customerIndex_InAllCustomers = idx;
@@ -694,7 +717,7 @@ module.exports = function(io,pool) {
 					if(customerIndex_InAllCustomers != -1){							
 						//Romove this customers
 						allCustomers.splice(customerIndex_InAllCustomers,1);	
-					}
+					}*/
 
 					//Romove this customers in calling queue
 					callingQueue.splice(customerIndex_IncallingQueue,1);
@@ -747,7 +770,7 @@ module.exports = function(io,pool) {
 						connection.release();
 					});				
 					// Find currentQueueCustomer index in allCustomers array
-					var customerIndex_InAllCustomers = -1;
+					/*var customerIndex_InAllCustomers = -1;
 					_.each(allCustomers, function(customer, idx) { 
 					   if (customer.Id == data.Id) {
 					      customerIndex_InAllCustomers = idx;
@@ -757,7 +780,7 @@ module.exports = function(io,pool) {
 					if(customerIndex_InAllCustomers != -1){							
 						//Romove this customers
 						allCustomers.splice(customerIndex_InAllCustomers,1);
-					}							
+					}*/							
 					//Romove this customers in calling queue
 					callingQueue.splice(customerIndex_IncallingQueue,1);
 				}
