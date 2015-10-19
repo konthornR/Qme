@@ -53,7 +53,7 @@ app.controller('tableQueueControl', function ($scope, socket, $location) {
     
     $scope.selectCustomer = function (customer) {
         $scope.selectedCustomer = customer;
-        $scope.qrCodeString = '{"CompanyId" : "' + $location.search().companyId + '", "Id": "' + customer.Id + '"}';
+        $scope.qrCodeString = '{"CompanyId" : "' + $location.search().companyId + '", "Id": "' + customer.Id + '", "Version": "1.0.0" }';
     }
     
     $scope.getNextQueue = function (index) {
