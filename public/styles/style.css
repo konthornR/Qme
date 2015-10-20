@@ -90,7 +90,7 @@ tr:nth-child(odd) {
 }	
 
 th {
-    background-color: #a0cf67;
+    background-color: #444444;
     font-weight: bold;
     color: #fff;
     white-space: nowrap;
@@ -127,7 +127,7 @@ a {
     }
 
 .btn-theme {
-    background: #6EAF59;
+    background: #1ABB9C;
     color: #fff;
 }
 
