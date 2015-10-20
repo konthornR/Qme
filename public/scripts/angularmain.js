@@ -38,44 +38,6 @@ app.controller('tableQueueControl', function ($scope, socket, $location) {
         $scope.listCustomersCalling = data;
         $scope.$digest();
     });
-
-
-    //In queue list calling queue on top
-    $scope.$watch('listCustomersCalling',function(callingQueue){
-        var groupOne = false;
-        var groupTwo = false;
-        var groupThree = false;
-        if(callingQueue){
-            for(var i = 0; i < callingQueue.length; i++){
-                if (callingQueue[i].NumberOfSeats <= 2) {
-                    $('#queue1').css({ 'background-color' : 'inherit', 'color' : 'inherit' });
-                    $('#queue1 .detail').text(callingQueue[i].Name);
-                    groupOne = true;
-                } else if (callingQueue[i].NumberOfSeats <= 6) {
-                    $('#queue2').css({ 'background-color' : 'inherit', 'color' : 'inherit' });
-                    $('#queue2 .detail').text(callingQueue[i].Name);
-                    groupTwo = true;
-                } else {
-                    $('#queue3').css({ 'background-color' : 'inherit', 'color' : 'inherit' });
-                    $('#queue3 .detail').text(callingQueue[i].Name);
-                    groupThree = true;
-                }
-            }
-            if(!groupOne){
-                $('#queue1').css({ 'background-color' : 'white', 'color' : '#555' });
-                $('#queue1 .detail').text('');
-            }
-            if(!groupTwo){
-                $('#queue2').css({ 'background-color' : 'white', 'color' : '#555' });
-                $('#queue2 .detail').text('');
-            }
-            if(!groupThree){
-                $('#queue3').css({ 'background-color' : 'white', 'color' : '#555' });
-                $('#queue3 .detail').text('');
-            }
-        }
-
-    });
     
     $scope.nextQueue = function (customer) {
         socket.emit('next queue', customer);
@@ -288,44 +250,44 @@ app.directive('queueAnnouncementRow', ['$interval', function ($interval) {
             element.on('$destroy', function () {
                 $interval.cancel(timeoutId);
             });
-        }
-        return {
-            restrict: 'C',
-            link: link
-        };
-    }])
 
-app.directive('winkableDirective', ['$interval', function ($interval) {
-        function link(scope, element, attrs) {
-            var timeoutId;
-            /*scope.$watch(scope.customer.QueuePosition, function (value) {
-                if (scope.customer.QueuePosition == 0) {
-                    if (scope.customer.NumberOfSeats <= 2) {
-                        $('#queue1').css({ 'background-color' : 'inherit', 'color' : 'inherit' });
-                        $('#queue1 .detail').text(scope.customer.Name);
-                    } else if (scope.customer.NumberOfSeats <= 6) {
-                        $('#queue2').css({ 'background-color' : 'inherit', 'color' : 'inherit' });
-                        $('#queue2 .detail').text(scope.customer.Name);
-                    } else {
-                        $('#queue3').css({ 'background-color' : 'inherit', 'color' : 'inherit' });
-                        $('#queue3 .detail').text(scope.customer.Name);
+            scope.$watch('listCustomersCalling', function (callingQueue) {
+                var groupOne = false;
+                var groupTwo = false;
+                var groupThree = false;
+                if (callingQueue) {
+                    for (var i = 0; i < callingQueue.length; i++) {
+                        if (callingQueue[i].NumberOfSeats <= 2) {
+                            $('#queue1').css({ 'background-color' : 'inherit', 'color' : 'inherit' });
+                            $('#queue1 .detail').text(callingQueue[i].Name);
+                            groupOne = true;
+                        } else if (callingQueue[i].NumberOfSeats <= 6) {
+                            $('#queue2').css({ 'background-color' : 'inherit', 'color' : 'inherit' });
+                            $('#queue2 .detail').text(callingQueue[i].Name);
+                            groupTwo = true;
+                        } else {
+                            $('#queue3').css({ 'background-color' : 'inherit', 'color' : 'inherit' });
+                            $('#queue3 .detail').text(callingQueue[i].Name);
+                            groupThree = true;
+                        }
+                    }
+                    if (!groupOne) {
+                        $('#queue1').css({ 'background-color' : 'white', 'color' : '#555' });
+                        $('#queue1 .detail').text('');
+                    }
+                    if (!groupTwo) {
+                        $('#queue2').css({ 'background-color' : 'white', 'color' : '#555' });
+                        $('#queue2 .detail').text('');
+                    }
+                    if (!groupThree) {
+                        $('#queue3').css({ 'background-color' : 'white', 'color' : '#555' });
+                        $('#queue3 .detail').text('');
                     }
                 }
             });
-            element.on('$destroy', function () {
-                if (scope.customer.NumberOfSeats <= 2) {
-                    $('#queue1').css({ 'background-color' : 'white', 'color' : '#555' });
-                    $('#queue1 .detail').text('');
-                } else if (scope.customer.NumberOfSeats <= 6) {
-                    $('#queue2').css({ 'background-color' : 'white', 'color' : '#555' });
-                    $('#queue2 .detail').text('');
-                } else {
-                    $('#queue3').css({ 'background-color' : 'white', 'color' : '#555' });
-                    $('#queue3 .detail').text('');
-                }
-            });*/
         }
         return {
+            restrict: 'C',
             link: link
         };
     }])
