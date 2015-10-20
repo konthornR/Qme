@@ -90,7 +90,7 @@ tr:nth-child(odd) {
 }	
 
 th {
-    background-color: #56bc94;
+    background-color: #a0cf67;
     font-weight: bold;
     color: #fff;
     white-space: nowrap;
@@ -127,14 +127,12 @@ a {
     }
 
 .btn-theme {
-    background: #56bc94;
-    border: 1px solid #56bc94;
+    background: #6EAF59;
     color: #fff;
 }
 
     .btn-theme:hover {
-        background: #3fa07a;
-        border: 1px solid #3fa07a;
+        background: #8EE48D;
         color: #fff;
     }
 

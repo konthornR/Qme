@@ -17,14 +17,12 @@ block append content
         table.table(style='width: 90%; margin: auto; font-size: 18px;')
           tbody
             tr
-              th(style='width: 15%; text-align: center;') ลำดับคิว
-              th ชื่อ
+              th(style='padding-left:5%') ชื่อ
               th(style='width: 15%; text-align: center;') จำนวนที่นั่ง
               th(style='width: 15%; text-align: center;') มา
               th(style='width: 15%; text-align: center;') ไม่มา
             tr.ng-scope.ng-cloak(ng-repeat='customer in listCustomersCalling')
-              td.ng-binding(style='text-align: center') {{ customer.QueuePosition }}
-              td.ng-binding {{ customer.Name }}
+              td.ng-binding(style='padding-left:5.5%') {{ customer.Name }}
               td.ng-binding(style='text-align: center') {{ customer.NumberOfSeats }}
               td(style='text-align: center;')
                 i#callqueue-attend.fa.fa-check.clickable-icon.customer-attend(ng-click='attend(customer)')
