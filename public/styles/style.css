@@ -139,6 +139,7 @@ a {
     .btn-theme:active,
     .btn-theme:focus {
         color: #fff;
+        outline: none;
     }
 
 .btn-u {

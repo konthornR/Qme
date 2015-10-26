@@ -1,6 +1,4 @@
-//test push
-
-var app = angular.module('reservationApp', ['ja.qr', 'ngRoute']);
+﻿var app = angular.module('reservationApp', ['ja.qr', 'ngRoute']);
 
 app.config(function ($routeProvider, $locationProvider) {
     // enable html5Mode for pushstate ('#'-less URLs)
@@ -87,7 +85,8 @@ app.controller('tableQueueControl', function ($scope, socket, $location) {
 });
 
 app.controller('reserveQueueControl', function ($scope, socket, $location) {
-    $scope.qrCodeString = "TEST";
+    $scope.qrCodeString = 'TEST';
+    $scope.submitText = 'ทำการจองคิว';
     if ($location.search().companyId) {
         socket.emit('join company', { 'CompanyId': $location.search().companyId });
     }
@@ -95,12 +94,17 @@ app.controller('reserveQueueControl', function ($scope, socket, $location) {
         var Id = generateUniqueId();
         if ($scope.customer && $scope.customer.Name != "" && IsNumeric($scope.customer.NumberOfSeats)) {
             socket.emit('request reserve seats', { 'Name': $scope.customer.Name, 'NumberOfSeats': $scope.customer.NumberOfSeats, 'Id': Id });
-            $scope.customer.Name = "";
-            $scope.customer.NumberOfSeats = "";
+            $scope.customer.Name = '';
+            $scope.customer.NumberOfSeats = '';
             $scope.qrCodeString = '{"CompanyId" : "' + $location.search().companyId + '" , "Id": "' + Id + '" , "Version": "1.0.0" }';
         } else {
-            alert("Wrong Input Format: Name can not be empty and Number of Seats must be numeric");
+            alert('Wrong Input Format: Name can not be empty and Number of Seats must be numeric');
         }
+    };
+    
+    $scope.change = function () {
+        if ($scope.checked) $scope.submitText = 'ลงทะเบียน';
+        else $scope.submitText = 'ทำการจองคิว';
     };
     
     var generateUniqueId = function () {
@@ -161,34 +165,15 @@ app.controller('homePageControl', function ($scope, $http) {
 });
 
 app.controller('userAndCompanyManagerControl', function ($scope, $http) {
-    $http.post("/admin/listUser").success(function (data) {
+    $http.post('/admin/listUser').success(function (data) {
         $scope.users = data;
     });
-    $http.post("/admin/listCompany").success(function (data) {
+    $http.post('/admin/listCompany').success(function (data) {
         $scope.companies = data;
     });
-    $http.post("/admin/listLink").success(function (data) {
+    $http.post('/admin/listLink').success(function (data) {
         $scope.linksBetween = data;
     });
-    
-    /*$scope.seachUsernameById = function(userId){
-        if($scope.users && $scope.users.length>0){
-            for(var i = 0; i<$scope.users.length; i++){
-                if($scope.users[i].id == userId){
-                    return $scope.users[i].username;
-                }
-            }
-        }
-    };
-    $scope.searchCompanyNameById = function(companyId){
-        if($scope.companies && $scope.companies.length>0){
-            for(var i = 0; i<$scope.companies.length; i++){
-                if($scope.companies[i].id == companyId){
-                    return $scope.companies[i].name;
-                }
-            }
-        }
-    };*/
 
     $scope.linkUserCompany = function () {
         if ($scope.newLink && $scope.newLink.userId && $scope.newLink.companyId) {
@@ -210,9 +195,7 @@ app.controller('userAndCompanyManagerControl', function ($scope, $http) {
     }
 });
 
-
 app.controller('backstoreControl', function ($scope, $http) {
-    
     $http.post('/api/getCompaniesByUserId', '').
       then(function (response) {
         $scope.companies = response["data"];
