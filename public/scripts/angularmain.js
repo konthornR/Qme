@@ -17,6 +17,8 @@ app.factory('socket', function () {
 
 app.controller('tableQueueControl', function ($scope, socket, $location) {
     $scope.qrCodeString = "TEST";
+    $scope.isCallingDisabled = true;
+    $scope.callingBtnClass = 'btn-disabled';
     if ($location.search().companyId) {
         socket.emit('join company', { 'CompanyId': $location.search().companyId });
     }
@@ -54,8 +56,59 @@ app.controller('tableQueueControl', function ($scope, socket, $location) {
         $scope.qrCodeString = '{"CompanyId" : "' + $location.search().companyId + '", "Id": "' + customer.Id + '", "Version": "1.0.0" }';
     }
     
-    $scope.getNextQueue = function (index) {
-        socket.emit('request customer in next queue', { 'customerType': index });
+    $scope.getNextQueue = function (format) {
+        socket.emit('request customer in next queue', { 'customerType': format });
+        
+        var waitingCalledCustomer = false;
+        var callingQueues = $scope.listCustomersCalling;
+        var i, callingQueue;
+        for (i in callingQueues) {
+            callingQueue = callingQueues[i];
+            if (format == 0 && (callingQueue.NumberOfSeats == 1 || callingQueue.NumberOfSeats == 2)) {
+                waitingCalledCustomer = true;
+                break;
+            }
+            else if (format == 1 && (callingQueue.NumberOfSeats >= 3 && callingQueue.NumberOfSeats <= 6)) {
+                waitingCalledCustomer = true;
+                break;
+            }
+            else if (format == 2 && (callingQueue.NumberOfSeats > 6)) {
+                waitingCalledCustomer = true;
+                break;
+            }
+        }
+        
+        var nextCustomerExist = false;
+        var inLineQueues = $scope.listCustomersQueue;
+        var inLineQueue;
+        for (i in inLineQueues) {
+            inLineQueue = inLineQueues[i];
+            if (format == 0 && (inLineQueue.NumberOfSeats == 1 || inLineQueue.NumberOfSeats == 2)) {
+                nextCustomerExist = true;
+                break;
+            }
+            else if (format == 1 && (inLineQueue.NumberOfSeats >= 3 && inLineQueue.NumberOfSeats <= 6)) {
+                nextCustomerExist = true;
+                break;
+            }
+            else if (format == 2 && (inLineQueue.NumberOfSeats > 6)) {
+                nextCustomerExist = true;
+                break;
+            }
+        }
+
+        if (waitingCalledCustomer) {
+            $scope.isCallingDisabled = true;
+            $scope.callingBtnClass = 'btn-disabled';
+        } else {
+            if (nextCustomerExist) {
+                $scope.isCallingDisabled = false;
+                $scope.callingBtnClass = 'btn-theme';
+            } else {
+                $scope.isCallingDisabled = true;
+                $scope.callingBtnClass = 'btn-disabled';
+            }
+        }
     }
     
     socket.on('respond customer in next queue', function (data) {
@@ -64,6 +117,7 @@ app.controller('tableQueueControl', function ($scope, socket, $location) {
     });
     
     $scope.callThisQueue = function () {
+        if ($scope.isCallingDisabled) return false;
         if ($scope.nextCustomer && $scope.nextCustomer.Id) {
             socket.emit('next queue', $scope.nextCustomer);
             $scope.nextCustomer = undefined;
