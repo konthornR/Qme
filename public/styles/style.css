@@ -142,6 +142,21 @@ a {
         outline: none;
     }
 
+.btn-disabled{
+    background-color: #dedede;
+    color: #9c9c9c;
+}
+    .btn-disabled:hover{
+        background-color: #dedede;
+        color: #9c9c9c;
+    }
+
+    .btn-disabled:active,
+    .btn-disabled:focus {
+        color: #9c9c9c;
+        outline: none;
+    }
+
 .btn-u {
     border: 0;
     color: #fff;

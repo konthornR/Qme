@@ -12,7 +12,7 @@ block append content
           a.btn.btn-lg.btn-option.notransition(href='', ng-click='getNextQueue(1)', style='margin-top: 10px;') 3 - 6 ที่นั่ง
         label.radio-inline
           a.btn.btn-lg.btn-option.notransition(href='', ng-click='getNextQueue(2)', style='margin-top: 10px;') 6 ที่นั่งขึ้นไป
-        a.btn.btn-lg.btn-theme(style='margin-left: 30px; margin-top: 10px;', href='', ng-click='callThisQueue()') เรียก
+        a.btn.btn-lg.btn-disabled(style='margin-left: 30px; margin-top: 10px;', href='', ng-class='callingBtnClass', ng-click='callThisQueue()', ng-disabled='isCallingDisabled') เรียก
       .row.ng-scope
         table.table(style='width: 90%; margin: auto; font-size: 18px;')
           tbody
