@@ -301,7 +301,7 @@ module.exports = function(io,pool) {
 					timestart: start_sqlFormat,		
 					timeend: start_sqlFormat, 
 					name: customer.Name,
-					doesattend: "true"
+					doesattend: "true",
 					numseat: data.NumberOfSeats
 				};
 				pool.getConnection(function(err, connection){
