@@ -92,12 +92,16 @@ app.controller('reserveQueueControl', function ($scope, socket, $location) {
     }
     $scope.reserveSeats = function () {
         var Id = generateUniqueId();
-        if ($scope.customer && $scope.customer.Name != "" && IsNumeric($scope.customer.NumberOfSeats)) {
+        if (!$scope.checked && $scope.customer && $scope.customer.Name != "" && IsNumeric($scope.customer.NumberOfSeats)) {
             socket.emit('request reserve seats', { 'Name': $scope.customer.Name, 'NumberOfSeats': $scope.customer.NumberOfSeats, 'Id': Id });
             $scope.customer.Name = '';
             $scope.customer.NumberOfSeats = '';
             $scope.qrCodeString = '{"CompanyId" : "' + $location.search().companyId + '" , "Id": "' + Id + '" , "Version": "1.0.0" }';
-        } else {
+        } else if ($scope.checked && $scope.customer && IsNumeric($scope.customer.NumberOfSeats)){
+            socket.emit('request direct checkin', { 'NumberOfSeats': $scope.customer.NumberOfSeats, 'Id': Id });
+            $scope.customer.Name = '';
+            $scope.customer.NumberOfSeats = '';
+        }else {
             alert('Wrong Input Format: Name can not be empty and Number of Seats must be numeric');
         }
     };

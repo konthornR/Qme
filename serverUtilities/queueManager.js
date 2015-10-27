@@ -277,6 +277,49 @@ module.exports = function(io,pool) {
 	        }
 	    });  
 
+		socket.on('request direct checkin', function(data){	
+	    	thisCompany = globalCompany.getCompanyById(socket.companyId);
+	    	if(thisCompany && parseInt(data.NumberOfSeats) > 0){
+		    	tableConfig = thisCompany.tableConfig;
+		    	allCustomers = thisCompany.allCustomers;
+		    	callingQueue = thisCompany.callingQueue;
+
+				var customer = _.clone(customer_format);
+				customer.Name = "direct checkin (no queue needed)";
+				customer.NumberOfSeats = data.NumberOfSeats;
+				customer.Id = data.Id;
+				customer.SocketId = _.clone(customer_format.SocketId);
+				customer.PushNotificationToken = _.clone(customer_format.PushNotificationToken);
+
+				//Add customer into database
+				var start = new Date();
+				customer.TimeStart = start;
+				var start_sqlFormat = start.getFullYear() + "-" + (start.getMonth()+1) + "-" + start.getDate() + " " + start.getHours() + ":" + start.getMinutes() + ":" + start.getSeconds();
+				var post  = {
+					companyid: parseInt(socket.companyId),
+					qrcode: data.Id, 
+					timestart: start_sqlFormat,		
+					timeend: start_sqlFormat, 
+					name: customer.Name,
+					doesattend: "true"
+					numseat: data.NumberOfSeats
+				};
+				pool.getConnection(function(err, connection){
+					if(err){
+						console.log("!!!!!!!!!!!!!!!!!!!!!! Can not connect with database !!!!!!!!!!!!!!!!!!!!!");
+						io.sockets.emit('database connection error', 'database connection error'); 
+						return;
+					}
+					var query = connection.query('INSERT INTO reservation SET ?', post, function(err, result) {
+					  	if (err) { 
+					        //throw err;
+				      	}
+					});
+					connection.release();
+				});								  
+	        }
+	    });  
+
 		socket.on('next queue', function(data){		
 			thisCompany = globalCompany.getCompanyById(socket.companyId);
 			if(thisCompany){
