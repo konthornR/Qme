@@ -4,15 +4,20 @@ block append content
       .row
         .col-md-6.col-md-offset-3(style='text-align: center; margin-top: 20px;')
           img#logo-image.logo-header(src='../images/logo.jpg', alt='Logo')
+      .overlay(ng-show='showOverlay', ng-click='hideOverlay()')
       .row(style='margin-top: 40px; margin-bottom: 40px; text-align: center;')
         h2(style='margin-bottom: 30px;') เรียกลูกค้ารายต่อไปสำหรับ
         label.radio-inline
-          a.btn.btn-lg.btn-option.notransition(href='', ng-click='getNextQueue(0)', style='margin-top: 10px;') 1 - 2 ที่นั่ง
+          a.btn.btn-lg.btn-option.notransition.beyond-overlay(href='', ng-click='getNextQueue(0)', style='margin-top: 10px;') 
+            | 1 - 2 ที่นั่ง
         label.radio-inline
-          a.btn.btn-lg.btn-option.notransition(href='', ng-click='getNextQueue(1)', style='margin-top: 10px;') 3 - 6 ที่นั่ง
+          a.btn.btn-lg.btn-option.notransition.beyond-overlay(href='', ng-click='getNextQueue(1)', style='margin-top: 10px;') 
+            | 3 - 6 ที่นั่ง
         label.radio-inline
-          a.btn.btn-lg.btn-option.notransition(href='', ng-click='getNextQueue(2)', style='margin-top: 10px;') 6 ที่นั่งขึ้นไป
-        a.btn.btn-lg.btn-disabled(style='margin-left: 30px; margin-top: 10px;', href='', ng-class='callingBtnClass', ng-click='callThisQueue()', ng-disabled='isCallingDisabled') เรียก
+          a.btn.btn-lg.btn-option.notransition.beyond-overlay(href='', ng-click='getNextQueue(2)', style='margin-top: 10px;') 
+            | 6 ที่นั่งขึ้นไป
+        a.btn.btn-lg.btn-disabled.beyond-overlay(style='margin-left: 30px; margin-top: 10px;', href='', ng-class='callingBtnClass', 
+        ng-click='callThisQueue(); hideOverlay();', ng-disabled='isCallingDisabled') เรียก
       .row.ng-scope
         table.table(style='width: 90%; margin: auto; font-size: 18px;')
           tbody
@@ -25,17 +30,21 @@ block append content
               td.ng-binding(style='padding-left:5.5%') {{ customer.Name }}
               td.ng-binding(style='text-align: center') {{ customer.NumberOfSeats }}
               td(style='text-align: center;')
-                i#callqueue-attend.fa.fa-check.clickable-icon.customer-attend(ng-click='attend(customer)')
+                i#callqueue-attend.fa.fa-check.clickable-icon.customer-attend.beyond-overlay(ng-click='attend(customer); hideOverlay();')
               td(style='text-align: center;')
-                i#callqueue-not-attend.fa.fa-close.clickable-icon.customer-not-attend(ng-click='notAttend(customer)')
+                i#callqueue-not-attend.fa.fa-close.clickable-icon.customer-not-attend.beyond-overlay(ng-click='notAttend(customer); hideOverlay();')
       .row(style='margin-top: 65px; margin-bottom: 40px; text-align: center;')
         .col-xs-6.col-xs-offset-3
           .col-lg-6(style='margin-bottom: 10px;')
-            input#callqueue-text-name.form-control.input-lg(type='text', placeholder='ชื่อ', ng-model='searchCustomer.Name')
+            input#callqueue-text-name.form-control.input-lg.beyond-overlay(type='text', placeholder='ชื่อ', 
+            ng-model='searchCustomer.Name', ng-click='hideOverlay()')
           .col-lg-3(style='margin-bottom: 10px;')
-            input#callqueue-text-numseat.form-control.input-lg(type='text', placeholder='จำนวนที่นั่ง', ng-model='searchCustomer.NumberOfSeats')
+            input#callqueue-text-numseat.form-control.input-lg.beyond-overlay(type='text', placeholder='จำนวนที่นั่ง', 
+            ng-model='searchCustomer.NumberOfSeats', ng-click='hideOverlay()')
           .col-lg-3(style='margin-bottom: 10px;')
-            a#callqueue-qr-submit.control-label.btn.btn-lg.btn-theme(style='margin-left: 10px;', href='#', data-toggle='modal', data-target='#callqueue-searchResultModal', ng-click='searchCustomerByNameAndNumSeats()') ค้นหา QR Code
+            a#callqueue-qr-submit.control-label.btn.btn-lg.btn-theme.beyond-overlay(style='margin-left: 10px;', href='#', 
+            data-toggle='modal', data-target='#callqueue-searchResultModal', ng-click='searchCustomerByNameAndNumSeats(); hideOverlay();') 
+              | ค้นหา QR Code
     #callqueue-searchResultModal.modal.fade
       .modal-dialog(style='width: 90%;')
         .modal-content
@@ -57,7 +66,8 @@ block append content
                     td.ng-binding(style='text-align: start; line-height: 2; vertical-align: middle;') {{ customer.Name }}
                     td.ng-binding(style='text-align: center; line-height: 2; vertical-align: middle;') {{ customer.NumberOfSeats }}
                     td(style='text-align: center; line-height: 2; vertical-align: middle;')
-                      button#callqueue-button-showSearchModal.control-label.btn.btn-lg.btn-theme(style='margin-left: 10px;', ng-click='selectCustomer(customer)', data-toggle='modal', data-dismiss='modal', data-target='#callqueue-qrModal')
+                      button#callqueue-button-showSearchModal.control-label.btn.btn-lg.btn-theme(style='margin-left: 10px;', 
+                      ng-click='selectCustomer(customer)', data-toggle='modal', data-dismiss='modal', data-target='#callqueue-qrModal')
                         | แสดง QR Code
     #callqueue-qrModal.modal.fade
       .modal-dialog

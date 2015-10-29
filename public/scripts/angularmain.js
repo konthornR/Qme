@@ -19,6 +19,11 @@ app.controller('tableQueueControl', function ($scope, socket, $location) {
     $scope.qrCodeString = "TEST";
     $scope.isCallingDisabled = true;
     $scope.callingBtnClass = 'btn-disabled';
+    $scope.showOverlay = false;
+    $scope.hideOverlay = function () {
+        $scope.showOverlay = false;
+        disableCallButton();
+    }
     if ($location.search().companyId) {
         socket.emit('join company', { 'CompanyId': $location.search().companyId });
     }
@@ -56,9 +61,20 @@ app.controller('tableQueueControl', function ($scope, socket, $location) {
         $scope.qrCodeString = '{"CompanyId" : "' + $location.search().companyId + '", "Id": "' + customer.Id + '", "Version": "1.0.0" }';
     }
     
+    var disableCallButton = function() {
+        $scope.isCallingDisabled = true;
+        $scope.callingBtnClass = 'btn-disabled';
+    }
+    
+    var enableCallButton = function() {
+        $scope.isCallingDisabled = false;
+        $scope.callingBtnClass = 'btn-theme';
+    }
+    
     $scope.getNextQueue = function (format) {
         socket.emit('request customer in next queue', { 'customerType': format });
-        
+        $scope.showOverlay = true;
+
         var waitingCalledCustomer = false;
         var callingQueues = $scope.listCustomersCalling;
         var i, callingQueue;
@@ -98,16 +114,12 @@ app.controller('tableQueueControl', function ($scope, socket, $location) {
         }
 
         if (waitingCalledCustomer) {
-            $scope.isCallingDisabled = true;
-            $scope.callingBtnClass = 'btn-disabled';
+            disableCallButton();
         } else {
-            if (nextCustomerExist) {
-                $scope.isCallingDisabled = false;
-                $scope.callingBtnClass = 'btn-theme';
-            } else {
-                $scope.isCallingDisabled = true;
-                $scope.callingBtnClass = 'btn-disabled';
-            }
+            if (nextCustomerExist)
+                enableCallButton();
+            else
+                disableCallButton();
         }
     }
     
