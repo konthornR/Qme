@@ -12,7 +12,13 @@ block append content
       .row(style='margin-top: 30px;')
         .col-md-4.col-md-offset-4.col-sm-6.col-sm-offset-3
           .frame-page
-            company-dropdown
+            #company-dropdown.ng-cloak.dropdown(data-selectedcompanyid='{{selectedCompany.id}}')
+              button#dropdownMenu1.btn.btn-default.dropdown-toggle.dropdown-btn-expand(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='true')
+                span.dropdown-btn-ellipsis {{ selectedCompany.name }}
+                span.caret
+              ul.dropdown-menu.dropdown-ul-expand(aria-labelledby='dropdownMenu1')
+                li
+                  a.dropdown-li-ellipsis.notransition(href='', ng-repeat='company in companies', ng-click='changeSelectedCompany(company)') {{company.name}}
             a.btn.btn-lg.btn-theme(style='display: inherit; margin-top: 30px; margin-bottom: 15px;', ng-href='../reserveQueue?companyId={{selectedCompany.id}}') จองคิว
             a.btn.btn-lg.btn-theme(style='display: inherit; margin-bottom: 15px;', ng-href='../queueLists?companyId={{selectedCompany.id}}') ตารางคิว
             a.btn.btn-lg.btn-theme(style='display: inherit; margin-bottom: 15px;', ng-href='../callQueue?companyId={{selectedCompany.id}}') เรียกคิว

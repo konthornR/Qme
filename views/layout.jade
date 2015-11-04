@@ -11,6 +11,11 @@ html(xmlns='http://www.w3.org/1999/xhtml', ng-app='reservationApp', class='ng-sc
     link(rel='stylesheet', href='plugins/animate.min.css')
     link(rel='stylesheet', href='plugins/jquery-ui.min.css')
     link(rel='shortcut icon', href='images/favicon.ico', type='image/x-icon')
+    script(type='text/javascript', src='angular/angular.min.js')
+    script(type='text/javascript', src='angular-route/angular-route.min.js')
+    script(type='text/javascript', src='qrcode/lib/qrcode.min.js')
+    script(type='text/javascript', src='angular-qr/angular-qr.min.js')
+    script(type='text/javascript', src='scripts/angularmain.js')
     block style
   body(ng-controller=mainCtrl)
     block content
@@ -18,9 +23,4 @@ html(xmlns='http://www.w3.org/1999/xhtml', ng-app='reservationApp', class='ng-sc
     script(type='text/javascript', src='//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js')
     script(type='text/javascript', src='plugins/jquery-ui.min.js')
     script(type='text/javascript', src='socket.io/socket.io.js')
-    script(type='text/javascript', src='angular/angular.min.js')
-    script(type='text/javascript', src='angular-route/angular-route.min.js')
-    script(type='text/javascript', src='qrcode/lib/qrcode.min.js')
-    script(type='text/javascript', src='angular-qr/angular-qr.min.js')
-    script(type='text/javascript', src='scripts/angularmain.js')
     block script

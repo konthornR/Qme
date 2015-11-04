@@ -266,6 +266,10 @@ app.controller('userAndCompanyManagerControl', function ($scope, $http) {
 });
 
 app.controller('backstoreControl', function ($scope, $http) {
+    var companies = [];
+    companies.push({ id: 0, name: 'Loading...' });
+    $scope.companies = companies;
+    $scope.selectedCompany = companies[0];
     $http.post('/api/getCompaniesByUserId', '').
       then(function (response) {
         $scope.companies = response["data"];
