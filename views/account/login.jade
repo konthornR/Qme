@@ -11,6 +11,8 @@ block append content
               h2 ล็อกอินเข้าสู่ระบบ
             #login-error.alert.alert-danger(style='overflow: hidden; display: none;')
               | ข้อมูลไม่ถูกต้อง
+            #login-success.alert.alert-success(style='overflow: hidden; display: none;')
+              | ล็อกอินสำเร็จ!
             .input-group(style='margin-bottom: 20px;')
               span.input-group-addon
                 i.fa.fa-user
@@ -25,30 +27,49 @@ block append content
                   input(type='checkbox')
                   | จำฉันไว้ในระบบ
               .col-md-6
-                button#login-submit.btn.btn-block.btn-theme.pull-right ล็อกอิน
+                button#login-submit.btn.btn-block.btn-theme.pull-right.notransition ล็อกอิน
             hr
             a.color-green(href='forgetpassword.html') ลืมรหัสผ่าน
 block append script
     script.
-      $('#login-submit').click(function () {
+      $('#login-submit').click(loginSubmitEvent);
+      function loginSubmitEvent(){
+      $(this).addClass('processing-quick');
+      $(this).css('height','34px');
+      $(this).prop('disabled', true);
+      $(this).text('');
+      $(this).unbind('click');
+      $('#login-error').css('display', 'none');
       var username = $('#login-username').val();
       var password = $('#login-password').val();
+      ajaxLoginSubmit(username, password);
+      }
+      function ajaxLoginSubmit(username, password){
       $.ajax({
       method: "post",
       data: { username: username, password: password },
       success: function () {
+      $('#login-success').css('display', 'block');
+      $('#login-success').addClass('animated bounceInDown delayp1');
       window.location.href = "account/index";
       },
       statusCode: {
       401: function () {
       $('#login-error').css('display', 'block');
-      $('#login-error').addClass('animated tada delayp3');
+      $('#login-error').addClass('animated bounceInDown delayp1');
       }
+      },
+      complete: function(){
+      $('#login-submit').removeClass('processing-quick');
+      $('#login-submit').css('height','auto');
+      $('#login-submit').prop('disabled', false);
+      $('#login-submit').text('ล็อกอิน');
+      $('#login-submit').click(loginSubmitEvent);
       }
-      })
       });
+      }
       $('#login-error').on('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
-      $('#login-error').removeClass('animated tada delayp3');
+      $('#login-error').removeClass('animated bounceInDown delayp3');
       });
       $('#login-password').keydown(function (e) {
       if (e.keyCode == 13) {

@@ -2251,3 +2251,12 @@ select {
     position: relative;
     z-index: 1040;
 }
+
+.processing-quick,.processing-quick:hover{
+    background: url("/images/icons/circular-processing-quick.GIF") no-repeat center;
+    background-size: 20px 20px;
+    background-color: #e4e4e4;
+    color: #e4e4e4;
+    border-color: #d2d2d2;
+    image-rendering: -moz-crisp-edges;
+}
