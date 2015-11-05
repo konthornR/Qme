@@ -1634,6 +1634,10 @@ select {
         color: #56bc94;
     }
 
+    .modal .modal-title-error{
+        color: #f13131;
+    }
+
     .modal .modal-body {
         padding: 30px;
         padding-top: 0;

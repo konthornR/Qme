@@ -158,17 +158,19 @@ app.controller('reserveQueueControl', function ($scope, socket, $location) {
     }
     $scope.reserveSeats = function () {
         var Id = generateUniqueId();
-        if (!$scope.checked && $scope.customer && $scope.customer.Name != "" && IsNumeric($scope.customer.NumberOfSeats)) {
+        if (!$scope.checked && $scope.customer && $scope.customer.Name != '' && IsPositiveInteger($scope.customer.NumberOfSeats)) {
             socket.emit('request reserve seats', { 'Name': $scope.customer.Name, 'NumberOfSeats': $scope.customer.NumberOfSeats, 'Id': Id });
             $scope.customer.Name = '';
             $scope.customer.NumberOfSeats = '';
             $scope.qrCodeString = '{"CompanyId" : "' + $location.search().companyId + '" , "Id": "' + Id + '" , "Version": "1.0.0" }';
-        } else if ($scope.checked && $scope.customer && IsNumeric($scope.customer.NumberOfSeats)){
+            $('#reserve-complete-modal').modal('show');
+        } else if ($scope.checked && $scope.customer && IsPositiveInteger($scope.customer.NumberOfSeats)){
             socket.emit('request direct checkin', { 'NumberOfSeats': $scope.customer.NumberOfSeats, 'Id': Id });
             $scope.customer.Name = '';
             $scope.customer.NumberOfSeats = '';
+            $('#save-data-complete-modal').modal('show');
         }else {
-            alert('Wrong Input Format: Name can not be empty and Number of Seats must be numeric');
+            $('#fail-validate-modal').modal('show');
         }
     };
     
@@ -184,8 +186,9 @@ app.controller('reserveQueueControl', function ($scope, socket, $location) {
         });
     };
     
-    var IsNumeric = function (num) {
-        return (num >= 0 || num < 0);
+    var IsPositiveInteger = function (num) {
+        var bool = ((num % 1) === 0) && (num > 0);
+        return bool;
     }
 });
 

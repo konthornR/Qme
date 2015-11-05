@@ -16,7 +16,7 @@ block append content
             .input-group(style='margin-bottom: 20px;')
               span.input-group-addon
                 i.fa.fa-sort-numeric-asc
-              input.form-control(type='text', placeholder='จำนวนที่นั่ง', ng-model='customer.NumberOfSeats')
+              input#num-seat-input.form-control(type='text', placeholder='จำนวนที่นั่ง', ng-model='customer.NumberOfSeats')
             .row
               .col-md-6.checkbox
                 label
@@ -25,7 +25,7 @@ block append content
               .col-md-6
                 button#reservequeue-submit.btn.btn-theme.btn-block(ng-click='reserveSeats()', ng-bind='submitText') ทำการจองคิว
             hr
-    #myModal.modal.fade
+    #reserve-complete-modal.modal.fade
       .modal-dialog
         .modal-content
           .modal-header
@@ -34,8 +34,21 @@ block append content
           .modal-body(style='text-align: center;')
             h3.modal-title(style='margin-bottom: 20px;') ท่านได้ทำการจองเรียบร้อย กรุณาสแกน QR Code เพื่อรับข้อมูลคิวผ่านทางสมาร์ทโฟน
             qr(type-number='8', correction-level="'M'", size='250', text='qrCodeString', image='true')
+    #fail-validate-modal.modal.fade
+      .modal-dialog
+        .modal-content
+          .modal-header
+            button.close(type='button', data-dismiss='modal', aria-label='Close')
+              span(aria-hidden='true') ×
+          .modal-body(style='text-align: center;')
+            h3.modal-title-error(style='margin-bottom: 20px;') กรุณากรอกข้อมูลให้ถูกต้อง
+    #save-data-complete-modal.modal.fade
+      .modal-dialog
+        .modal-content
+          .modal-header
+            button.close(type='button', data-dismiss='modal', aria-label='Close')
+              span(aria-hidden='true') ×
+          .modal-body(style='text-align: center;')
+            h3.modal-title(style='margin-bottom: 20px;') บันทึกข้อมูลเสร็จสิ้น
 block append script
-    script.
-      $('#reservequeue-submit').click(function () {
-      $('#myModal').modal('show');
-      });
+    script(type='text/javascript', src='scripts/reserve-script.min.js')
