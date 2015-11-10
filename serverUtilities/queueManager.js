@@ -274,23 +274,7 @@ module.exports = function (io, pool) {
                 
                 allCustomers.push(customer);
                 
-                // Sort customers (2 dimensional array)
-                var sortedAllCustomers = [];
-                for (var i = 0; i < tableConfig.length; i++) {
-                    sortedAllCustomers[i] = [];
-                    for (var j = 0; j < allCustomers.length; j++) { // loop thorugh each queue format
-                        if (allCustomers[j].NumberOfSeats >= tableConfig[i].greater && allCustomers[j].NumberOfSeats <= tableConfig[i].less) {
-                            sortedAllCustomers[i].push(allCustomers[j]);
-                        }
-                    }
-                }
-                
-                var result = []
-                for (var i = 0; i < sortedAllCustomers.length; i++) {
-                    result = result.concat(sortedAllCustomers[i]);
-                }
-                
-                io.sockets.in(socket.companyId).emit('update table', result);
+                io.sockets.in(socket.companyId).emit('update table', sortCustomers(allCustomers, tableConfig));
             }
         });
         
@@ -857,7 +841,7 @@ module.exports = function (io, pool) {
                 tableConfig = thisCompany.tableConfig;
                 allCustomers = thisCompany.allCustomers;
                 callingQueue = thisCompany.callingQueue;
-                io.sockets.in(socket.companyId).emit('update table', allCustomers);
+                io.sockets.in(socket.companyId).emit('update table', sortCustomers(allCustomers, tableConfig));
                 io.sockets.in(socket.companyId).emit('update calling table', callingQueue);
             }
         });
@@ -920,3 +904,23 @@ module.exports.getCompaniesByUserId = function (req, res, pool) {
         
     });
 };
+
+function sortCustomers(allCustomers, tableConfig) {
+    // Sort customers (2 dimensional array)
+    var sortedAllCustomers = [];
+    for (var i = 0; i < tableConfig.length; i++) {
+        sortedAllCustomers[i] = [];
+        for (var j = 0; j < allCustomers.length; j++) { // loop thorugh each queue format
+            if (allCustomers[j].NumberOfSeats >= tableConfig[i].greater && allCustomers[j].NumberOfSeats <= tableConfig[i].less) {
+                sortedAllCustomers[i].push(allCustomers[j]);
+            }
+        }
+    }
+    
+    var result = []
+    for (var i = 0; i < sortedAllCustomers.length; i++) {
+        result = result.concat(sortedAllCustomers[i]);
+    }
+    
+    return result;
+}
