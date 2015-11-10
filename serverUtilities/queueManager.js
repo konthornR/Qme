@@ -456,7 +456,7 @@ module.exports = function (io, pool) {
                     });
                     
                     //update Table information
-                    io.sockets.in(socket.companyId).emit('update table', allCustomers);
+                    io.sockets.in(socket.companyId).emit('update table', sortCustomers(allCustomers, tableConfig));
                     io.sockets.in(socket.companyId).emit('update calling table', callingQueue);
                 }
             }
@@ -596,7 +596,7 @@ module.exports = function (io, pool) {
 
                 }
                 //update Table information
-                io.sockets.in(socket.companyId).emit('update table', allCustomers);
+                io.sockets.in(socket.companyId).emit('update table', sortCustomers(allCustomers, tableConfig));
                 io.sockets.in(socket.companyId).emit('update calling table', callingQueue);
             }
         });
@@ -683,7 +683,7 @@ module.exports = function (io, pool) {
                     });
                 }
                 //update Table information
-                io.sockets.in(socket.companyId).emit('update table', allCustomers);
+                io.sockets.in(socket.companyId).emit('update table', sortCustomers(allCustomers, tableConfig));
                 io.sockets.in(socket.companyId).emit('update calling table', callingQueue);
             }
         });
@@ -767,7 +767,7 @@ module.exports = function (io, pool) {
 					callingQueue.splice(customerIndex_IncallingQueue, 1);
                 }
                 
-                io.sockets.in(socket.companyId).emit('update table', allCustomers);
+                io.sockets.in(socket.companyId).emit('update table', sortCustomers(allCustomers, tableConfig));
                 io.sockets.in(socket.companyId).emit('update calling table', callingQueue);
             }
         });
@@ -829,7 +829,7 @@ module.exports = function (io, pool) {
 					callingQueue.splice(customerIndex_IncallingQueue, 1);
                 }
                 
-                io.sockets.in(socket.companyId).emit('update table', allCustomers);
+                io.sockets.in(socket.companyId).emit('update table', sortCustomers(allCustomers, tableConfig));
                 io.sockets.in(socket.companyId).emit('update calling table', callingQueue);
             }
         });
@@ -905,8 +905,9 @@ module.exports.getCompaniesByUserId = function (req, res, pool) {
     });
 };
 
+// sort customers in queue list
 function sortCustomers(allCustomers, tableConfig) {
-    // Sort customers (2 dimensional array)
+    // 2 dimensional array
     var sortedAllCustomers = [];
     for (var i = 0; i < tableConfig.length; i++) {
         sortedAllCustomers[i] = [];
